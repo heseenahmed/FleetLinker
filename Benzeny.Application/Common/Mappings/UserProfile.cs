@@ -22,20 +22,7 @@ namespace Benzeny.Application.Common.Mappings
                     src.UserRoles.Select(ur => ur.Role != null ? ur.Role.Name : null).Where(name => name != null).ToList()))
                 .ForMember(dest => dest.BranchId, opt => opt.Ignore())
                 .ForMember(dest => dest.BranchName, opt => opt.Ignore())
-                .AfterMap((src, dest) =>
-                {
-                    var userBranch = src.UserBranches.FirstOrDefault();
-                    if (userBranch != null && userBranch.Branch != null)
-                    {
-                        dest.BranchId = userBranch.BranchId;
-                        dest.BranchName = userBranch.Branch.Address;
-                    }
-                    else
-                    {
-                        dest.BranchId = null;
-                        dest.BranchName = null;
-                    }
-                })
+               
                 .ReverseMap();
 
             CreateMap<ApplicationUser, GetUserDto>()

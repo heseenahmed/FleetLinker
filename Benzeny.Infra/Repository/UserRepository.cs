@@ -1,10 +1,8 @@
 ﻿using Benzeny.Domain.Entity;
 using Benzeny.Domain.Entity.Dto.Identity;
-using Benzeny.Domain.Entity.Dto.User;
 using Benzeny.Domain.IRepository;
 using Benzeny.Infra.Data;
 using BenzenyMain.Application.Common;
-using BenzenyMain.Domain.Entity;
 using BenzenyMain.Domain.Entity.Dto.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -86,13 +84,13 @@ namespace Benzeny.Infra.Repository
                         throw new ArgumentException("Mobile number already in use by another user.");
                 }
 
-                if (dto.CompanyId.HasValue)
-                {
-                    var companyExists = await _context.Companies
-                        .AnyAsync(b => b.Id == dto.CompanyId.Value);
-                    if (!companyExists)
-                        throw new KeyNotFoundException("Company not found.");
-                }
+                //if (dto.CompanyId.HasValue)
+                //{
+                //    var companyExists = await _context.Companies
+                //        .AnyAsync(b => b.Id == dto.CompanyId.Value);
+                //    if (!companyExists)
+                //        throw new KeyNotFoundException("Company not found.");
+                //}
 
                 user.FullName = dto.FullName ?? user.FullName;
                 user.Email = dto.Email ?? user.Email;
@@ -175,22 +173,22 @@ namespace Benzeny.Infra.Repository
 
             Guid? resolvedCompanyId = request.CompanyId;
 
-            if (request.BranchId.HasValue)
-            {
-                var branch = await _context.Branches
-                    .FirstOrDefaultAsync(b => b.Id == request.BranchId.Value);
-                if (branch == null)
-                    throw new KeyNotFoundException("Branch not found.");
-                resolvedCompanyId = branch.CompanyId;
-            }
+            //if (request.BranchId.HasValue)
+            //{
+            //    var branch = await _context.Branches
+            //        .FirstOrDefaultAsync(b => b.Id == request.BranchId.Value);
+            //    if (branch == null)
+            //        throw new KeyNotFoundException("Branch not found.");
+            //    resolvedCompanyId = branch.CompanyId;
+            //}
 
-            if (request.CompanyId.HasValue)
-            {
-                var companyExists = await _context.Companies
-                    .AnyAsync(c => c.Id == request.CompanyId.Value);
-                if (!companyExists)
-                    throw new KeyNotFoundException("Company not found.");
-            }
+            //if (request.CompanyId.HasValue)
+            //{
+            //    var companyExists = await _context.Companies
+            //        .AnyAsync(c => c.Id == request.CompanyId.Value);
+            //    if (!companyExists)
+            //        throw new KeyNotFoundException("Company not found.");
+            //}
 
             var refreshToken = TokenGenerator.GenerateRefreshToken();
 
@@ -215,15 +213,15 @@ namespace Benzeny.Infra.Repository
                 throw new ApplicationException("User creation failed: " +
                     string.Join(", ", createResult.Errors.Select(e => e.Description)));
 
-            if (request.BranchId.HasValue)
-            {
-                await _context.UserBranchs.AddAsync(new UserBranch
-                {
-                    UserId = user.Id,
-                    BranchId = request.BranchId.Value
-                });
-                await _context.SaveChangesAsync();
-            }
+            //if (request.BranchId.HasValue)
+            //{
+            //    await _context.UserBranchs.AddAsync(new UserBranch
+            //    {
+            //        UserId = user.Id,
+            //        BranchId = request.BranchId.Value
+            //    });
+            //    await _context.SaveChangesAsync();
+            //}
 
             if (request.RoleIds?.Any() == true)
             {
@@ -276,7 +274,6 @@ namespace Benzeny.Infra.Repository
             {
                 return await _context.Users
                     .Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                    .Include(x => x.UserBranches).ThenInclude(x => x.Branch)
                     .FirstOrDefaultAsync(e => e.Id == id);
             }
             catch (Exception ex)
@@ -291,7 +288,6 @@ namespace Benzeny.Infra.Repository
             {
                 return await _context.Users
                     .Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                    .Include(x => x.UserBranches).ThenInclude(x => x.Branch)
                     .Where(x => !x.Deleted)
                     .ToListAsync();
             }
@@ -308,16 +304,13 @@ namespace Benzeny.Infra.Repository
 
             try
             {
-                var companyExists = await _context.Companies.AnyAsync(b => b.Id == companyId);
-                if (!companyExists)
-                    throw new KeyNotFoundException("Company not found.");
+                //var companyExists = await _context.Companies.AnyAsync(b => b.Id == companyId);
+                //if (!companyExists)
+                //    throw new KeyNotFoundException("Company not found.");
 
                 var users = await _context.Users
-                    .Where(u => !u.Deleted &&
-                                (u.CompanyId == companyId ||
-                                 u.UserBranches.Any(ub => ub.Branch.CompanyId == companyId)))
+                    .Where(u => !u.Deleted)
                     .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
-                    .Include(u => u.UserBranches).ThenInclude(ub => ub.Branch)
                     .ToListAsync();
 
                 return new GetUsersInCompany
@@ -332,8 +325,6 @@ namespace Benzeny.Infra.Repository
                         Email = u.Email,
                         Mobile = u.PhoneNumber,
                         CompanyId = u.CompanyId,
-                        BranchId = u.UserBranches.FirstOrDefault()?.BranchId,
-                        BranchName = u.UserBranches.FirstOrDefault()?.Branch?.Address ?? "N/A",
                         UserRoles = u.UserRoles.Select(r => r.Role.Name!).ToList(),
                         IsActive = u.Active
                     }).ToList()

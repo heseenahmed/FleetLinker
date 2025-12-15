@@ -2,11 +2,8 @@
 using Benzeny.Domain.Entity;
 using Benzeny.Domain.Entity.Dto;
 using Benzeny.Domain.IRepository;
-using BenzenyMain.Application.Command.Log;
 using BenzenyMain.Application.Common;
-using BenzenyMain.Domain.Entity.Dto.Log;
 using BenzenyMain.Domain.Entity.Dto.User;
-using BenzenyMain.Domain.IRepository;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,8 +28,6 @@ namespace Benzeny.Application.Command.User
         private readonly IMailRepository _mailRepository;
         private readonly IWebHostEnvironment _env;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ICompanyRepository _companyRepository;
-        private readonly IBranchRepository _branchRepository;
         private readonly JwtSettings _jwtSettings;
         private readonly IMediator _mediator;
         private static readonly string[] BenzenyRoles =
@@ -43,8 +38,6 @@ namespace Benzeny.Application.Command.User
             IMailRepository mailRepository,
             IWebHostEnvironment env,
             UserManager<ApplicationUser> userManager,
-            ICompanyRepository companyRepository,
-            IBranchRepository branchRepository,
             JwtSettings jwtSettings ,
             IMediator mediator)
         {
@@ -53,8 +46,6 @@ namespace Benzeny.Application.Command.User
             _mailRepository = mailRepository;
             _env = env;
             _userManager = userManager;
-            _companyRepository = companyRepository;
-            _branchRepository = branchRepository;
             _jwtSettings = jwtSettings;
             _mediator = mediator;
         }
@@ -89,17 +80,17 @@ namespace Benzeny.Application.Command.User
                 throw new InvalidOperationException("Failed to update user.");
 
             // 🧩 5. Log only if both are Benzeny-level users
-            if (isPerformerBenzeny && isTargetBenzeny)
-            {
-                await _mediator.Send(new CreateLogCommand(new LogForCreateDto
-                {
-                    Action = "UpdateUser",
-                    EntityName = "User",
-                    EntityId = /*Guid.TryParse(request.UpdateUserDto.Id, out var uid) ? uid : (Guid?)*/null,
-                    PerformedBy = request.PerformedBy,
-                    Details = $"User '{targetUser.FullName}' ({targetUser.Email}) was updated by '{performer.FullName}' ({performer.Email})."
-                }), cancellationToken);
-            }
+            //if (isPerformerBenzeny && isTargetBenzeny)
+            //{
+            //    await _mediator.Send(new CreateLogCommand(new LogForCreateDto
+            //    {
+            //        Action = "UpdateUser",
+            //        EntityName = "User",
+            //        EntityId = /*Guid.TryParse(request.UpdateUserDto.Id, out var uid) ? uid : (Guid?)*/null,
+            //        PerformedBy = request.PerformedBy,
+            //        Details = $"User '{targetUser.FullName}' ({targetUser.Email}) was updated by '{performer.FullName}' ({performer.Email})."
+            //    }), cancellationToken);
+            //}
 
             return true;
         }
@@ -161,21 +152,21 @@ namespace Benzeny.Application.Command.User
             bool newUserIsBenzeny = newUserRoles.Any(r => BenzenyRoles.Contains(r));
 
             // 6️⃣ Log only if both are Benzeny-level users
-            if (performerIsBenzeny && newUserIsBenzeny)
-            {
-                var newUserRolesList = newUserRoles.Any()
-                                        ? string.Join(", ", newUserRoles)
-                                        : "No roles assigned";
-                await _mediator.Send(new CreateLogCommand(new LogForCreateDto
-                {
-                    Action = "RegisterNewUser",
-                    EntityName = "User",
-                    EntityId = /*Guid.TryParse(newUser.Id, out var uid) ? uid : (Guid?)*/null,
-                    PerformedBy = request.PerformedBy,
-                    Details = $"User '{newUser.FullName}' ({newUser.Email}) was created by '{performer.FullName}' ({performer.Email})" +
-                    $"with roles: {newUserRolesList}."
-                }), cancellationToken);
-            }
+            //if (performerIsBenzeny && newUserIsBenzeny)
+            //{
+            //    var newUserRolesList = newUserRoles.Any()
+            //                            ? string.Join(", ", newUserRoles)
+            //                            : "No roles assigned";
+            //    await _mediator.Send(new CreateLogCommand(new LogForCreateDto
+            //    {
+            //        Action = "RegisterNewUser",
+            //        EntityName = "User",
+            //        EntityId = /*Guid.TryParse(newUser.Id, out var uid) ? uid : (Guid?)*/null,
+            //        PerformedBy = request.PerformedBy,
+            //        Details = $"User '{newUser.FullName}' ({newUser.Email}) was created by '{performer.FullName}' ({performer.Email})" +
+            //        $"with roles: {newUserRolesList}."
+            //    }), cancellationToken);
+            //}
 
             return true;
         }
@@ -209,17 +200,17 @@ namespace Benzeny.Application.Command.User
             bool targetIsBenzeny = targetRoles.Any(r => BenzenyRoles.Contains(r));
 
             // 🧩 6. Log only if both users have Benzeny roles
-            if (performerIsBenzeny && targetIsBenzeny)
-            {
-                await _mediator.Send(new CreateLogCommand(new LogForCreateDto
-                {
-                    Action = "SwitchUserActive",
-                    EntityName = "User",
-                    EntityId = null,
-                    PerformedBy = request.PerformedBy,
-                    Details = $"User '{targetUser.FullName}' ({targetUser.Email}) was {(newStatus ? "activated" : "deactivated")} by '{performer.FullName}' ({performer.Email})."
-                }), cancellationToken);
-            }
+            //if (performerIsBenzeny && targetIsBenzeny)
+            //{
+            //    await _mediator.Send(new CreateLogCommand(new LogForCreateDto
+            //    {
+            //        Action = "SwitchUserActive",
+            //        EntityName = "User",
+            //        EntityId = null,
+            //        PerformedBy = request.PerformedBy,
+            //        Details = $"User '{targetUser.FullName}' ({targetUser.Email}) was {(newStatus ? "activated" : "deactivated")} by '{performer.FullName}' ({performer.Email})."
+            //    }), cancellationToken);
+            //}
 
             return newStatus;
         }
@@ -257,17 +248,17 @@ namespace Benzeny.Application.Command.User
             Guid? companyId = null;
             string? companyName = null;
 
-            if (user.CompanyId != null)
-            {
-                var company = await _companyRepository.GetCompanyWithUserByIdAsync(user.CompanyId.Value);
-                if (company != null)
-                {
-                    companyId = company.Company.Id;
-                    companyName = company.Company.Name;
-                }
-            }
+            //if (user.CompanyId != null)
+            //{
+            //    var company = await _companyRepository.GetCompanyWithUserByIdAsync(user.CompanyId.Value);
+            //    if (company != null)
+            //    {
+            //        companyId = company.Company.Id;
+            //        companyName = company.Company.Name;
+            //    }
+            //}
 
-            var userBranches = await _branchRepository.GetBranchesForUserAsync(user.Id);
+            //var userBranches = await _branchRepository.GetBranchesForUserAsync(user.Id);
 
             var response = new LoginResponseDto
             {
@@ -279,7 +270,6 @@ namespace Benzeny.Application.Command.User
                 CompanyId = companyId,
                 CompanyName = companyName,
                 FirstTimeLogin=user.FirstTimeLogin,
-                Branches = userBranches
             };
 
             return APIResponse<LoginResponseDto>.Success(response, "Login successful.");
@@ -322,14 +312,14 @@ namespace Benzeny.Application.Command.User
                     ? string.Join(", ", targetRoles)
                     : "No roles assigned";
 
-                await _mediator.Send(new CreateLogCommand(new LogForCreateDto
-                {
-                    Action = "DeleteUser",
-                    EntityName = "User",
-                    EntityId = /*Guid.TryParse(targetUser.Id, out var uid) ? uid : (Guid?)*/null,
-                    PerformedBy = request.PerformedBy,
-                    Details = $"User '{targetUser.FullName}' ({targetUser.Email}) was deleted by '{performer.FullName}' ({performer.Email}) with roles: {targetRolesList}."
-                }), cancellationToken);
+                //await _mediator.Send(new CreateLogCommand(new LogForCreateDto
+                //{
+                //    Action = "DeleteUser",
+                //    EntityName = "User",
+                //    EntityId = /*Guid.TryParse(targetUser.Id, out var uid) ? uid : (Guid?)*/null,
+                //    PerformedBy = request.PerformedBy,
+                //    Details = $"User '{targetUser.FullName}' ({targetUser.Email}) was deleted by '{performer.FullName}' ({performer.Email}) with roles: {targetRolesList}."
+                //}), cancellationToken);
             }
 
             return true;
@@ -372,14 +362,14 @@ namespace Benzeny.Application.Command.User
                     ? string.Join(", ", result.FinalRoles.Select(r => r.Name))
                     : "No roles assigned";
 
-                await _mediator.Send(new CreateLogCommand(new LogForCreateDto
-                {
-                    Action = "UpdateUserRoles",
-                    EntityName = "User",
-                    EntityId = null,
-                    PerformedBy = request.PerformedBy,
-                    Details = $"User '{targetUser.FullName}' ({targetUser.Email}) roles were updated by '{performer.FullName}' ({performer.Email}). Final roles: {finalRolesList}."
-                }), cancellationToken);
+                //await _mediator.Send(new CreateLogCommand(new LogForCreateDto
+                //{
+                //    Action = "UpdateUserRoles",
+                //    EntityName = "User",
+                //    EntityId = null,
+                //    PerformedBy = request.PerformedBy,
+                //    Details = $"User '{targetUser.FullName}' ({targetUser.Email}) roles were updated by '{performer.FullName}' ({performer.Email}). Final roles: {finalRolesList}."
+                //}), cancellationToken);
             }
 
             return result;

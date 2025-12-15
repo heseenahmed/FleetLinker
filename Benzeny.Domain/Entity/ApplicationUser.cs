@@ -75,9 +75,7 @@ namespace Benzeny.Domain.Entity
         public bool IsOTPEnabled { get; set; }
        
         public Guid? CompanyId { get; set; }
-        public Company? Company { get; set; }
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; } = new List<ApplicationUserRole>();
-        public virtual ICollection<UserBranch> UserBranches { get; set; } = new List<UserBranch>();
     }
     public class ApplicationUserRole : IdentityUserRole<string>
     {

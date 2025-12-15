@@ -6,7 +6,6 @@ using Benzeny.Application.Common;
 using Benzeny.Domain.Entity;
 using Benzeny.Infra;
 using BenzenyMain.Infra.Behaviors;
-using BenzenyMain.Infra.Persistence.Seed;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -42,7 +41,6 @@ builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSe
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 //Background Service
-builder.Services.AddHostedService<AutoFundingService>();
 
 // Program.cs
 builder.Services.AddControllers()
@@ -64,11 +62,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var sp = scope.ServiceProvider;
-    await ApplicationDbSeeder.SeedRolesAndAdminUserAsync(
-        sp.GetRequiredService<RoleManager<ApplicationRole>>(),
-        sp.GetRequiredService<UserManager<ApplicationUser>>());
-    await ApplicationDbSeeder.SeedRegionsAndCitiesAsync(sp);
-    await ApplicationDbSeeder.SeedCarDataAsync(sp);
+    
 }
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -90,7 +84,6 @@ app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.MapControllers();
 
-app.MapGet("/swagger", () => "Hello from Benzeny API!");
 
 app.UseStaticFiles();
 
