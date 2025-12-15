@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-
 namespace FleetLinker.Domain.Entity.Dto.Identity
 {
     public class RegisterRequest
@@ -12,5 +11,4 @@ namespace FleetLinker.Domain.Entity.Dto.Identity
         [Required]
         public string Mobile { get; set; } 
     }
-    
 }

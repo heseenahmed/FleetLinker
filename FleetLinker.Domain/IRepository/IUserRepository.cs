@@ -1,8 +1,6 @@
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.Entity.Dto.Identity;
 using FleetLinker.Domain.Entity.Dto.User;
-
-
 namespace FleetLinker.Domain.IRepository
 {
     public interface IUserRepository
@@ -16,6 +14,5 @@ namespace FleetLinker.Domain.IRepository
         Task<int> CountAdminsAsync();
         Task<bool> SoftDeleteUserAsync(string userId);
         Task<UpdateUserRolesResult> UpdateUserRolesAsync(string userId, IEnumerable<Guid> roleIds, CancellationToken ct = default);
-
     }
 }

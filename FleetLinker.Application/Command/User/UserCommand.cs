@@ -6,24 +6,19 @@ using FleetLinker.Domain.Entity.Dto.User;
 using MediatR;
 using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
-
 namespace FleetLinker.Application.Command.User
 {
-
     public class UpdateUserAsyncCommand : IRequest<bool> 
     {
         public UserForUpdateDto UpdateUserDto { set; get; }
         public string? PerformedBy { get; }
-
         public UpdateUserAsyncCommand(UserForUpdateDto updateUserDto , string? performedBy)
         {
             UpdateUserDto = updateUserDto;   
             PerformedBy = performedBy;
         }
     }
-
     public sealed record GetPrincipalFromExpiredTokenCommand(string? Token) : IRequest<ClaimsPrincipal>;
-
     public class RegisterCommand : IRequest<bool>
     {
         public UserForRegisterDto userDto{set;get;}
@@ -34,13 +29,10 @@ namespace FleetLinker.Application.Command.User
             PerformedBy = performedBy;
         }
     }
-
-
     public sealed record SwitchUserActiveCommand(Guid Id , string? PerformedBy) : IRequest<bool>;
     public class LoginCommand : IRequest<APIResponse<LoginResponseDto>>
     {
         public LoginRequest LoginRequest { get; set; }
-
         public LoginCommand(LoginRequest loginRequest)
         {
             LoginRequest = loginRequest;

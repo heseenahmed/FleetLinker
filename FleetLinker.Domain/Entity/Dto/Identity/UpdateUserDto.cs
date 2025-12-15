@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
-
 namespace FleetLinker.Domain.Entity.Dto.Identity
 {
     public class UpdateUserDto

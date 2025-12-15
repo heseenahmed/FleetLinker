@@ -15,22 +15,15 @@ namespace FleetLinker.Infra.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
             foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
             base.OnModelCreating(builder);
-
-          
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
-
         }
-      
-
     }
 }

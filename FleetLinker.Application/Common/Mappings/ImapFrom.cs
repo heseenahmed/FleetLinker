@@ -1,5 +1,4 @@
 using AutoMapper;
-
 namespace FleetLinker.Application.Common.Mappings
 {
     public interface ImapFrom<T>

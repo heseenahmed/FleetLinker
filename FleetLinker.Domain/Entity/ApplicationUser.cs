@@ -1,14 +1,9 @@
-﻿
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
-
 namespace FleetLinker.Domain.Entity
 {
-    /// <summary>
-    /// Device types supported by the FleetLinker platform
-    /// </summary>
     public enum DeviceType
     {
         [Display(Name = "Apple iOS")]
@@ -18,10 +13,6 @@ namespace FleetLinker.Domain.Entity
         [Display(Name = "WEB")]
         WEB,
     }
-
-    /// <summary>
-    /// User roles in the FleetLinker spare parts marketplace
-    /// </summary>
     public enum UserType
     {
         [Display(Name = "Admin")]
@@ -33,10 +24,6 @@ namespace FleetLinker.Domain.Entity
         [Display(Name = "Workshop")]
         Workshop
     }
-
-    /// <summary>
-    /// Role names for authorization
-    /// </summary>
     public enum Roles
     {
         [Display(Name = "Admin")]
@@ -52,33 +39,24 @@ namespace FleetLinker.Domain.Entity
     {
         [Display(Name = "FullName")]
         public string FullName { get; set; } = null!;
-
         [Display(Name = "National ID")]
         public string? SSN { get; set; }
-
         public DeviceType DeviceType { get; set; }
-
         [Display(Name = "Refresh Token")]
         public string? RefreshToken { get; set; }
-
         [Display(Name = "Refresh Token Expiry UTC")]
         public DateTime? RefreshTokenExpiryUTC { get; set; }
-
         [Display(Name = "Deleted")]
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
-
         [Display(Name = "Active")]
         public bool IsActive { get; set; }
-
         [Display(Name = "Birth Day")]
         public DateTime BirthDay { get; set; }
         [DefaultValue(true)]
         public bool FirstTimeLogin { get; set; }
-
         [DefaultValue(false)]
         public bool IsOTPEnabled { get; set; }
-       
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; } = new List<ApplicationUserRole>();
     }
     public class ApplicationUserRole : IdentityUserRole<string>
@@ -86,11 +64,9 @@ namespace FleetLinker.Domain.Entity
         public virtual ApplicationUser User { get; set; }
         public virtual ApplicationRole Role { get; set; }
     }
-     
     public class ApplicationRole : IdentityRole<string>
     {
         public ApplicationRole() { }
-
         public ApplicationRole(string roleName)
             : base(roleName)
         {
@@ -108,7 +84,6 @@ namespace FleetLinker.Domain.Entity
     }
     public class ForgetPasswordApi
     {
-
         [Required(ErrorMessage = "MobileNumberRequired")]
         [Display(Name = "Mobile")]
         [RegularExpression(@"^(\+\d{1,3}[- ]?)?\d{10}$", ErrorMessage = "MobileNumberRequired")]

@@ -14,15 +14,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
 [Produces("application/json")]
 public class AuthController : ApiController
 {
+    #region Fields
     private readonly JwtSettings _jwtSettings;
     private readonly IDistributedCache _cache;
+    #endregion
+    #region Constructor
     public AuthController(
         ISender mediator,
         UserManager<ApplicationUser> userManager,
@@ -32,9 +34,8 @@ public class AuthController : ApiController
         _jwtSettings = jwtSettings;
         _cache = cache;
     }
-
-    // POST: api/Auth/login
-    // Keeps existing behavior because your LoginCommand currently returns an APIResponse with ApiStatusCode.
+    #endregion
+    #region Login
     [HttpPost("login")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(APIResponse<object>), StatusCodes.Status200OK)]
@@ -46,9 +47,8 @@ public class AuthController : ApiController
         var result = await _mediator.Send(new LoginCommand(request), ct);
         return StatusCode(result.ApiStatusCode, result);
     }
-
-    // POST: api/Auth/logout
-    // logoutAll = true ???? ?? ??????? (????? SecurityStamp)
+    #endregion
+    #region Logout
     [HttpPost("logout")]
     [ProducesResponseType(typeof(APIResponse<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
@@ -58,29 +58,21 @@ public class AuthController : ApiController
         bool logoutAll = true;
         var user = await _userManager.GetUserAsync(User)
                    ?? throw new UnauthorizedAccessException("User not authenticated.");
-
-        // 1) ???? ??? Refresh Token ?????? ?????? (?? ???? ??? ???? ?? ???)
         user.RefreshToken = null;
         user.RefreshTokenExpiryUTC = null;
-
         if (logoutAll)
         {
-            // 2A) Logout ?? ???????: ???? ?? ???????? ?????? ??? SecurityStamp
             await _userManager.UpdateSecurityStampAsync(user);
         }
         else
         {
-            // 2B) Logout ?????? ??????: ???? ???? ??? Access Token ?????? ??? ?????? ???????
             var jti = User.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
             var expStr = User.FindFirst(JwtRegisteredClaimNames.Exp)?.Value;
-
             if (!string.IsNullOrWhiteSpace(jti) && long.TryParse(expStr, out var expUnix))
             {
                 var exp = DateTimeOffset.FromUnixTimeSeconds(expUnix);
                 var ttl = exp - DateTimeOffset.UtcNow;
-                if (ttl < TimeSpan.Zero) ttl = TimeSpan.FromSeconds(5); // ????
-
-                //// ????? ?????? ????
+                if (ttl < TimeSpan.Zero) ttl = TimeSpan.FromSeconds(5);
                 var key = $"blk:{jti}";
                 await _cache.SetStringAsync(
                     key,
@@ -89,20 +81,17 @@ public class AuthController : ApiController
                     {
                         AbsoluteExpirationRelativeToNow = ttl
                     });
-
             }
         }
-
         var update = await _userManager.UpdateAsync(user);
         if (!update.Succeeded)
             throw new InvalidOperationException(string.Join("; ", update.Errors.Select(e => e.Description)));
-
         return Ok(APIResponse<object>.Success(null, logoutAll
             ? "Logout successful (all devices)."
             : "Logout successful."));
     }
-
-    // POST: api/Auth/change-password
+    #endregion
+    #region Change Password
     [HttpPost("change-password")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(APIResponse<object>), StatusCodes.Status200OK)]
@@ -118,33 +107,24 @@ public class AuthController : ApiController
         {
             throw new ArgumentException("Old and new passwords are required.");
         }
-
-        //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-        //             ?? throw new UnauthorizedAccessException("User is not authorized.");
-
         var user = await _userManager.Users.FirstOrDefaultAsync(e => e.Id == change.UserId, ct)
                    ?? throw new KeyNotFoundException("User not found.");
-        
         var roles = await _userManager.GetRolesAsync(user);
-
         var accessToken = TokenGenerator.GenerateAccessToken(user, roles, _jwtSettings);
         ChangePasswordResponseDto response = new ChangePasswordResponseDto();
         response.AccessToken = accessToken;
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, change.OldPassword);
-
         if (!isPasswordValid)
             throw new UnauthorizedAccessException("Invalid credentials.");
-
         var result = await _userManager.ChangePasswordAsync(user, change.OldPassword, change.NewPassword);
         if (!result.Succeeded)
             throw new InvalidOperationException(string.Join("; ", result.Errors.Select(e => e.Description)));
-
         user.FirstTimeLogin = false;
         await _userManager.UpdateAsync(user);
         return Ok(APIResponse<object>.Success(response, "Password changed successfully."));
     }
-
-    // POST: api/Auth/AddNewPassword
+    #endregion
+    #region Add New Password
     [HttpPost("AddNewPassword")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(APIResponse<object>), StatusCodes.Status200OK)]
@@ -156,19 +136,16 @@ public class AuthController : ApiController
     {
         if (string.IsNullOrWhiteSpace(forget?.Mobile) || string.IsNullOrWhiteSpace(forget.Password))
             throw new ArgumentException("Mobile and password are required.");
-
         var user = await _userManager.Users
             .FirstOrDefaultAsync(e => e.PhoneNumber == forget.Mobile && e.IsActive, ct)
             ?? throw new ApplicationException("User not found.");
-
         user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, forget.Password);
         await _userManager.UpdateAsync(user);
         await _userManager.UpdateSecurityStampAsync(user);
-
         return Ok(APIResponse<object>.Success(null, "Password changed successfully."));
     }
-
-    // POST: api/Auth/refresh
+    #endregion
+    #region Refresh Token
     [HttpPost("refresh")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(APIResponse<object>), StatusCodes.Status200OK)]
@@ -177,27 +154,18 @@ public class AuthController : ApiController
     [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RefreshToken([FromBody] TokenRequest request, CancellationToken ct)
     {
-        // Validate expired access token & extract identity
         var principal = await _mediator.Send(new GetPrincipalFromExpiredTokenCommand(request.AccessToken), ct)
                         ?? throw new UnauthorizedAccessException("Invalid access token.");
-
         var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value
                      ?? throw new UnauthorizedAccessException("Invalid access token.");
-
         var user = await _userManager.FindByIdAsync(userId)
                    ?? throw new KeyNotFoundException("User not found.");
-
         if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryUTC <= DateTime.UtcNow)
             throw new UnauthorizedAccessException("Invalid or expired refresh token.");
-
-        // Issue new tokens
         var newAccessToken = TokenGenerator.GenerateAccessToken(user, await _userManager.GetRolesAsync(user), _jwtSettings);
-
-        // Rotate refresh token
         user.RefreshToken = TokenGenerator.GenerateRefreshToken();
         user.RefreshTokenExpiryUTC = DateTime.UtcNow.AddDays(7);
         await _userManager.UpdateAsync(user);
-
         return Ok(APIResponse<object>.Success(new
         {
             AccessToken = newAccessToken,
@@ -205,4 +173,5 @@ public class AuthController : ApiController
             RefreshTokenExpiry = user.RefreshTokenExpiryUTC
         }, "Token refreshed successfully."));
     }
+    #endregion
 }

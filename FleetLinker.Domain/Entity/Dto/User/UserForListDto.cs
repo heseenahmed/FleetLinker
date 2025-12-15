@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-
 namespace FleetLinker.Domain.Entity.Dto.User
 {
     public class UserForListDto

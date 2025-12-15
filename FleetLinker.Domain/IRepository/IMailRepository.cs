@@ -1,6 +1,4 @@
-
 using Microsoft.AspNetCore.Http;
-
 namespace FleetLinker.Domain.IRepository
 {
     public interface IMailRepository

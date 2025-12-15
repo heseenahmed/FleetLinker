@@ -1,4 +1,3 @@
-
 namespace FleetLinker.Domain.Entity.Dto.Identity
 {
     public class ApplicationUserDto
@@ -7,5 +6,4 @@ namespace FleetLinker.Domain.Entity.Dto.Identity
         public string FullName { get; set; }
         public bool IsActive { get; set; } = true;
     }
-
 }

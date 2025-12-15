@@ -1,7 +1,6 @@
 using FleetLinker.Application.Command.Core;
 using FleetLinker.Domain.Entity.Dto.Identity;
 using MediatR;
-
 namespace FleetLinker.Application.Command.Companies
 {
     public class UserCommand : Commands

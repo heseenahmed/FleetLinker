@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
-
 namespace FleetLinker.Domain.Entity
 {
     public class BaseEntity

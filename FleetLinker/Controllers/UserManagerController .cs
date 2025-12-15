@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-
 namespace FleetLinker.API.Controllers
 {
     [Route("api/[controller]")]
@@ -18,13 +17,13 @@ namespace FleetLinker.API.Controllers
     [Produces("application/json")]
     public class UserManagerController : ApiController
     {
-
-        public UserManagerController(ISender mediator, UserManager<ApplicationUser> userManager )
-            : base(mediator, userManager) 
+        #region Constructor
+        public UserManagerController(ISender mediator, UserManager<ApplicationUser> userManager)
+            : base(mediator, userManager)
         {
         }
-
-        // POST: api/UserManager/RegisterNewUser
+        #endregion
+        #region User Registration
         [HttpPost("RegisterNewUser")]
         [ProducesResponseType(typeof(APIResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
@@ -35,16 +34,14 @@ namespace FleetLinker.API.Controllers
         {
             if (model == null)
                 throw new ValidationException("Body is required.");
-
             var performedBy = User?.Identity?.Name ?? "System";
-
-            var success = await _mediator.Send(new RegisterCommand(model , performedBy), ct);
+            var success = await _mediator.Send(new RegisterCommand(model, performedBy), ct);
             return Ok(APIResponse<bool>.Success(success, "User registered successfully."));
         }
-
-        // PUT: api/UserManager/Update?id={id}
+        #endregion
+        #region User Update
         [HttpPut("Update")]
-        [AllowAnonymous] // keep as-is per your current code
+        [AllowAnonymous]
         [ProducesResponseType(typeof(APIResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
@@ -55,14 +52,12 @@ namespace FleetLinker.API.Controllers
         {
             if (string.IsNullOrWhiteSpace(id) || model == null || id != model.Id)
                 throw new ArgumentException("User data is missing or inconsistent.");
-
             var performedBy = User?.Identity?.Name ?? "System";
-            
-            var result = await _mediator.Send(new UpdateUserAsyncCommand(model , performedBy), ct);
+            var result = await _mediator.Send(new UpdateUserAsyncCommand(model, performedBy), ct);
             return Ok(APIResponse<bool>.Success(result, "User updated successfully."));
         }
-
-        // POST: api/UserManager/{id}
+        #endregion
+        #region User Activation
         [HttpPost("SwitchUserActive/{id}")]
         [ProducesResponseType(typeof(APIResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
@@ -73,14 +68,12 @@ namespace FleetLinker.API.Controllers
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid user ID.");
-
             var performedBy = User?.Identity?.Name ?? "System";
-
-            var result = await _mediator.Send(new SwitchUserActiveCommand(id , performedBy), ct);
+            var result = await _mediator.Send(new SwitchUserActiveCommand(id, performedBy), ct);
             return Ok(APIResponse<object>.Success(null, result ? "User activated successfully." : "User deactivated."));
         }
-
-        // GET: api/UserManager/GetById/{id}
+        #endregion
+        #region User Queries
         [HttpGet("GetById/{id}")]
         [ProducesResponseType(typeof(APIResponse<UserForListDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
@@ -91,12 +84,9 @@ namespace FleetLinker.API.Controllers
         {
             if (string.IsNullOrWhiteSpace(id))
                 throw new ArgumentException("Invalid user ID.");
-
             var userInfo = await _mediator.Send(new GetUserById(id), ct);
             return Ok(APIResponse<UserForListDto>.Success(userInfo, "User information retrieved successfully."));
         }
-
-        // GET: api/UserManager/GetAll
         [HttpGet("GetAll")]
         [ProducesResponseType(typeof(APIResponse<List<UserForListDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
@@ -106,10 +96,8 @@ namespace FleetLinker.API.Controllers
             var users = await _mediator.Send(new GetAllUser(), ct);
             return Ok(APIResponse<List<UserForListDto>>.Success(users, "Users information retrieved successfully."));
         }
-
-       
-
-        // DELETE: api/UserManager/DeleteUser/{userId}
+        #endregion
+        #region User Deletion
         [HttpDelete("DeleteUser/{userId}")]
         [ProducesResponseType(typeof(APIResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
@@ -120,29 +108,23 @@ namespace FleetLinker.API.Controllers
         {
             if (string.IsNullOrWhiteSpace(userId))
                 throw new ArgumentException("Invalid user ID.");
-
             var performedBy = User?.Identity?.Name ?? "System";
-
-            var result = await _mediator.Send(new DeleteUserCommand(userId , performedBy), ct);
-
+            var result = await _mediator.Send(new DeleteUserCommand(userId, performedBy), ct);
             if (!result)
                 throw new KeyNotFoundException("User not found or already deleted.");
-
             return Ok(APIResponse<bool>.Success(true, "User deleted successfully."));
         }
-
-       
-        
+        #endregion
+        #region Role Management
         [HttpPut("UpdateUserRoles")]
         public async Task<IActionResult> UpdateUserRoles([FromBody] UpdateUserRolesRequest body, CancellationToken ct)
         {
             var performedBy = User?.Identity?.Name ?? "System";
-
             var result = await _mediator.Send(
-                new UpdateUserRolesCommand(body.UserId, body.Roles , performedBy), ct);
-
-            return Ok(APIResponse<FleetLinker.Domain.Entity.Dto.User.UpdateUserRolesResult>
+                new UpdateUserRolesCommand(body.UserId, body.Roles, performedBy), ct);
+            return Ok(APIResponse<UpdateUserRolesResult>
                 .Success(result, "User roles updated"));
         }
+        #endregion
     }
 }

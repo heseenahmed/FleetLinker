@@ -1,4 +1,3 @@
-
 namespace FleetLinker.Domain.Entity.Dto.Auth
 {
     public class ChangePasswordResponseDto

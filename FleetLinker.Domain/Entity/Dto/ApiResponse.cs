@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Http;
 using System.Net;
-
 namespace FleetLinker.Domain.Entity.Dto
 {
     public class APIResponse<T>
@@ -10,7 +9,6 @@ namespace FleetLinker.Domain.Entity.Dto
         public string Msg { get; set; }
         public List<string>? Errors { get; set; }
         public T? Data { get; set; }
-
         public static APIResponse<T> Success(T data, string message = "Success", int statusCode = StatusCodes.Status200OK)
         {
             return new APIResponse<T>
@@ -22,7 +20,6 @@ namespace FleetLinker.Domain.Entity.Dto
                 Data = data
             };
         }
-
         public static APIResponse<T> Fail(int statusCode, List<string>? errors = null, string? message = "Failed")
         {
             return new APIResponse<T>
@@ -34,7 +31,6 @@ namespace FleetLinker.Domain.Entity.Dto
                 Data = default
             };
         }
-
         public static APIResponse<T> Exception(Exception ex, string? message = "Unexpected error occurred")
         {
             return new APIResponse<T>

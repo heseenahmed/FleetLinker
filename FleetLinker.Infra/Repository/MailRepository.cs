@@ -1,4 +1,3 @@
-
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.IRepository;
 using MailKit.Net.Smtp;
@@ -6,7 +5,6 @@ using MailKit.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using MimeKit;
-
 namespace FleetLinker.Infra.Repository
 {
     public class MailRepository :IMailRepository
@@ -23,15 +21,10 @@ namespace FleetLinker.Infra.Repository
                 Sender = MailboxAddress.Parse(_mailSettings.Email),
                 Subject = subject
             };
-
-            // ? ???? ?? ??? ??????
             if (!MailboxAddress.TryParse(mailTo, out var toAddress))
                 throw new Exception($"Invalid email address: {mailTo}");
-
             email.To.Add(toAddress);
-
             var builder = new BodyBuilder();
-
             if (attachments != null)
             {
                 foreach (var file in attachments)
@@ -41,24 +34,18 @@ namespace FleetLinker.Infra.Repository
                         using var ms = new MemoryStream();
                         file.CopyTo(ms);
                         var fileBytes = ms.ToArray();
-
                         builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
                     }
                 }
             }
-
             builder.HtmlBody = body;
             email.Body = builder.ToMessageBody();
-
             email.From.Add(new MailboxAddress(_mailSettings.DisplayName, _mailSettings.Email));
-
             using var smtp = new SmtpClient();
             smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.Auto);
             smtp.Authenticate(_mailSettings.Email, _mailSettings.Password);
             await smtp.SendAsync(email);
             smtp.Disconnect(true);
         }
-
-
     }
 }

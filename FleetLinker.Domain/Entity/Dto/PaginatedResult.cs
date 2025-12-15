@@ -1,4 +1,3 @@
-
 namespace FleetLinker.Domain.Entity.Dto
 {
     public class PaginatedResult<T>

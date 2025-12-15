@@ -6,18 +6,14 @@ using Microsoft.Extensions.Logging;
 using System.Data.SqlClient;
 using System.Net;
 using System.Text.Json;
-
 namespace FleetLinker.API.Middlewares;
-
 public class GlobalExceptionHandlingMiddleware : IMiddleware
 {
     private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger;
-
     public GlobalExceptionHandlingMiddleware(ILogger<GlobalExceptionHandlingMiddleware> logger)
     {
         _logger = logger;
     }
-
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
@@ -72,13 +68,10 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
         {
             _logger.LogError(appEx, "Application-level exception.");
             var errors = new List<string>();
-
             if (!string.IsNullOrEmpty(appEx.Message))
                 errors.Add(appEx.Message);
-
             if (appEx.InnerException != null && !string.IsNullOrEmpty(appEx.InnerException.Message))
                 errors.Add(appEx.InnerException.Message);
-
             await WriteErrorResponseAsync(
                 context,
                 HttpStatusCode.Conflict,
@@ -86,7 +79,6 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
                 errors
             );
         }
-
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception.");
@@ -97,12 +89,10 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             });
         }
     }
-
     private static async Task WriteErrorResponseAsync(HttpContext context, HttpStatusCode statusCode, string msg, List<string> errors)
     {
         if (context.Response.HasStarted)
             return;
-
         var response = new APIResponse<string>
         {
             ApiStatusCode = (int)statusCode,
@@ -110,16 +100,13 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             Msg = msg,
             Errors = errors
         };
-
         context.Response.StatusCode = (int)statusCode;
         context.Response.ContentType = "application/json";
-
         var json = JsonSerializer.Serialize(response, new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             WriteIndented = false
         });
-
         await context.Response.WriteAsync(json);
     }
 }

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-
 namespace FleetLinker.API.Filter
 {
     public class ValidateModelFilter : ActionFilterAttribute
@@ -15,7 +14,6 @@ namespace FleetLinker.API.Filter
                         error => error.Key,
                         error => error.Value.Errors.Select(e => e.ErrorMessage).ToArray()
                     );
-
                 context.Result = new BadRequestObjectResult(new
                 {
                     Message = "Model validation failed",

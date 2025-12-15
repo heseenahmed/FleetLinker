@@ -1,7 +1,5 @@
-
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.Entity.Dto.Identity;
-
 namespace FleetLinker.Domain.IRepository
 {
     public interface IRoleRepository 

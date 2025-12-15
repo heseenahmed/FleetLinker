@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-
 namespace FleetLinker.Domain.Entity.Dto.Identity
 {
     public class TokenApiDto

@@ -4,14 +4,12 @@ using FleetLinker.Infra.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
 namespace FleetLinker.Infra
 {
     public static class InfraConfigureServices
     {
         public static IServiceCollection AddInfraServices(this IServiceCollection services, IConfiguration configuration)
         {
-
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("AppDBContext"));
@@ -23,7 +21,6 @@ namespace FleetLinker.Infra
             services.AddScoped<ITokenRepository, TokenRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-
             return services;
         }
     }
