@@ -1,0 +1,51 @@
+- Features in nymcard: 
+(1) Manage Users:
+     You can add users who will own the cards.
+     Collect their information (like name, ID, etc.).
+     Verify their identity using KYC (Know Your Customer) to ensure compliance with legal rules.
+(2) Handle Accounts:
+     Each user gets an account linked to their card.
+     You can track how much money they have.
+     You can freeze or close accounts if needed.
+(3) Transactions and Money Transfers:
+     Add money to users’ accounts.
+     Let them spend it or move money between accounts.
+     Monitor transactions to spot any suspicious activity.
+(4) Support for Multi-Currency:
+     If your users spend in different currencies, the platform can handle currency exchange rates automatically.
+-----------------------------------------------------------------------------------------------------------------
+(1) nymcard have feature called webhook that notify me with each transaction accure in card at real time and i can 
+     control which event that will notify me if have change like "Transaction" , "status" , ..etc
+(2) i should first create user (in our case it is car) in nymcard api (Create User) and then i will
+    take the created user id and create a card in nymcard system by this user id and then i can track 
+    all changes in this card by webhook Api
+(3) to create card i must create card product first then take the product card id and user id to create card 
+(5) Relation Between Card And Product Card: 
+    - The Card Product is a template that defines the card's attributes.
+    - The Card is an instance created from a Card Product and inherits its properties.
+    - Multiple Cards can be created from the same Card Product but can also have individual customizations 
+      or statuses.
+(6) bulk card it is a collection of cards behave as one card this bulk card i can connect more than
+    card to this bulk card.
+
+(7) Objectives of the KYC Process:
+     - Verify Customer Identity: Ensure that the customer is who they claim to be.
+     - Understand Customer Activities: Confirm that the customer's activities are legal and comply with 
+                                       regulatory guidelines.
+     - Validate Source of Funds: Ensure that the customer's funds come from legitimate sources.
+(8) there is 2 type of kyc policy:
+    1- Primary Individual Policy (Individual Primary):  
+        Used to verify primary users (e.g., parents or main account holders).  
+        This policy applies to adults or main account holders.  
+    2- Secondary Individual Policy (Individual Secondary):  
+        Used to verify dependent users (e.g., children or secondary users).  
+        This policy applies to users who are linked to a primary account.  
+
+(9) Scenario in 2 type of Kyc policy :
+              A bank offers virtual cards for families. The parent (primary user) and children (secondary users) 
+              are provided cards:
+               The parent undergoes the Primary KYC process to verify their identity as the main account holder.
+               Each child undergoes the Secondary KYC process, which is linked to the parent’s account.
+               This ensures that both the primary and dependent users are verified according to their roles 
+               and relationships in the account structure.
+

@@ -1,0 +1,88 @@
+access => eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjBkNGE2MTYwLTlkZmMtNDIzZC04YzEwLTNiNzk2YjhiNWRjOCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJBbGh1c3NpZW4iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzN3NAZXhhbXBsZS5jb20iLCJqdGkiOiJlY2IwMjM0ZC1lMDNmLTRjNjYtYmI0OS1mMDk1YmJmYTY1ZjAiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJzdHJpbmciLCJleHAiOjE3Mzc2MjQ4MTcsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE4OSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcyNzAifQ.uo_1q8vKQzlP5Hs6GkjmHAkH9mK7tYP_CgcRn4Dez-0
+
+
+----------------------------------------------------------
+
+----------------------------------------------------------
+{
+  "id": "0d4a6160-9dfc-423d-8c10-3b796b8b5dc8",
+  "fullName": "string",
+  "email": "test@example.com",
+  "mobile": "+201101202125",
+  "ssn": "string",
+  "active": true,
+  "birthDay": "2025-01-26T10:23:26.062Z",
+  "oldPassword": "Heseen.ahmed2$",
+  "newPassword": "Heseen.Ahmed2$",
+  "confirmNewPassword": "Heseen.Ahmed2$",
+  "roles": [
+    "string"
+  ]
+}
+
+
+
+
+
+
+
+=> Server=localhost;Database=Benzeny;Trusted_Connection=True;
+
+**steps to create permission for each user:
+(1) create class to have custom perssions :
+     public class CustomClaimTypes
+     {
+    	 public const string AccessDrivers = "access_drivers";
+     }
+(2)add policy to each permission:
+   builder.Services.AddAuthorization(options =>
+   {
+        options.AddPolicy("RequireDriversAccess", policy =>
+             policy.RequireClaim(CustomClaimTypes.AccessDrivers, "true"));
+   });
+(3)add authorize to each endpoint :
+   [Authorize(Policy = "RequireDriversAccess")]
+(4)when create a new user add claims to it after create user:
+   //add claims
+            var claims = new List<Claim>
+                {
+                    new Claim(CustomClaimTypes.AccessDrivers, "true")
+                };
+(5)add claims in in token:
+   var userClaims = await _userManager.GetClaimsAsync(user);
+   claims.AddRange(userClaims);
+(6)test endpoint
+
+------------------------------------------------------------------------
+transaction when get i will send message to mobile
+public class TransactionHub : Hub
+{
+    // Optional: Override connection/disconnection events
+    public override async Task OnConnectedAsync()
+    {
+        await Clients.Caller.SendAsync("Connected", "Connection established.");
+        await base.OnConnectedAsync();
+    }
+}
+this is singlrhub then i wil use it to send message 
+[HttpPost("process")]
+    public async Task<IActionResult> ProcessTransaction([FromBody] TransactionRequest request)
+    {
+        // 1. Process the transaction (e.g., save to database)
+        // ...
+
+        // 2. Send a real-time notification to the user's mobile app
+        await _hubContext.Clients.User(userId).SendAsync("ReceiveTransactionStatus", new
+        {
+            Status = "Success",
+            Amount = request.Amount,
+            Message = "Transaction completed successfully."
+        });
+
+        return Ok();
+    }
+
+
+
+
+

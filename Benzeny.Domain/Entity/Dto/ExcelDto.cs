@@ -1,0 +1,12 @@
+﻿
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+
+namespace Benzeny.Domain.Entity.Dto
+{
+    public class ExcelDto
+    {
+        [Required]
+        public IFormFile File { get; set; }
+    }
+}

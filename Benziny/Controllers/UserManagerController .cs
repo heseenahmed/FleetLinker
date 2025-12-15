@@ -1,0 +1,179 @@
+﻿using Benzeny.Application.Command.User;
+using Benzeny.Application.Queries.User;
+using Benzeny.Domain.Entity;
+using Benzeny.Domain.Entity.Dto;
+using Benzeny.Domain.Entity.Dto.Identity;
+using BenzenyMain.Domain.Entity.Dto.User;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+
+namespace Benzeny.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    [Produces("application/json")]
+    public class UserManagerController : ApiController
+    {
+
+        public UserManagerController(ISender mediator, UserManager<ApplicationUser> userManager )
+            : base(mediator, userManager) 
+        {
+        }
+
+        // POST: api/UserManager/RegisterNewUser
+        [HttpPost("RegisterNewUser")]
+        [ProducesResponseType(typeof(APIResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Register([FromBody] UserForRegisterDto model, CancellationToken ct)
+        {
+            if (model == null)
+                throw new ValidationException("Body is required.");
+
+            var performedBy = User?.Identity?.Name ?? "System";
+
+            var success = await _mediator.Send(new RegisterCommand(model , performedBy), ct);
+            return Ok(APIResponse<bool>.Success(success, "User registered successfully."));
+        }
+
+        // PUT: api/UserManager/Update?id={id}
+        [HttpPut("Update")]
+        [AllowAnonymous] // keep as-is per your current code
+        [ProducesResponseType(typeof(APIResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Update(string id, [FromBody] UserForUpdateDto model, CancellationToken ct)
+        {
+            if (string.IsNullOrWhiteSpace(id) || model == null || id != model.Id)
+                throw new ArgumentException("User data is missing or inconsistent.");
+
+            var performedBy = User?.Identity?.Name ?? "System";
+            
+            var result = await _mediator.Send(new UpdateUserAsyncCommand(model , performedBy), ct);
+            return Ok(APIResponse<bool>.Success(result, "User updated successfully."));
+        }
+
+        // POST: api/UserManager/{id}
+        [HttpPost("SwitchUserActive/{id}")]
+        [ProducesResponseType(typeof(APIResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SwitchUserActive(Guid id, CancellationToken ct)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentException("Invalid user ID.");
+
+            var performedBy = User?.Identity?.Name ?? "System";
+
+            var result = await _mediator.Send(new SwitchUserActiveCommand(id , performedBy), ct);
+            return Ok(APIResponse<object>.Success(null, result ? "User activated successfully." : "User deactivated."));
+        }
+
+        // GET: api/UserManager/GetById/{id}
+        [HttpGet("GetById/{id}")]
+        [ProducesResponseType(typeof(APIResponse<UserForListDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetById(string id, CancellationToken ct)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentException("Invalid user ID.");
+
+            var userInfo = await _mediator.Send(new GetUserById(id), ct);
+            return Ok(APIResponse<UserForListDto>.Success(userInfo, "User information retrieved successfully."));
+        }
+
+        // GET: api/UserManager/GetAll
+        [HttpGet("GetAll")]
+        [ProducesResponseType(typeof(APIResponse<List<UserForListDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAll(CancellationToken ct)
+        {
+            var users = await _mediator.Send(new GetAllUser(), ct);
+            return Ok(APIResponse<List<UserForListDto>>.Success(users, "Users information retrieved successfully."));
+        }
+
+        // GET: api/UserManager/GetAdminBenzenyCount
+        [HttpGet("GetAdminBenzenyCount")]
+        [ProducesResponseType(typeof(APIResponse<AdminsCount>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAdminsCount(CancellationToken ct)
+        {
+            var count = await _mediator.Send(new GetAdminsCount(), ct);
+            return Ok(APIResponse<AdminsCount>.Success(count, "Super Admin count retrieved successfully."));
+        }
+
+        // DELETE: api/UserManager/DeleteUser/{userId}
+        [HttpDelete("DeleteUser/{userId}")]
+        [ProducesResponseType(typeof(APIResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteUser(string userId, CancellationToken ct)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentException("Invalid user ID.");
+
+            var performedBy = User?.Identity?.Name ?? "System";
+
+            var result = await _mediator.Send(new DeleteUserCommand(userId , performedBy), ct);
+
+            if (!result)
+                throw new KeyNotFoundException("User not found or already deleted.");
+
+            return Ok(APIResponse<bool>.Success(true, "User deleted successfully."));
+        }
+
+        // GET: api/UserManager/company/{companyId}/users
+        [HttpGet("GetAllUsersInCompany/{companyId}/users")]
+        [ProducesResponseType(typeof(APIResponse<GetUsersInCompany>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetUsersInCompany(Guid companyId, CancellationToken cancellationToken)
+        {
+            if (companyId == Guid.Empty)
+                throw new ArgumentException("Invalid company ID.");
+
+            var result = await _mediator.Send(new GetAllUsersInCompanyQuery(companyId), cancellationToken);
+            return Ok(APIResponse<GetUsersInCompany>.Success(result, "Users retrieved successfully."));
+        }
+        [HttpGet("GetBenzenyUsers")]
+        public async Task<IActionResult> GetAllBenzenyUsers(CancellationToken ct)
+        {
+            var result = await _mediator.Send(new GetAllBenzenyUsersQuery(), ct);
+
+            // consistent with your GlobalExceptionHandlingMiddleware (no try/catch here)
+            return Ok(APIResponse<GetAllBenzenyUsersResult>.Success(
+                result, "Fetched Benzeny users"));
+        }
+        [HttpPut("UpdateUserRoles")]
+        public async Task<IActionResult> UpdateUserRoles([FromBody] UpdateUserRolesRequest body, CancellationToken ct)
+        {
+            var performedBy = User?.Identity?.Name ?? "System";
+
+            var result = await _mediator.Send(
+                new UpdateUserRolesCommand(body.UserId, body.Roles , performedBy), ct);
+
+            return Ok(APIResponse<BenzenyMain.Domain.Entity.Dto.User.UpdateUserRolesResult>
+                .Success(result, "User roles updated"));
+        }
+    }
+}

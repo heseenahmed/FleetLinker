@@ -1,0 +1,27 @@
+    var car = new Benzeny.Domain.Entity.Car
+    {
+        Model = row.Cell(1).GetString().Trim(),
+        CarNumber = row.Cell(2).GetString().Trim(),
+        Color = row.Cell(3).GetString().Trim(),
+        Petroltype = row.Cell(4).GetString().Trim(),
+        CardNum = row.Cell(5).GetString().Trim(),
+        LicenseDate = DateTime.TryParseExact(
+            row.Cell(6).GetString().Trim(),
+            "yyyy-MM-dd",
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.None,
+            out var licenseDate) ? licenseDate : (DateTime?)null,
+        
+    };
+---------------------------------------------------------------------------
+var driver = new Driver
+{
+    License = row.Cell(1).GetString().Trim(),
+    LicenseDegree = row.Cell(2).GetString().Trim(),
+    User = new ApplicationUser
+    {
+        FullName = row.Cell(3).GetString().Trim(),
+        UserName = row.Cell(3).GetString().Trim() + Guid.NewGuid().ToString(),
+        PhoneNumber = row.Cell(4).GetString().Trim(),
+    },
+};

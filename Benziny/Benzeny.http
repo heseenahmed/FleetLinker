@@ -1,0 +1,6 @@
+@Benzeny_HostAddress = http://localhost:5189
+
+GET {{Benzeny_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

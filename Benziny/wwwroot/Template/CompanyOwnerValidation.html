@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Company & Owner Approved — Sign In</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f8fa;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            max-width: 600px;
+            margin: auto;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+
+            .header h2 {
+                color: #007bff;
+                margin: 0 0 6px;
+            }
+
+        .sub {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        .status-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 16px 0 8px;
+            justify-content: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .badge-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .content {
+            line-height: 1.7;
+        }
+
+        .info-list {
+            padding-left: 18px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: white !important;
+            padding: 10px 20px;
+            margin-top: 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .note {
+            background: #f9fbff;
+            border: 1px solid #e6eefc;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #334;
+            margin-top: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Welcome to Benzeny 👋</h2>
+            <p class="sub">Company & Owner Approval — Access Granted</p>
+            <div class="status-row">
+                <span class="badge badge-success">Company: Approved ✅</span>
+                <span class="badge badge-success">Company Owner: Approved ✅</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <p>Dear <strong>[companyName]</strong>,</p>
+
+            <p>Fantastic news! Your <strong>company</strong> and the <strong>company owner</strong> have both been approved. 🎉</p>
+            <p>You can now sign in to Benzeny to start onboarding your team, manage cards, and complete KYC where needed.</p>
+
+            <ul class="info-list">
+                <li>Company: <strong>[companyName]</strong></li>
+                <li>Owner Name: <strong>[ownerFullName]</strong></li>
+                <li>Owner Email: <strong>[ownerEmail]</strong></li>
+            </ul>
+
+            <a class="btn" href="[url]" target="_blank" rel="noopener">Sign In to Benzeny</a>
+
+            <div class="note">
+                <strong>Tip:</strong> Use the owner’s email (<strong>[ownerEmail]</strong>) to sign in. If you don’t recall your password, use “Forgot Password” on the sign-in page.
+            </div>
+
+            <p style="margin-top:16px;">
+                If the button doesn’t work, copy and paste this link into your browser:<br>
+                <strong>[url]</strong>
+            </p>
+
+            <p>Need help? Reply to this email or reach us at <strong>[supportEmail]</strong>.</p>
+
+            <p>Thanks for choosing <strong>Benzeny</strong>! 🚀</p>
+        </div>
+
+        <div class="footer">
+            &copy; 2025 Benzeny. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
