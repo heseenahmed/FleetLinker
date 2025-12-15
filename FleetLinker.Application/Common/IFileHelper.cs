@@ -1,9 +1,9 @@
-﻿
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 
-namespace Benzeny.Application.Common
+namespace FleetLinker.Application.Common
 {
     public static class IFileHelper
     {

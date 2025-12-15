@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
-using BenzenyMain.Domain.Entity;
 
-namespace Benzeny.Domain.Entity
+namespace FleetLinker.Domain.Entity
 {
+    /// <summary>
+    /// Device types supported by the FleetLinker platform
+    /// </summary>
     public enum DeviceType
     {
         [Display(Name = "Apple iOS")]
@@ -15,33 +17,36 @@ namespace Benzeny.Domain.Entity
         Android,
         [Display(Name = "WEB")]
         WEB,
-
     }
+
+    /// <summary>
+    /// User roles in the FleetLinker spare parts marketplace
+    /// </summary>
     public enum UserType
     {
-        [Display(Name = "Administrator")]
-        Administrator,
-        [Display(Name = "Customer Support")]
-        CustomerSupport,
-        [Display(Name = "Marketer")]
-        Marketer,
-        [Display(Name = "Merchandiser")]
-        Merchandiser,
-        [Display(Name = "Online Store Editor")]
-        OnlineStoreEditor
+        [Display(Name = "Admin")]
+        Admin = 1,
+        [Display(Name = "Client")]
+        Client,
+        [Display(Name = "Visitor")]
+        Visitor,
+        [Display(Name = "Workshop")]
+        Workshop
     }
+
+    /// <summary>
+    /// Role names for authorization
+    /// </summary>
     public enum Roles
     {
-        [Display(Name = "Administrator")]
-        Administrator,
-        [Display(Name = "Customer Support")]
-        CustomerSupport,
-        [Display(Name = "Marketer")]
-        Marketer,
-        [Display(Name = "Merchandiser")]
-        Merchandiser,
-        [Display(Name = "Online Store Editor")]
-        OnlineStoreEditor
+        [Display(Name = "Admin")]
+        Admin = 1,
+        [Display(Name = "Client")]
+        Client,
+        [Display(Name = "Visitor")]
+        Visitor,
+        [Display(Name = "Workshop")]
+        Workshop
     }
     public class ApplicationUser : IdentityUser
     {

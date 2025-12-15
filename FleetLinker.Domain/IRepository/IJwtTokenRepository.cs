@@ -1,8 +1,8 @@
-﻿
+
 //using Benzeny.Domain.Entity;
 //using System.Security.Cryptography;
 
-//namespace Benzeny.Domain.IRepository
+//namespace FleetLinker.Domain.IRepository
 //{
 //    public interface IJwtTokenRepository
 //    {

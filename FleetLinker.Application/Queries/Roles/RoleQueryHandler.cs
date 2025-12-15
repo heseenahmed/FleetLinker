@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto.Identity;
-using Benzeny.Domain.IRepository;
+using AutoMapper;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.IRepository;
 using MediatR;
 using System.Linq;
 
-namespace Benzeny.Application.Queries.Roles.Queries
+namespace FleetLinker.Application.Queries.Roles.Queries
 {
     public class GetRoleQueryHandler : IRequestHandler<GetRoleList, IEnumerable<ApplicationRole>>
     {

@@ -1,7 +1,7 @@
-﻿
+
 using System.Security.Claims;
 
-namespace Benzeny.Domain.IRepository
+namespace FleetLinker.Domain.IRepository
 {
     public interface ITokenRepository
     {

@@ -1,11 +1,11 @@
-﻿using Amazon.Runtime.Internal.Util;
-using Benzeny.API.Controllers;
-using Benzeny.Application.Command.User;
-using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto;
-using Benzeny.Domain.Entity.Dto.Identity;
-using BenzenyMain.Application.Common;
-using BenzenyMain.Domain.Entity.Dto.Auth;
+using Amazon.Runtime.Internal.Util;
+using FleetLinker.API.Controllers;
+using FleetLinker.Application.Command.User;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto;
+using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Application.Common;
+using FleetLinker.Domain.Entity.Dto.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +48,7 @@ public class AuthController : ApiController
     }
 
     // POST: api/Auth/logout
-    // logoutAll = true يقطع كل الأجهزة (يحدّث SecurityStamp)
+    // logoutAll = true ???? ?? ??????? (????? SecurityStamp)
     [HttpPost("logout")]
     [ProducesResponseType(typeof(APIResponse<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
@@ -59,18 +59,18 @@ public class AuthController : ApiController
         var user = await _userManager.GetUserAsync(User)
                    ?? throw new UnauthorizedAccessException("User not authenticated.");
 
-        // 1) امسح الـ Refresh Token للجهاز الحالي (أو احفظ لكل جلسة إن وجد)
+        // 1) ???? ??? Refresh Token ?????? ?????? (?? ???? ??? ???? ?? ???)
         user.RefreshToken = null;
         user.RefreshTokenExpiryUTC = null;
 
         if (logoutAll)
         {
-            // 2A) Logout كل الأجهزة: أبطل كل التوكنات بتحديث الـ SecurityStamp
+            // 2A) Logout ?? ???????: ???? ?? ???????? ?????? ??? SecurityStamp
             await _userManager.UpdateSecurityStampAsync(user);
         }
         else
         {
-            // 2B) Logout الجهاز الحالي: بلّك ليست الـ Access Token الحالي حتى انتهاء صلاحيته
+            // 2B) Logout ?????? ??????: ???? ???? ??? Access Token ?????? ??? ?????? ???????
             var jti = User.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
             var expStr = User.FindFirst(JwtRegisteredClaimNames.Exp)?.Value;
 
@@ -78,9 +78,9 @@ public class AuthController : ApiController
             {
                 var exp = DateTimeOffset.FromUnixTimeSeconds(expUnix);
                 var ttl = exp - DateTimeOffset.UtcNow;
-                if (ttl < TimeSpan.Zero) ttl = TimeSpan.FromSeconds(5); // أمان
+                if (ttl < TimeSpan.Zero) ttl = TimeSpan.FromSeconds(5); // ????
 
-                //// مفتاح البلوك ليست
+                //// ????? ?????? ????
                 var key = $"blk:{jti}";
                 await _cache.SetStringAsync(
                     key,

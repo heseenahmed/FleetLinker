@@ -1,10 +1,10 @@
-﻿using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Benzeny.Domain.IRepository
+namespace FleetLinker.Domain.IRepository
 {
     public interface IBaseRepository<TEntity> where TEntity : class
     {

@@ -1,8 +1,8 @@
-﻿using Benzeny.Domain.Entity.Dto.Identity;
-using BenzenyMain.Domain.Entity.Dto.User;
+using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.Entity.Dto.User;
 using MediatR;
 
-namespace Benzeny.Application.Queries.User
+namespace FleetLinker.Application.Queries.User
 {
     public sealed record GetUserInfoAsyncCommand(string Id) : IRequest<UserInfoAPI>;
     public sealed record GetUserById(string Id) : IRequest<UserForListDto>;

@@ -1,5 +1,5 @@
-﻿
-using Benzeny.Domain.IRepository;
+
+using FleetLinker.Domain.IRepository;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using SendEmailsWithDotNet5.Settings;
 
-namespace Benzeny.Infra.Repository
+namespace FleetLinker.Infra.Repository
 {
     public class MailRepository :IMailRepository
     {
@@ -24,7 +24,7 @@ namespace Benzeny.Infra.Repository
                 Subject = subject
             };
 
-            // ✅ تحقق من صحة البريد
+            // ? ???? ?? ??? ??????
             if (!MailboxAddress.TryParse(mailTo, out var toAddress))
                 throw new Exception($"Invalid email address: {mailTo}");
 

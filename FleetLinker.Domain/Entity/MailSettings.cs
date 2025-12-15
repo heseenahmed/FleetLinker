@@ -1,4 +1,4 @@
-﻿namespace SendEmailsWithDotNet5.Settings
+﻿namespace FleetLinker.Domain.Entity
 {
     public class MailSettings
     {

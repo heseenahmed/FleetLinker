@@ -1,8 +1,8 @@
-﻿using Benzeny.Application.Common.Mappings;
+using FleetLinker.Application.Common.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace Benzeny.Application
+namespace FleetLinker.Application
 {
     public static class AppConfigureServices
     {

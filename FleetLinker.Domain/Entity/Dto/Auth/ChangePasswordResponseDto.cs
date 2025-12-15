@@ -1,5 +1,5 @@
-﻿
-namespace BenzenyMain.Domain.Entity.Dto.Auth
+
+namespace FleetLinker.Domain.Entity.Dto.Auth
 {
     public class ChangePasswordResponseDto
     {

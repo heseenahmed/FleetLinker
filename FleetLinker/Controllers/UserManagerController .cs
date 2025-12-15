@@ -1,16 +1,16 @@
-﻿using Benzeny.Application.Command.User;
-using Benzeny.Application.Queries.User;
-using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto;
-using Benzeny.Domain.Entity.Dto.Identity;
-using BenzenyMain.Domain.Entity.Dto.User;
+using FleetLinker.Application.Command.User;
+using FleetLinker.Application.Queries.User;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto;
+using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.Entity.Dto.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace Benzeny.API.Controllers
+namespace FleetLinker.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

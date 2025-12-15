@@ -1,5 +1,5 @@
-﻿
-namespace BenzenyMain.Domain.Entity.Dto.User
+
+namespace FleetLinker.Domain.Entity.Dto.User
 {
     public class UpdateUserRolesRequest
     {

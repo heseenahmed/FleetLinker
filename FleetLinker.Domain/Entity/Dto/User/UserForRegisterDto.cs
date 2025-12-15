@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Benzeny.Domain.Entity.Dto.Identity
+namespace FleetLinker.Domain.Entity.Dto.Identity
 {
     public class UserForRegisterDto
     {

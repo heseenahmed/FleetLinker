@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Benzeny.Domain.Entity
+namespace FleetLinker.Domain.Entity
 {
     public  class AuthMessageSenderOptions
     {

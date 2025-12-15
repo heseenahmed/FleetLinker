@@ -1,13 +1,13 @@
-﻿using Benzeny.Application.Command.Core;
-using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto;
-using Benzeny.Domain.Entity.Dto.Identity;
-using BenzenyMain.Domain.Entity.Dto.User;
+using FleetLinker.Application.Command.Core;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto;
+using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.Entity.Dto.User;
 using MediatR;
 using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
 
-namespace Benzeny.Application.Command.User
+namespace FleetLinker.Application.Command.User
 {
 
     public class UpdateUserAsyncCommand : IRequest<bool> 

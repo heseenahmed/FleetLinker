@@ -1,5 +1,5 @@
-﻿
-using Benzeny.Domain.Entity;
+
+using FleetLinker.Domain.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BenzenyMain.Application.Common
+namespace FleetLinker.Application.Common
 {
     public static class TokenGenerator
     {

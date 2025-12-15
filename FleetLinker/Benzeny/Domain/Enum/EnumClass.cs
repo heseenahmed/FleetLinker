@@ -1,4 +1,4 @@
-﻿namespace Benzeny.Domain.Enum
+namespace Benzeny.Domain.Enum
 {
     internal class EnumClass
     {

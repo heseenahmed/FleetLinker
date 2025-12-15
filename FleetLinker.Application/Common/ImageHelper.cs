@@ -1,7 +1,7 @@
-﻿
+
 using Microsoft.AspNetCore.Http;
 
-namespace Benzeny.Application.Common
+namespace FleetLinker.Application.Common
 {
     public static class ImageHelper
     {

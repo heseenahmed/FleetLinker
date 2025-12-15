@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Benzeny.Domain.Entity.Dto.Identity
+namespace FleetLinker.Domain.Entity.Dto.User
 {
     public class UserForListDto
     {
@@ -9,10 +9,6 @@ namespace Benzeny.Domain.Entity.Dto.Identity
         public string? Email { get; set; }
         public string? Mobile { get; set; }
         public List<string>? UserRoles { get; set; }
-        public string? BranchName { get; set; }
-        public Guid? BranchId { get; set; }
-        public Guid? CompanyId { get; set; }
         public bool IsActive { get; set; }
-
     }
 }

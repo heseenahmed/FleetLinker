@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using Benzeny.Application.Command.Companies;
-using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto.Identity;
-using Benzeny.Domain.IRepository;
+using AutoMapper;
+using FleetLinker.Application.Command.Companies;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.IRepository;
 using MediatR;
 
-namespace Benzeny.Application.Command.Roles
+namespace FleetLinker.Application.Command.Roles
 {
     public class UserCommandHandler :
         IRequestHandler<AddRoleCommand, bool>,

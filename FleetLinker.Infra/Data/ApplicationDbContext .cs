@@ -1,12 +1,12 @@
-﻿using Benzeny.Domain.Entity;
-using Benzeny.Infra.Configuration;
-using BenzenyMain.Domain.Entity;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Infra.Configuration;
+using FleetLinker.Domain.Entity;
 using DocumentFormat.OpenXml.Math;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
-namespace Benzeny.Infra.Data
+namespace FleetLinker.Infra.Data
 {
     public class ApplicationDbContext : IdentityDbContext<
         ApplicationUser, ApplicationRole, string,

@@ -1,13 +1,13 @@
-﻿
-using Benzeny.Domain.Entity;
-using Benzeny.Domain.IRepository;
+
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.IRepository;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit.Text;
 using MimeKit;
 using MailKit.Net.Smtp;
 
-namespace Benzeny.Infra.Repository
+namespace FleetLinker.Infra.Repository
 {
     public class MailSender : IEmailSender
     {

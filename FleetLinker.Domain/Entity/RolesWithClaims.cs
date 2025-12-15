@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 
-namespace Benzeny.Domain.Entity
+namespace FleetLinker.Domain.Entity
 {
     public static class RolesWithClaims
     {
@@ -12,17 +12,17 @@ namespace Benzeny.Domain.Entity
         //    var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
         //    // Create Admin Role
-        //    if (!await roleManager.RoleExistsAsync("Administrator"))
+        //    if (!await roleManager.RoleExistsAsync("Admin"))
         //    {
-        //        var adminRole = new ApplicationRole("Administrator");
+        //        var adminRole = new ApplicationRole("Admin");
         //        await roleManager.CreateAsync(adminRole);
         //        await roleManager.AddClaimAsync(adminRole, new Claim("Permission", "CanManageUsers"));
         //    }
 
-        //    // Create Editor Role
-        //    if (!await roleManager.RoleExistsAsync("Customer Support"))
+        //    // Create Client Role
+        //    if (!await roleManager.RoleExistsAsync("Client"))
         //    {
-        //        var editorRole = new ApplicationRole("Customer Support");
+        //        var clientRole = new ApplicationRole("Client");
         //        await roleManager.CreateAsync(editorRole);
         //        await roleManager.AddClaimAsync(editorRole, new Claim("Permission", "CanPublishContent"));
         //    }

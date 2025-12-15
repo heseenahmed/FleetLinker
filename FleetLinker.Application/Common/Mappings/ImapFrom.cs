@@ -1,6 +1,6 @@
-﻿using AutoMapper;
+using AutoMapper;
 
-namespace Benzeny.Application.Common.Mappings
+namespace FleetLinker.Application.Common.Mappings
 {
     public interface ImapFrom<T>
     {

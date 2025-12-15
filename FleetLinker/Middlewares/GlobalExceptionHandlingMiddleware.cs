@@ -1,4 +1,4 @@
-﻿using Benzeny.Domain.Entity.Dto;
+using FleetLinker.Domain.Entity.Dto;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Net;
 using System.Text.Json;
 
-namespace Benzeny.API.Middlewares;
+namespace FleetLinker.API.Middlewares;
 
 public class GlobalExceptionHandlingMiddleware : IMiddleware
 {

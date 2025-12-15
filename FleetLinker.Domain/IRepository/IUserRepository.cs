@@ -1,9 +1,9 @@
-﻿using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto.Identity;
-using BenzenyMain.Domain.Entity.Dto.User;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.Entity.Dto.User;
 
 
-namespace Benzeny.Domain.IRepository
+namespace FleetLinker.Domain.IRepository
 {
     public interface IUserRepository
     {

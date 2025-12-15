@@ -1,11 +1,11 @@
-﻿using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Benzeny.API.Controllers
+namespace FleetLinker.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]/v1/[action]")]

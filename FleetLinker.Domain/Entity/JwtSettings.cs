@@ -1,5 +1,5 @@
 ﻿
-namespace Benzeny.Domain.Entity
+namespace FleetLinker.Domain.Entity
 {
     public class JwtSettings
     {

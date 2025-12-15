@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Benzeny.Application.Command.Core
+namespace FleetLinker.Application.Command.Core
 {
     public abstract class Commands : Message
     {

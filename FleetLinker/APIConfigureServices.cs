@@ -1,6 +1,6 @@
-﻿using Benzeny.API.Middlewares;
-using Benzeny.Domain.Entity;
-using Benzeny.Infra.Data;
+using FleetLinker.API.Middlewares;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Infra.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Benzeny.API
+namespace FleetLinker.API
 {
     public static class APIConfigureServices
     {

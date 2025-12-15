@@ -1,10 +1,10 @@
-﻿
-using AutoMapper;
-using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto.Identity;
-using BenzenyMain.Domain.Entity.Dto.Company;
 
-namespace Benzeny.Application.Common.Mappings
+using AutoMapper;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.Entity.Dto.Company;
+
+namespace FleetLinker.Application.Common.Mappings
 {
     public class UserProfile : Profile
     {

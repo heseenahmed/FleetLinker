@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace Benzeny.Domain.Entity.Dto.Identity
+namespace FleetLinker.Domain.Entity.Dto.Identity
 {
     public class UpdateUserDto
     {

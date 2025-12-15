@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using System.Net;
 
-namespace Benzeny.Domain.Entity.Dto
+namespace FleetLinker.Domain.Entity.Dto
 {
     public class APIResponse<T>
     {

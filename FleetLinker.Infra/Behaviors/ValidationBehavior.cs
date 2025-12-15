@@ -1,8 +1,8 @@
-﻿
+
 using FluentValidation;
 using MediatR;
 
-namespace BenzenyMain.Infra.Behaviors
+namespace FleetLinker.Infra.Behaviors
 {
     public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {

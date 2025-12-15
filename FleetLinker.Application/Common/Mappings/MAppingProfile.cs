@@ -1,7 +1,7 @@
-﻿using AutoMapper;
+using AutoMapper;
 using System.Reflection;
 
-namespace Benzeny.Application.Common.Mappings
+namespace FleetLinker.Application.Common.Mappings
 {
     public class MappingProfile : Profile
     {

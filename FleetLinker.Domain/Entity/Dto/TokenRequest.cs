@@ -1,5 +1,5 @@
-﻿
-namespace Benzeny.Domain.Entity.Dto
+
+namespace FleetLinker.Domain.Entity.Dto
 {
     public class TokenRequest
     {

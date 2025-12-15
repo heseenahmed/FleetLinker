@@ -1,12 +1,12 @@
-﻿using Benzeny.Domain.Entity;
-using Benzeny.Domain.IRepository;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.IRepository;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Benzeny.Infra.Repository
+namespace FleetLinker.Infra.Repository
 {
     public class TokenRepository : ITokenRepository
     {
@@ -55,7 +55,7 @@ namespace Benzeny.Infra.Repository
             }
             catch (Exception ex)
             {
-                // Any other parsing issue → unauthorized for consistency with auth flow
+                // Any other parsing issue ? unauthorized for consistency with auth flow
                 throw new UnauthorizedAccessException("Invalid or malformed token.", ex);
             }
         }

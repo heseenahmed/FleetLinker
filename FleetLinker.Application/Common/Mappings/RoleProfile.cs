@@ -1,9 +1,9 @@
-﻿
-using AutoMapper;
-using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto.Identity;
 
-namespace Benzeny.Application.Common.Mappings
+using AutoMapper;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto.Identity;
+
+namespace FleetLinker.Application.Common.Mappings
 {
     public class RoleProfile :Profile
     {

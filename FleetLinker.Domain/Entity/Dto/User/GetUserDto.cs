@@ -1,5 +1,5 @@
-﻿
-namespace BenzenyMain.Domain.Entity.Dto.Company
+
+namespace FleetLinker.Domain.Entity.Dto.User
 {
     public class GetUserDto
     {

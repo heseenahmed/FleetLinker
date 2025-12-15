@@ -1,11 +1,11 @@
-﻿using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto.Identity;
-using Benzeny.Domain.IRepository;
-using Benzeny.Infra.Data;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.IRepository;
+using FleetLinker.Infra.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Benzeny.Infra.Repository
+namespace FleetLinker.Infra.Repository
 {
     public class RoleRepository : IRoleRepository
     {
@@ -129,7 +129,7 @@ namespace Benzeny.Infra.Repository
             return roles;
         }
 
-        // Kept public signature/behavior as in your codebase (despite the Async suffix, it’s sync).
+        // Kept public signature/behavior as in your codebase (despite the Async suffix, it�s sync).
         public bool IsRoleExistsAsync(string roleName)
         {
             if (string.IsNullOrWhiteSpace(roleName)) throw new ArgumentException("Role name is required.", nameof(roleName));

@@ -1,8 +1,8 @@
-﻿using Benzeny.Application.Command.Core;
-using Benzeny.Domain.Entity.Dto.Identity;
+using FleetLinker.Application.Command.Core;
+using FleetLinker.Domain.Entity.Dto.Identity;
 using MediatR;
 
-namespace Benzeny.Application.Command.Companies
+namespace FleetLinker.Application.Command.Companies
 {
     public class UserCommand : Commands
     {

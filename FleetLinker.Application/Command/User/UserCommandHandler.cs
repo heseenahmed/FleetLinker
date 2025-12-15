@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto;
-using Benzeny.Domain.IRepository;
-using BenzenyMain.Application.Common;
-using BenzenyMain.Domain.Entity.Dto.User;
+using AutoMapper;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto;
+using FleetLinker.Domain.IRepository;
+using FleetLinker.Application.Common;
+using FleetLinker.Domain.Entity.Dto.User;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace Benzeny.Application.Command.User
+namespace FleetLinker.Application.Command.User
 {
     public class UserCommandHandler :
         IRequestHandler<UpdateUserAsyncCommand, bool>,
@@ -55,18 +55,18 @@ namespace Benzeny.Application.Command.User
             if (request.UpdateUserDto == null)
                 throw new ArgumentException("User update data is required.");
 
-            // 🧩 1. Get performer (the logged-in user)
+            // ?? 1. Get performer (the logged-in user)
             var performer = await _userManager.Users
                 .FirstOrDefaultAsync(u => u.Email == request.PerformedBy || u.UserName == request.PerformedBy, cancellationToken);
 
             if (performer == null)
                 throw new UnauthorizedAccessException("Performer not found in system.");
 
-            // 🧩 2. Get roles of performer
+            // ?? 2. Get roles of performer
             var performerRoles = await _userManager.GetRolesAsync(performer);
             var isPerformerBenzeny = performerRoles.Any(r => BenzenyRoles.Contains(r));
 
-            // 🧩 3. Get target user (the one being updated)
+            // ?? 3. Get target user (the one being updated)
             var targetUser = await _userManager.FindByIdAsync(request.UpdateUserDto.Id);
             if (targetUser == null)
                 throw new KeyNotFoundException("Target user not found.");
@@ -74,12 +74,12 @@ namespace Benzeny.Application.Command.User
             var targetRoles = await _userManager.GetRolesAsync(targetUser);
             var isTargetBenzeny = targetRoles.Any(r => BenzenyRoles.Contains(r));
 
-            // 🧩 4. Perform update
+            // ?? 4. Perform update
             var updated = await _userRepository.UpdateUserAsync(request.UpdateUserDto);
             if (!updated)
                 throw new InvalidOperationException("Failed to update user.");
 
-            // 🧩 5. Log only if both are Benzeny-level users
+            // ?? 5. Log only if both are Benzeny-level users
             //if (isPerformerBenzeny && isTargetBenzeny)
             //{
             //    await _mediator.Send(new CreateLogCommand(new LogForCreateDto
@@ -112,12 +112,12 @@ namespace Benzeny.Application.Command.User
             if (request.userDto == null)
                 throw new ArgumentException("Registration payload is required.");
 
-            // 1️⃣ Perform the registration
+            // 1?? Perform the registration
             var success = await _userRepository.RegisterAsync(request.userDto);
             if (!success)
                 throw new ApplicationException("Registration failed internally.");
 
-            // 2️⃣ Send the welcome email (existing logic)
+            // 2?? Send the welcome email (existing logic)
             var templatePath = Path.Combine(_env.WebRootPath, "Template", "WelcomeEmail.html");
             if (!File.Exists(templatePath))
                 throw new FileNotFoundException("Email template not found.", templatePath);
@@ -129,7 +129,7 @@ namespace Benzeny.Application.Command.User
             if (!string.IsNullOrWhiteSpace(request.userDto.Email))
                 await _mailRepository.SendEmailAsync(request.userDto.Email, "Welcome to our channel", mailBody);
 
-            // 3️⃣ Retrieve the newly created user
+            // 3?? Retrieve the newly created user
             var newUser = await _userManager.Users
                 .FirstOrDefaultAsync(u => u.Email == request.userDto.Email, cancellationToken);
 
@@ -137,21 +137,21 @@ namespace Benzeny.Application.Command.User
             if (newUser == null)
                 return true;
 
-            // 4️⃣ Retrieve the performer (creator)
+            // 4?? Retrieve the performer (creator)
             var performer = await _userManager.Users
                 .FirstOrDefaultAsync(u => u.Email == request.PerformedBy || u.UserName == request.PerformedBy, cancellationToken);
 
             if (performer == null)
                 return true; // no performer found, probably system or external
 
-            // 5️⃣ Get roles for both users
+            // 5?? Get roles for both users
             var performerRoles = await _userManager.GetRolesAsync(performer);
             var newUserRoles = await _userManager.GetRolesAsync(newUser);
 
             bool performerIsBenzeny = performerRoles.Any(r => BenzenyRoles.Contains(r));
             bool newUserIsBenzeny = newUserRoles.Any(r => BenzenyRoles.Contains(r));
 
-            // 6️⃣ Log only if both are Benzeny-level users
+            // 6?? Log only if both are Benzeny-level users
             //if (performerIsBenzeny && newUserIsBenzeny)
             //{
             //    var newUserRolesList = newUserRoles.Any()
@@ -176,30 +176,30 @@ namespace Benzeny.Application.Command.User
             if (request.Id == Guid.Empty)
                 throw new ArgumentException("Invalid user ID.");
 
-            // 🧩 1. Get target user (the one whose status will be switched)
+            // ?? 1. Get target user (the one whose status will be switched)
             var targetUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == request.Id.ToString(), cancellationToken);
             if (targetUser == null)
                 throw new KeyNotFoundException("User not found.");
 
-            // 🧩 2. Get performer
+            // ?? 2. Get performer
             var performer = await _userManager.Users
                 .FirstOrDefaultAsync(u => u.Email == request.PerformedBy || u.UserName == request.PerformedBy, cancellationToken);
 
-            // 🧩 3. Switch user active state
+            // ?? 3. Switch user active state
             var newStatus = await _userRepository.SwitchUserActiveAsync(request.Id.ToString());
 
-            // 🧩 4. If performer missing, skip logging
+            // ?? 4. If performer missing, skip logging
             if (performer == null)
                 return newStatus;
 
-            // 🧩 5. Get both roles
+            // ?? 5. Get both roles
             var performerRoles = await _userManager.GetRolesAsync(performer);
             var targetRoles = await _userManager.GetRolesAsync(targetUser);
 
             bool performerIsBenzeny = performerRoles.Any(r => BenzenyRoles.Contains(r));
             bool targetIsBenzeny = targetRoles.Any(r => BenzenyRoles.Contains(r));
 
-            // 🧩 6. Log only if both users have Benzeny roles
+            // ?? 6. Log only if both users have Benzeny roles
             //if (performerIsBenzeny && targetIsBenzeny)
             //{
             //    await _mediator.Send(new CreateLogCommand(new LogForCreateDto
@@ -280,16 +280,16 @@ namespace Benzeny.Application.Command.User
             if (string.IsNullOrWhiteSpace(request.UserId))
                 throw new ArgumentException("User ID is required.");
 
-            // 🧩 1. Get target user (to be deleted)
+            // ?? 1. Get target user (to be deleted)
             var targetUser = await _userManager.FindByIdAsync(request.UserId);
             if (targetUser == null)
                 throw new KeyNotFoundException("User not found or already deleted.");
 
-            // 🧩 2. Get performer (the logged-in user)
+            // ?? 2. Get performer (the logged-in user)
             var performer = await _userManager.Users
                 .FirstOrDefaultAsync(u => u.Email == request.PerformedBy || u.UserName == request.PerformedBy, cancellationToken);
 
-            // 🧩 3. Perform delete first
+            // ?? 3. Perform delete first
             var deleted = await _userRepository.SoftDeleteUserAsync(request.UserId);
             if (!deleted)
                 throw new KeyNotFoundException("User not found or already deleted.");
@@ -298,14 +298,14 @@ namespace Benzeny.Application.Command.User
             if (performer == null)
                 return true;
 
-            // 🧩 4. Get roles
+            // ?? 4. Get roles
             var performerRoles = await _userManager.GetRolesAsync(performer);
             var targetRoles = await _userManager.GetRolesAsync(targetUser);
 
             bool performerIsBenzeny = performerRoles.Any(r => BenzenyRoles.Contains(r));
             bool targetIsBenzeny = targetRoles.Any(r => BenzenyRoles.Contains(r));
 
-            // 🧩 5. Log only if both are Benzeny-level users
+            // ?? 5. Log only if both are Benzeny-level users
             if (performerIsBenzeny && targetIsBenzeny)
             {
                 var targetRolesList = targetRoles.Any()
@@ -332,30 +332,30 @@ namespace Benzeny.Application.Command.User
             if (request.RoleIds is null)
                 throw new ArgumentException("RoleIds cannot be null. Send empty list to remove all roles.");
 
-            // 🧩 1. Get target user
+            // ?? 1. Get target user
             var targetUser = await _userManager.FindByIdAsync(request.UserId);
             if (targetUser == null)
                 throw new KeyNotFoundException("Target user not found.");
 
-            // 🧩 2. Get performer
+            // ?? 2. Get performer
             var performer = await _userManager.Users
                 .FirstOrDefaultAsync(u => u.Email == request.PerformedBy || u.UserName == request.PerformedBy, cancellationToken);
 
-            // 🧩 3. Update roles via repository
+            // ?? 3. Update roles via repository
             var result = await _userRepository.UpdateUserRolesAsync(request.UserId, request.RoleIds, cancellationToken);
 
-            // 🧩 4. If performer missing (system call), just return result
+            // ?? 4. If performer missing (system call), just return result
             if (performer == null)
                 return result;
 
-            // 🧩 5. Retrieve roles for both users
+            // ?? 5. Retrieve roles for both users
             var performerRoles = await _userManager.GetRolesAsync(performer);
             var targetRoles = await _userManager.GetRolesAsync(targetUser);
 
             bool performerIsBenzeny = performerRoles.Any(r => BenzenyRoles.Contains(r));
             bool targetIsBenzeny = targetRoles.Any(r => BenzenyRoles.Contains(r));
 
-            // 🧩 6. Log only if both are Benzeny-level users
+            // ?? 6. Log only if both are Benzeny-level users
             if (performerIsBenzeny && targetIsBenzeny)
             {
                 var finalRolesList = result.FinalRoles?.Any() == true

@@ -1,11 +1,11 @@
-﻿using Benzeny.Domain.IRepository;
-using Benzeny.Infra.Data;
-using Benzeny.Infra.Repository;
+using FleetLinker.Domain.IRepository;
+using FleetLinker.Infra.Data;
+using FleetLinker.Infra.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Benzeny.Infra
+namespace FleetLinker.Infra
 {
     public static class InfraConfigureServices
     {

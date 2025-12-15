@@ -1,14 +1,14 @@
-﻿using Benzeny.Domain.Entity;
-using Benzeny.Domain.Entity.Dto.Identity;
-using Benzeny.Domain.IRepository;
-using Benzeny.Infra.Data;
-using BenzenyMain.Application.Common;
-using BenzenyMain.Domain.Entity.Dto.User;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.IRepository;
+using FleetLinker.Infra.Data;
+using FleetLinker.Application.Common;
+using FleetLinker.Domain.Entity.Dto.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
-namespace Benzeny.Infra.Repository
+namespace FleetLinker.Infra.Repository
 {
     public class UserRepository : IUserRepository
     {
@@ -333,7 +333,7 @@ namespace Benzeny.Infra.Repository
        
         public async Task<UpdateUserRolesResult> UpdateUserRolesAsync(string userId, IEnumerable<Guid> roleIds, CancellationToken ct = default)
         {
-            // 1) تحقق من وجود المستخدم
+            // 1) ???? ?? ???? ????????
             var user = await _context.Users
                 .Include(u => u.UserRoles)
                 .FirstOrDefaultAsync(u => u.Id == userId, ct);
@@ -341,11 +341,11 @@ namespace Benzeny.Infra.Repository
             if (user is null)
                 throw new KeyNotFoundException($"User not found: {userId}");
 
-            // 2) حوّل الـ Guids إلى string (Identity uses string keys by default)
+            // 2) ???? ??? Guids ??? string (Identity uses string keys by default)
             var targetRoleIdStrings = roleIds?.Select(g => g.ToString()).ToHashSet(StringComparer.OrdinalIgnoreCase)
                                    ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            // 3) هات كل الأدوار المطلوبة من الـ DB وتأكد إنها موجودة
+            // 3) ??? ?? ??????? ???????? ?? ??? DB ????? ???? ??????
             var rolesInDb = await _context.Roles
                 .Where(r => targetRoleIdStrings.Contains(r.Id))
                 .Select(r => new { r.Id, r.Name })
@@ -356,14 +356,14 @@ namespace Benzeny.Infra.Repository
             if (missingIds.Count > 0)
                 throw new ArgumentException($"Some roles do not exist: {string.Join(", ", missingIds)}");
 
-            // 4) حساب القوائم: الحالي، المطلوب، الإضافة/الإزالة/الثبات
+            // 4) ???? ???????: ??????? ???????? ???????/???????/??????
             var currentRoleIds = user.UserRoles.Select(ur => ur.RoleId).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
             var toAdd = targetRoleIdStrings.Except(currentRoleIds, StringComparer.OrdinalIgnoreCase).ToList();
             var toRemove = currentRoleIds.Except(targetRoleIdStrings, StringComparer.OrdinalIgnoreCase).ToList();
             var kept = currentRoleIds.Intersect(targetRoleIdStrings, StringComparer.OrdinalIgnoreCase).ToList();
 
-            // 5) تنفيذ داخل ترانزاكشن بسيطة
+            // 5) ????? ???? ????????? ?????
             using var tx = await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, ct);
             try
             {
@@ -392,10 +392,10 @@ namespace Benzeny.Infra.Repository
             catch
             {
                 await tx.RollbackAsync(ct);
-                throw; // هيمر على الميدل وير
+                throw; // ???? ??? ?????? ???
             }
 
-            // 6) رجّع النتيجة النهائية
+            // 6) ???? ??????? ????????
             var finalRoles = await (from ur in _context.UserRoles.AsNoTracking()
                                     join r in _context.Roles.AsNoTracking() on ur.RoleId equals r.Id
                                     where ur.UserId == userId

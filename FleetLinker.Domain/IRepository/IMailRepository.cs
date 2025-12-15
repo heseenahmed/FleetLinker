@@ -1,7 +1,7 @@
-﻿
+
 using Microsoft.AspNetCore.Http;
 
-namespace Benzeny.Domain.IRepository
+namespace FleetLinker.Domain.IRepository
 {
     public interface IMailRepository
     {

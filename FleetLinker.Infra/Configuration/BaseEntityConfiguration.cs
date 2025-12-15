@@ -1,8 +1,8 @@
-﻿using Benzeny.Domain.Entity;
+using FleetLinker.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Benzeny.Infra.Configuration
+namespace FleetLinker.Infra.Configuration
 {
     public class BaseEntityConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
     {

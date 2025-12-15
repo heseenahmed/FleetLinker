@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 
-namespace Benzeny.Domain.Entity
+namespace FleetLinker.Domain.Entity
 {
     public class BaseEntity
     {

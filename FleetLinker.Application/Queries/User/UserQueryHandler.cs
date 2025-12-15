@@ -1,10 +1,10 @@
-﻿using AutoMapper;
-using Benzeny.Domain.Entity.Dto.Identity;
-using Benzeny.Domain.IRepository;
-using BenzenyMain.Domain.Entity.Dto.User;
+using AutoMapper;
+using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.IRepository;
+using FleetLinker.Domain.Entity.Dto.User;
 using MediatR;
 
-namespace Benzeny.Application.Queries.User
+namespace FleetLinker.Application.Queries.User
 {
     public class UserCommandHandler :
         IRequestHandler<GetUserInfoAsyncCommand, UserInfoAPI?>,
