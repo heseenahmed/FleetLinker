@@ -77,7 +77,7 @@ namespace FleetLinker.API
            {
                c.SwaggerDoc("v1", new OpenApiInfo
                {
-                   Title = "Benzeny API",
+                   Title = "FleetLinker API",
                    Version = "v1"
                });
                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
