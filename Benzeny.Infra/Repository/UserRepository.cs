@@ -35,7 +35,7 @@ namespace Benzeny.Infra.Repository
             try
             {
                 return await _context.Users
-                    .Where(e => e.Id == id && e.Active && !e.Deleted)
+                    .Where(e => e.Id == id && e.IsActive && !e.IsDeleted)
                     .Select(s => new UserInfoAPI
                     {
                         FullName = s.FullName,
@@ -69,7 +69,7 @@ namespace Benzeny.Infra.Repository
                     var emailExists = await _userManager.Users
                         .AnyAsync(u => u.Id != dto.Id &&
                                        u.Email == dto.Email &&
-                                       !u.Deleted);
+                                       !u.IsDeleted);
                     if (emailExists)
                         throw new ArgumentException("Email already in use by another user.");
                 }
@@ -79,7 +79,7 @@ namespace Benzeny.Infra.Repository
                     var phoneExists = await _userManager.Users
                         .AnyAsync(u => u.Id != dto.Id &&
                                        u.PhoneNumber == dto.Mobile &&
-                                       !u.Deleted);
+                                       !u.IsDeleted);
                     if (phoneExists)
                         throw new ArgumentException("Mobile number already in use by another user.");
                 }
@@ -97,7 +97,7 @@ namespace Benzeny.Infra.Repository
                 user.PhoneNumber = dto.Mobile ?? user.PhoneNumber;
                 user.UserName = dto.Username ?? user.UserName;
                 user.EmailConfirmed = true;
-                user.Active = true;
+                user.IsActive = true;
 
                 var updateResult = await _userManager.UpdateAsync(user);
                 if (!updateResult.Succeeded)
@@ -163,7 +163,7 @@ namespace Benzeny.Infra.Repository
             var normalizedEmail = request.Email.Trim().ToUpperInvariant();
 
             var existingUsers = await _context.Users
-                .Where(u => u.NormalizedEmail == normalizedEmail && !u.Deleted)
+                .Where(u => u.NormalizedEmail == normalizedEmail && !u.IsDeleted)
                 .ToListAsync();
 
             if (existingUsers.Count > 1)
@@ -171,7 +171,6 @@ namespace Benzeny.Infra.Repository
             if (existingUsers.Count == 1)
                 throw new ArgumentException("Email is already in use.");
 
-            Guid? resolvedCompanyId = request.CompanyId;
 
             //if (request.BranchId.HasValue)
             //{
@@ -201,9 +200,8 @@ namespace Benzeny.Infra.Repository
                 Email = request.Email.Trim(),
                 NormalizedEmail = normalizedEmail,
                 PhoneNumber = request.Mobile.Trim(),
-                Active = false,
-                Deleted = false,
-                CompanyId = resolvedCompanyId,
+                IsActive = false,
+                IsDeleted = false,
                 RefreshToken = refreshToken,
                 RefreshTokenExpiryUTC = DateTime.UtcNow.AddDays(7),
             };
@@ -259,10 +257,10 @@ namespace Benzeny.Infra.Repository
             if (user == null)
                 throw new KeyNotFoundException("User not found.");
 
-            user.Active = !user.Active;
+            user.IsActive = !user.IsActive;
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
-            return user.Active;
+            return user.IsActive;
         }
 
         public async Task<ApplicationUser?> GetByIdAsync(string id)
@@ -288,7 +286,7 @@ namespace Benzeny.Infra.Repository
             {
                 return await _context.Users
                     .Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                    .Where(x => !x.Deleted)
+                    .Where(x => !x.IsDeleted)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -297,44 +295,7 @@ namespace Benzeny.Infra.Repository
             }
         }
 
-        public async Task<GetUsersInCompany> GetAllUsersInCompanyAsync(Guid companyId)
-        {
-            if (companyId == Guid.Empty)
-                throw new ArgumentException("Company ID is required.", nameof(companyId));
-
-            try
-            {
-                //var companyExists = await _context.Companies.AnyAsync(b => b.Id == companyId);
-                //if (!companyExists)
-                //    throw new KeyNotFoundException("Company not found.");
-
-                var users = await _context.Users
-                    .Where(u => !u.Deleted)
-                    .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
-                    .ToListAsync();
-
-                return new GetUsersInCompany
-                {
-                    TotalCount = users.Count,
-                    ActiveCount = users.Count(u => u.Active),
-                    InActiveCount = users.Count(u => !u.Active),
-                    Users = users.Select(u => new UserForListDto
-                    {
-                        Id = u.Id,
-                        FullName = u.FullName,
-                        Email = u.Email,
-                        Mobile = u.PhoneNumber,
-                        CompanyId = u.CompanyId,
-                        UserRoles = u.UserRoles.Select(r => r.Role.Name!).ToList(),
-                        IsActive = u.Active
-                    }).ToList()
-                };
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Error retrieving users for company.", ex);
-            }
-        }
+       
 
         public async Task<int> CountAdminsAsync()
         {
@@ -356,11 +317,11 @@ namespace Benzeny.Infra.Repository
                 throw new ArgumentException("User ID is required.", nameof(userId));
 
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null || user.Deleted)
+            if (user == null || user.IsDeleted)
                 throw new KeyNotFoundException("User not found or already deleted.");
 
-            user.Deleted = true;
-            user.Active = false;
+            user.IsDeleted = true;
+            user.IsActive = false;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
@@ -369,67 +330,7 @@ namespace Benzeny.Infra.Repository
 
             return true;
         }
-        public async Task<(List<UserBenzenyDto> , int Count , int ActiveCount , int InActiveCount)> GetAllBenzenyUsersAsync(CancellationToken ct = default)
-        {
-            var rename = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                ["BOperationAdmin"] = "Operation",
-                ["BSuperAdmin"] = "SuperAdmin",
-                ["BFinanceAdmin"] = "Finance",
-                // أضف غيرها لو لزم
-            };
-            string[] extraRoles = { "Benzeny", "BSuperAdmin", "BOperationAdmin", "BFinanceAdmin" };
-
-            var rolesQuery = _context.Roles
-                                   .AsNoTracking()
-                                   .Where(r => extraRoles.Contains(r.Name));
-
-            //var query =
-            //    from u in _context.Users.AsNoTracking() 
-            //    from ur in u.UserRoles 
-            //    join r in _context.Roles.AsNoTracking() on ur.RoleId equals r.Id
-            //    where extraRoles.Contains(r.Name)
-            //    select new { u, RoleName = r.Name! };
-            var userQuery = _context.Users.Where(x=>x.Deleted==false).AsNoTracking()
-                .Where(u => u.UserRoles.Any(ur =>
-                    _context.Roles.Where(r => extraRoles.Contains(r.Name))
-                                  .Select(r => r.Id)
-                                  .Contains(ur.RoleId)));
-
-            var count = await userQuery.CountAsync(ct);
-            var activeCount = await userQuery.CountAsync(u => u.Active, ct);
-            var inactiveCount = await userQuery.CountAsync(u => !u.Active, ct);
-
-            var result = await userQuery
-                .Select(u => new UserBenzenyDto
-                {
-                    Id = u.Id,
-                    FullName = u.FullName,
-                    Email = u.Email,
-                    PhoneNumber = u.PhoneNumber,
-                    IsActive = u.Active,
-                    Deleted = u.Deleted,
-                    BirthDay = u.BirthDay,
-                    Roles = u.UserRoles
-                        .Where(ur => _context.Roles.Where(r => extraRoles.Contains(r.Name))
-                                                   .Select(r => r.Id)
-                                                   .Contains(ur.RoleId))
-                        .Select(ur => ur.Role!.Name!)
-                        .Distinct()
-                        .ToList()
-                })
-                .OrderBy(x => x.FullName)
-                .ToListAsync(ct);
-            result.ForEach(u =>
-            {
-                u.Roles = (u.Roles ?? new List<string>())
-                    .Select(r => rename.TryGetValue(r, out var m) ? m : r)
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .OrderBy(s => s)
-                    .ToList();
-            });
-            return (result , count , activeCount , inactiveCount);
-        }
+       
         public async Task<UpdateUserRolesResult> UpdateUserRolesAsync(string userId, IEnumerable<Guid> roleIds, CancellationToken ct = default)
         {
             // 1) تحقق من وجود المستخدم

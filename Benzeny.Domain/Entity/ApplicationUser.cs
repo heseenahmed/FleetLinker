@@ -61,10 +61,10 @@ namespace Benzeny.Domain.Entity
 
         [Display(Name = "Deleted")]
         [DefaultValue(false)]
-        public bool Deleted { get; set; }
+        public bool IsDeleted { get; set; }
 
         [Display(Name = "Active")]
-        public bool Active { get; set; }
+        public bool IsActive { get; set; }
 
         [Display(Name = "Birth Day")]
         public DateTime BirthDay { get; set; }
@@ -74,7 +74,6 @@ namespace Benzeny.Domain.Entity
         [DefaultValue(false)]
         public bool IsOTPEnabled { get; set; }
        
-        public Guid? CompanyId { get; set; }
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; } = new List<ApplicationUserRole>();
     }
     public class ApplicationUserRole : IdentityUserRole<string>

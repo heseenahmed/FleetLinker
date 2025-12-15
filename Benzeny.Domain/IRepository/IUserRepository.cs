@@ -1,6 +1,5 @@
 ﻿using Benzeny.Domain.Entity;
 using Benzeny.Domain.Entity.Dto.Identity;
-using Benzeny.Domain.Entity.Dto.User;
 using BenzenyMain.Domain.Entity.Dto.User;
 
 
@@ -16,8 +15,6 @@ namespace Benzeny.Domain.IRepository
         public Task<bool> SwitchUserActiveAsync(string id);
         Task<int> CountAdminsAsync();
         Task<bool> SoftDeleteUserAsync(string userId);
-        Task<GetUsersInCompany> GetAllUsersInCompanyAsync(Guid companyId);
-        Task<(List<UserBenzenyDto>, int Count, int ActiveCount, int InActiveCount)> GetAllBenzenyUsersAsync(CancellationToken ct = default);
         Task<UpdateUserRolesResult> UpdateUserRolesAsync(string userId, IEnumerable<Guid> roleIds, CancellationToken ct = default);
 
     }

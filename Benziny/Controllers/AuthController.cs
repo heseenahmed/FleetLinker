@@ -158,7 +158,7 @@ public class AuthController : ApiController
             throw new ArgumentException("Mobile and password are required.");
 
         var user = await _userManager.Users
-            .FirstOrDefaultAsync(e => e.PhoneNumber == forget.Mobile && e.Active, ct)
+            .FirstOrDefaultAsync(e => e.PhoneNumber == forget.Mobile && e.IsActive, ct)
             ?? throw new ApplicationException("User not found.");
 
         user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, forget.Password);

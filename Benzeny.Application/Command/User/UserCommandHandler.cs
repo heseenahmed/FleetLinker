@@ -230,7 +230,7 @@ namespace Benzeny.Application.Command.User
                        ?? await _userManager.FindByEmailAsync(username)
                        ?? await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == username, cancellationToken);
 
-            if (user == null || user.Deleted || !user.Active)
+            if (user == null || user.IsDeleted || !user.IsActive)
                 throw new ArgumentException("User Not Found.");
 
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.LoginRequest.Password);

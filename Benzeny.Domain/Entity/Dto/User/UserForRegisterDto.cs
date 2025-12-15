@@ -12,7 +12,5 @@ namespace Benzeny.Domain.Entity.Dto.Identity
         public string? Username { get; set; } = null!; 
         public string? Password { get; set; } = null!;
         public List<Guid>? RoleIds { get; set; } = null!;
-        public Guid? BranchId { get; set; }
-        public Guid? CompanyId { get; set; }
     }
 }

@@ -107,16 +107,7 @@ namespace Benzeny.API.Controllers
             return Ok(APIResponse<List<UserForListDto>>.Success(users, "Users information retrieved successfully."));
         }
 
-        // GET: api/UserManager/GetAdminBenzenyCount
-        [HttpGet("GetAdminBenzenyCount")]
-        [ProducesResponseType(typeof(APIResponse<AdminsCount>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAdminsCount(CancellationToken ct)
-        {
-            var count = await _mediator.Send(new GetAdminsCount(), ct);
-            return Ok(APIResponse<AdminsCount>.Success(count, "Super Admin count retrieved successfully."));
-        }
+       
 
         // DELETE: api/UserManager/DeleteUser/{userId}
         [HttpDelete("DeleteUser/{userId}")]
@@ -140,30 +131,8 @@ namespace Benzeny.API.Controllers
             return Ok(APIResponse<bool>.Success(true, "User deleted successfully."));
         }
 
-        // GET: api/UserManager/company/{companyId}/users
-        [HttpGet("GetAllUsersInCompany/{companyId}/users")]
-        [ProducesResponseType(typeof(APIResponse<GetUsersInCompany>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetUsersInCompany(Guid companyId, CancellationToken cancellationToken)
-        {
-            if (companyId == Guid.Empty)
-                throw new ArgumentException("Invalid company ID.");
-
-            var result = await _mediator.Send(new GetAllUsersInCompanyQuery(companyId), cancellationToken);
-            return Ok(APIResponse<GetUsersInCompany>.Success(result, "Users retrieved successfully."));
-        }
-        [HttpGet("GetBenzenyUsers")]
-        public async Task<IActionResult> GetAllBenzenyUsers(CancellationToken ct)
-        {
-            var result = await _mediator.Send(new GetAllBenzenyUsersQuery(), ct);
-
-            // consistent with your GlobalExceptionHandlingMiddleware (no try/catch here)
-            return Ok(APIResponse<GetAllBenzenyUsersResult>.Success(
-                result, "Fetched Benzeny users"));
-        }
+       
+        
         [HttpPut("UpdateUserRoles")]
         public async Task<IActionResult> UpdateUserRoles([FromBody] UpdateUserRolesRequest body, CancellationToken ct)
         {

@@ -1,5 +1,4 @@
 ﻿
-using Benzeny.Domain.Entity.Dto.User;
 
 namespace Benzeny.Domain.Entity.Dto
 {

@@ -16,8 +16,7 @@ namespace Benzeny.Application.Common.Mappings
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.Mobile, opt => opt.MapFrom(src => src.PhoneNumber))
-                .ForMember(dest => dest.CompanyId, opt => opt.MapFrom(src => src.CompanyId))
-                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.Active))
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive))
                 .ForMember(dest => dest.UserRoles, opt => opt.MapFrom(src =>
                     src.UserRoles.Select(ur => ur.Role != null ? ur.Role.Name : null).Where(name => name != null).ToList()))
                 .ForMember(dest => dest.BranchId, opt => opt.Ignore())
