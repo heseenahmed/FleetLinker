@@ -1,11 +1,11 @@
 
+using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.IRepository;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using SendEmailsWithDotNet5.Settings;
 
 namespace FleetLinker.Infra.Repository
 {

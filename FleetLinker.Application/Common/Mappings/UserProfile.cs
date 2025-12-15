@@ -2,7 +2,7 @@
 using AutoMapper;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.Entity.Dto.Identity;
-using FleetLinker.Domain.Entity.Dto.Company;
+using FleetLinker.Domain.Entity.Dto.User;
 
 namespace FleetLinker.Application.Common.Mappings
 {
@@ -19,8 +19,6 @@ namespace FleetLinker.Application.Common.Mappings
                 .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive))
                 .ForMember(dest => dest.UserRoles, opt => opt.MapFrom(src =>
                     src.UserRoles.Select(ur => ur.Role != null ? ur.Role.Name : null).Where(name => name != null).ToList()))
-                .ForMember(dest => dest.BranchId, opt => opt.Ignore())
-                .ForMember(dest => dest.BranchName, opt => opt.Ignore())
                
                 .ReverseMap();
 

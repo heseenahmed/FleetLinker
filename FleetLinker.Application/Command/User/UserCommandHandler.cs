@@ -245,8 +245,8 @@ namespace FleetLinker.Application.Command.User
             user.RefreshTokenExpiryUTC = DateTime.UtcNow.AddDays(7);
             await _userManager.UpdateAsync(user);
 
-            Guid? companyId = null;
-            string? companyName = null;
+            //Guid? companyId = null;
+            //string? companyName = null;
 
             //if (user.CompanyId != null)
             //{
@@ -267,8 +267,6 @@ namespace FleetLinker.Application.Command.User
                 RefreshToken = user.RefreshToken,
                 AccessToken = accessToken,
                 Roles = roles.ToList(),
-                CompanyId = companyId,
-                CompanyName = companyName,
                 FirstTimeLogin=user.FirstTimeLogin,
             };
 

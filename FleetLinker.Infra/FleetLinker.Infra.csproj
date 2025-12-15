@@ -29,9 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Benzeny.Application\BenzenyMain.Application.csproj" />
-    <ProjectReference Include="..\Benzeny.Application\FleetLinker.Application.csproj" />
-    <ProjectReference Include="..\Benzeny.Domain\FleetLinker.Domain.csproj" />
+    <ProjectReference Include="..\FleetLinker.Application\FleetLinker.Application.csproj" />
+    <ProjectReference Include="..\FleetLinker.Application\FleetLinker.Application.csproj" />
+    <ProjectReference Include="..\FleetLinker.Domain\FleetLinker.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

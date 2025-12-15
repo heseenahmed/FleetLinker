@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Benzeny.Domain\FleetLinker.Domain.csproj" />
+    <ProjectReference Include="..\FleetLinker.Domain\FleetLinker.Domain.csproj" />
   </ItemGroup>
 
 </Project>

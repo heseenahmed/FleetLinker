@@ -141,7 +141,7 @@ namespace FleetLinker.API.Controllers
             var result = await _mediator.Send(
                 new UpdateUserRolesCommand(body.UserId, body.Roles , performedBy), ct);
 
-            return Ok(APIResponse<BenzenyMain.Domain.Entity.Dto.User.UpdateUserRolesResult>
+            return Ok(APIResponse<FleetLinker.Domain.Entity.Dto.User.UpdateUserRolesResult>
                 .Success(result, "User roles updated"));
         }
     }

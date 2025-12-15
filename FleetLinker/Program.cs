@@ -11,7 +11,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using QuestPDF.Infrastructure;
-using SendEmailsWithDotNet5.Settings;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
