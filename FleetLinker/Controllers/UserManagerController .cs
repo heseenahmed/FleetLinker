@@ -24,6 +24,7 @@ namespace FleetLinker.API.Controllers
         }
         #endregion
         #region User Registration
+        [AllowAnonymous]
         [HttpPost("RegisterNewUser")]
         [ProducesResponseType(typeof(APIResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status400BadRequest)]
@@ -35,6 +36,7 @@ namespace FleetLinker.API.Controllers
             if (model == null)
                 throw new ValidationException("Body is required.");
             var performedBy = User?.Identity?.Name ?? "System";
+            
             var success = await _mediator.Send(new RegisterCommand(model, performedBy), ct);
             return Ok(APIResponse<bool>.Success(success, "User registered successfully."));
         }

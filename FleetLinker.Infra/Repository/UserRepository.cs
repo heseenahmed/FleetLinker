@@ -151,7 +151,7 @@ namespace FleetLinker.Infra.Repository
                 Email = request.Email.Trim(),
                 NormalizedEmail = normalizedEmail,
                 PhoneNumber = request.Mobile.Trim(),
-                IsActive = false,
+                IsActive = true,
                 IsDeleted = false,
                 RefreshToken = refreshToken,
                 RefreshTokenExpiryUTC = DateTime.UtcNow.AddDays(7),
@@ -187,14 +187,23 @@ namespace FleetLinker.Infra.Repository
         {
             if (string.IsNullOrWhiteSpace(id))
                 throw new ArgumentException("User ID is required.", nameof(id));
-            var user = await _userManager.Users.FirstOrDefaultAsync(e => e.Id == id);
-            if (user == null)
-                throw new KeyNotFoundException("User not found.");
+
+            var user = await _userManager.FindByIdAsync(id)
+                ?? throw new KeyNotFoundException("User not found.");
+
             user.IsActive = !user.IsActive;
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                throw new ApplicationException(
+                    string.Join(", ", result.Errors.Select(e => e.Description)));
+
+            // ?? VERY IMPORTANT: invalidate all existing tokens
+            await _userManager.UpdateSecurityStampAsync(user);
+
             return user.IsActive;
         }
+
         public async Task<ApplicationUser?> GetByIdAsync(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -241,17 +250,28 @@ namespace FleetLinker.Infra.Repository
         {
             if (string.IsNullOrWhiteSpace(userId))
                 throw new ArgumentException("User ID is required.", nameof(userId));
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null || user.IsDeleted)
-                throw new KeyNotFoundException("User not found or already deleted.");
+
+            var user = await _userManager.FindByIdAsync(userId)
+                ?? throw new KeyNotFoundException("User not found.");
+
+            if (user.IsDeleted)
+                throw new KeyNotFoundException("User already deleted.");
+
             user.IsDeleted = true;
             user.IsActive = false;
+
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
-                throw new ApplicationException("Failed to soft delete user: " +
+                throw new ApplicationException(
+                    "Failed to soft delete user: " +
                     string.Join(", ", result.Errors.Select(e => e.Description)));
+
+            // ?? Invalidate all tokens immediately
+            await _userManager.UpdateSecurityStampAsync(user);
+
             return true;
         }
+
         public async Task<UpdateUserRolesResult> UpdateUserRolesAsync(string userId, IEnumerable<Guid> roleIds, CancellationToken ct = default)
         {
             var user = await _context.Users

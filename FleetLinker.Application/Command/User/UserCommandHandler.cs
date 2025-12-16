@@ -102,6 +102,7 @@ namespace FleetLinker.Application.Command.User
         #region User Registration
 
         public async Task<bool> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        
         {
             if (request.userDto == null)
                 throw new ArgumentException("Registration payload is required.");
@@ -110,16 +111,16 @@ namespace FleetLinker.Application.Command.User
             if (!success)
                 throw new ApplicationException("Registration failed internally.");
 
-            var templatePath = Path.Combine(_env.WebRootPath, "Template", "WelcomeEmail.html");
-            if (!File.Exists(templatePath))
-                throw new FileNotFoundException("Email template not found.", templatePath);
+            //var templatePath = Path.Combine(_env.WebRootPath, "Template", "WelcomeEmail.html");
+            //if (!File.Exists(templatePath))
+            //    throw new FileNotFoundException("Email template not found.", templatePath);
 
-            var mailBody = await File.ReadAllTextAsync(templatePath, cancellationToken);
-            mailBody = mailBody.Replace("[userName]", request.userDto.FullName)
-                               .Replace("[resetPasswordUrl]", "https://fleetlinker.com/reset-password");
+            //var mailBody = await File.ReadAllTextAsync(templatePath, cancellationToken);
+            //mailBody = mailBody.Replace("[userName]", request.userDto.FullName)
+            //                   .Replace("[resetPasswordUrl]", "https://fleetlinker.com/reset-password");
 
-            if (!string.IsNullOrWhiteSpace(request.userDto.Email))
-                await _mailRepository.SendEmailAsync(request.userDto.Email, "Welcome to FleetLinker", mailBody);
+            //if (!string.IsNullOrWhiteSpace(request.userDto.Email))
+            //    await _mailRepository.SendEmailAsync(request.userDto.Email, "Welcome to FleetLinker", mailBody);
 
             return true;
         }

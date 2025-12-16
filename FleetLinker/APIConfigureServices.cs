@@ -15,6 +15,11 @@ namespace FleetLinker.API
         public static IServiceCollection AddAPIServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<GlobalExceptionHandlingMiddleware>();
+            //services.AddControllers(options =>
+            //{
+            //    options.Filters.Add<ValidateUserStateFilter>();
+            //});
+
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
            {
                options.Password.RequireDigit = false;

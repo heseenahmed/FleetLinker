@@ -1,4 +1,4 @@
-using Amazon.Runtime.Internal.Util;
+﻿using Amazon.Runtime.Internal.Util;
 using FleetLinker.API.Controllers;
 using FleetLinker.Application.Command.User;
 using FleetLinker.Domain.Entity;
@@ -102,25 +102,34 @@ public class AuthController : ApiController
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordApi change, CancellationToken ct)
     {
         if (change == null ||
-            string.IsNullOrWhiteSpace(change.OldPassword) ||
-            string.IsNullOrWhiteSpace(change.NewPassword))
+        string.IsNullOrWhiteSpace(change.OldPassword) ||
+        string.IsNullOrWhiteSpace(change.NewPassword))
         {
             throw new ArgumentException("Old and new passwords are required.");
         }
         var user = await _userManager.Users.FirstOrDefaultAsync(e => e.Id == change.UserId, ct)
-                   ?? throw new KeyNotFoundException("User not found.");
-        var roles = await _userManager.GetRolesAsync(user);
-        var accessToken = TokenGenerator.GenerateAccessToken(user, roles, _jwtSettings);
-        ChangePasswordResponseDto response = new ChangePasswordResponseDto();
-        response.AccessToken = accessToken;
+            ?? throw new KeyNotFoundException("User not found.");
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, change.OldPassword);
         if (!isPasswordValid)
             throw new UnauthorizedAccessException("Invalid credentials.");
-        var result = await _userManager.ChangePasswordAsync(user, change.OldPassword, change.NewPassword);
+        var result = await _userManager.ChangePasswordAsync(
+            user,
+            change.OldPassword,
+            change.NewPassword);
         if (!result.Succeeded)
-            throw new InvalidOperationException(string.Join("; ", result.Errors.Select(e => e.Description)));
+            throw new InvalidOperationException(
+                string.Join("; ", result.Errors.Select(e => e.Description)));
+        // 🔐 VERY IMPORTANT
+        await _userManager.UpdateSecurityStampAsync(user);
         user.FirstTimeLogin = false;
         await _userManager.UpdateAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
+        // ✅ Generate token AFTER password change
+        var accessToken = TokenGenerator.GenerateAccessToken(
+            user,
+            roles,
+            _jwtSettings);
+        var response = new ChangePasswordResponseDto{AccessToken = accessToken};
         return Ok(APIResponse<object>.Success(response, "Password changed successfully."));
     }
     #endregion
@@ -162,6 +171,8 @@ public class AuthController : ApiController
                    ?? throw new KeyNotFoundException("User not found.");
         if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryUTC <= DateTime.UtcNow)
             throw new UnauthorizedAccessException("Invalid or expired refresh token.");
+        if(!user.IsActive || user.IsDeleted)
+            throw new KeyNotFoundException("User not found or inactive.");
         var newAccessToken = TokenGenerator.GenerateAccessToken(user, await _userManager.GetRolesAsync(user), _jwtSettings);
         user.RefreshToken = TokenGenerator.GenerateRefreshToken();
         user.RefreshTokenExpiryUTC = DateTime.UtcNow.AddDays(7);
