@@ -27,7 +27,7 @@ namespace FleetLinker.Infra.Repository
         public async Task<UserInfoAPI?> GetUserInfoAsync(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentException("User ID is required.", nameof(id));
+                throw new ArgumentException("User ID is required.");
             try
             {
                 return await _context.Users

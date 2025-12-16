@@ -1,19 +1,27 @@
+using FleetLinker.API.Resources;
 using FleetLinker.Domain.Entity.Dto;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Localization;
 using System.Data.SqlClient;
 using System.Net;
 using System.Text.Json;
+
 namespace FleetLinker.API.Middlewares;
+
 public class GlobalExceptionHandlingMiddleware : IMiddleware
 {
     private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger;
-    public GlobalExceptionHandlingMiddleware(ILogger<GlobalExceptionHandlingMiddleware> logger)
+    private readonly IStringLocalizer<Messages> _localizer;
+
+    public GlobalExceptionHandlingMiddleware(
+        ILogger<GlobalExceptionHandlingMiddleware> logger,
+        IStringLocalizer<Messages> localizer)
     {
         _logger = logger;
+        _localizer = localizer;
     }
+
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
@@ -23,46 +31,62 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
         catch (ValidationException ex)
         {
             _logger.LogWarning(ex, "Validation failed.");
-            await WriteErrorResponseAsync(context, HttpStatusCode.BadRequest, "Validation Error", ex.Errors.Select(e => $"{e.PropertyName}: {e.ErrorMessage}").ToList());
+            await WriteErrorResponseAsync(context, HttpStatusCode.BadRequest, 
+                _localizer[LocalizationMessages.ValidationError], 
+                ex.Errors.Select(e => $"{e.PropertyName}: {e.ErrorMessage}").ToList());
         }
         catch (KeyNotFoundException ex)
         {
             _logger.LogWarning(ex, "Key not found.");
-            await WriteErrorResponseAsync(context, HttpStatusCode.NotFound, "Not Found", new List<string> { ex.Message });
+            await WriteErrorResponseAsync(context, HttpStatusCode.NotFound, 
+                _localizer[LocalizationMessages.NotFound], 
+                new List<string> { ex.Message });
         }
         catch (ArgumentException ex)
         {
             _logger.LogWarning(ex, "Invalid argument.");
-            await WriteErrorResponseAsync(context, HttpStatusCode.BadRequest, "Invalid Argument", new List<string> { ex.Message });
+            await WriteErrorResponseAsync(context, HttpStatusCode.BadRequest, 
+                _localizer[LocalizationMessages.InvalidArgument], 
+                new List<string> { ex.Message });
         }
         catch (UnauthorizedAccessException ex)
         {
             _logger.LogWarning(ex, "Unauthorized.");
-            await WriteErrorResponseAsync(context, HttpStatusCode.Unauthorized, "Unauthorized", new List<string> { ex.Message });
+            await WriteErrorResponseAsync(context, HttpStatusCode.Unauthorized, 
+                _localizer[LocalizationMessages.Unauthorized], 
+                new List<string> { ex.Message });
         }
         catch (InvalidOperationException ex)
         {
             _logger.LogWarning(ex, "Invalid operation.");
-            await WriteErrorResponseAsync(context, HttpStatusCode.BadRequest, "Operation Failed", new List<string> { ex.Message });
+            await WriteErrorResponseAsync(context, HttpStatusCode.BadRequest, 
+                _localizer[LocalizationMessages.OperationFailed], 
+                new List<string> { ex.Message });
         }
         catch (FileNotFoundException ex)
         {
             _logger.LogWarning(ex, "Invalid operation.");
-            await WriteErrorResponseAsync(context, HttpStatusCode.BadRequest, "Operation Failed", new List<string> { ex.Message });
+            await WriteErrorResponseAsync(context, HttpStatusCode.BadRequest, 
+                _localizer[LocalizationMessages.OperationFailed], 
+                new List<string> { ex.Message });
         }
         catch (DbUpdateException ex)
         {
             _logger.LogError(ex, "Database update error.");
-            await WriteErrorResponseAsync(context, HttpStatusCode.Conflict, "Database Error", new List<string>
-            {
-                "A database error occurred.",
-                ex.InnerException?.Message ?? ex.Message
-            });
+            await WriteErrorResponseAsync(context, HttpStatusCode.Conflict, 
+                _localizer[LocalizationMessages.DatabaseError], 
+                new List<string>
+                {
+                    _localizer[LocalizationMessages.DatabaseErrorOccurred],
+                    ex.InnerException?.Message ?? ex.Message
+                });
         }
         catch (SqlException ex)
         {
             _logger.LogError(ex, "SQL error occurred.");
-            await WriteErrorResponseAsync(context, HttpStatusCode.InternalServerError, "SQL Error", new List<string> { ex.Message });
+            await WriteErrorResponseAsync(context, HttpStatusCode.InternalServerError, 
+                _localizer[LocalizationMessages.SqlError], 
+                new List<string> { ex.Message });
         }
         catch (ApplicationException appEx)
         {
@@ -75,20 +99,23 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             await WriteErrorResponseAsync(
                 context,
                 HttpStatusCode.Conflict,
-                "Application Error",
+                _localizer[LocalizationMessages.ApplicationError],
                 errors
             );
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception.");
-            await WriteErrorResponseAsync(context, HttpStatusCode.InternalServerError, "Server Error", new List<string>
-            {
-                "An unexpected error occurred.",
-                ex.Message
-            });
+            await WriteErrorResponseAsync(context, HttpStatusCode.InternalServerError, 
+                _localizer[LocalizationMessages.ServerError], 
+                new List<string>
+                {
+                    _localizer[LocalizationMessages.UnexpectedErrorOccurred],
+                    ex.Message
+                });
         }
     }
+
     private static async Task WriteErrorResponseAsync(HttpContext context, HttpStatusCode statusCode, string msg, List<string> errors)
     {
         if (context.Response.HasStarted)

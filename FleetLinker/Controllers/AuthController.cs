@@ -1,5 +1,5 @@
-﻿using Amazon.Runtime.Internal.Util;
-using FleetLinker.API.Controllers;
+﻿using FleetLinker.API.Controllers;
+using FleetLinker.API.Resources;
 using FleetLinker.Application.Command.User;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.Entity.Dto;
@@ -12,8 +12,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Localization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
@@ -24,17 +26,20 @@ public class AuthController : ApiController
     private readonly JwtSettings _jwtSettings;
     private readonly IDistributedCache _cache;
     #endregion
+
     #region Constructor
     public AuthController(
         ISender mediator,
         UserManager<ApplicationUser> userManager,
+        IStringLocalizer<Messages> localizer,
         JwtSettings jwtSettings,
-        IDistributedCache cache) : base(mediator, userManager)
+        IDistributedCache cache) : base(mediator, userManager, localizer)
     {
         _jwtSettings = jwtSettings;
         _cache = cache;
     }
     #endregion
+
     #region Login
     [HttpPost("login")]
     [AllowAnonymous]
@@ -48,6 +53,7 @@ public class AuthController : ApiController
         return StatusCode(result.ApiStatusCode, result);
     }
     #endregion
+
     #region Logout
     [HttpPost("logout")]
     [ProducesResponseType(typeof(APIResponse<object>), StatusCodes.Status200OK)]
@@ -57,7 +63,7 @@ public class AuthController : ApiController
     {
         bool logoutAll = true;
         var user = await _userManager.GetUserAsync(User)
-                   ?? throw new UnauthorizedAccessException("User not authenticated.");
+                   ?? throw new UnauthorizedAccessException(_localizer[LocalizationMessages.UserNotAuthenticated]);
         user.RefreshToken = null;
         user.RefreshTokenExpiryUTC = null;
         if (logoutAll)
@@ -87,10 +93,11 @@ public class AuthController : ApiController
         if (!update.Succeeded)
             throw new InvalidOperationException(string.Join("; ", update.Errors.Select(e => e.Description)));
         return Ok(APIResponse<object>.Success(null, logoutAll
-            ? "Logout successful (all devices)."
-            : "Logout successful."));
+            ? _localizer[LocalizationMessages.LogoutSuccessfulAllDevices]
+            : _localizer[LocalizationMessages.LogoutSuccessful]));
     }
     #endregion
+
     #region Change Password
     [HttpPost("change-password")]
     [AllowAnonymous]
@@ -105,13 +112,13 @@ public class AuthController : ApiController
         string.IsNullOrWhiteSpace(change.OldPassword) ||
         string.IsNullOrWhiteSpace(change.NewPassword))
         {
-            throw new ArgumentException("Old and new passwords are required.");
+            throw new ArgumentException(_localizer[LocalizationMessages.OldAndNewPasswordsRequired]);
         }
         var user = await _userManager.Users.FirstOrDefaultAsync(e => e.Id == change.UserId, ct)
-            ?? throw new KeyNotFoundException("User not found.");
+            ?? throw new KeyNotFoundException(_localizer[LocalizationMessages.UserNotFound]);
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, change.OldPassword);
         if (!isPasswordValid)
-            throw new UnauthorizedAccessException("Invalid credentials.");
+            throw new UnauthorizedAccessException(_localizer[LocalizationMessages.InvalidCredentials]);
         var result = await _userManager.ChangePasswordAsync(
             user,
             change.OldPassword,
@@ -130,9 +137,10 @@ public class AuthController : ApiController
             roles,
             _jwtSettings);
         var response = new ChangePasswordResponseDto{AccessToken = accessToken};
-        return Ok(APIResponse<object>.Success(response, "Password changed successfully."));
+        return Ok(APIResponse<object>.Success(response, _localizer[LocalizationMessages.PasswordChangedSuccessfully]));
     }
     #endregion
+
     #region Add New Password
     [HttpPost("AddNewPassword")]
     [AllowAnonymous]
@@ -144,16 +152,17 @@ public class AuthController : ApiController
     public async Task<IActionResult> AddNewPassword([FromBody] ForgetPasswordApi forget, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(forget?.Mobile) || string.IsNullOrWhiteSpace(forget.Password))
-            throw new ArgumentException("Mobile and password are required.");
+            throw new ArgumentException(_localizer[LocalizationMessages.MobileAndPasswordRequired]);
         var user = await _userManager.Users
             .FirstOrDefaultAsync(e => e.PhoneNumber == forget.Mobile && e.IsActive, ct)
-            ?? throw new ApplicationException("User not found.");
+            ?? throw new ApplicationException(_localizer[LocalizationMessages.UserNotFound]);
         user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, forget.Password);
         await _userManager.UpdateAsync(user);
         await _userManager.UpdateSecurityStampAsync(user);
-        return Ok(APIResponse<object>.Success(null, "Password changed successfully."));
+        return Ok(APIResponse<object>.Success(null, _localizer[LocalizationMessages.PasswordChangedSuccessfully]));
     }
     #endregion
+
     #region Refresh Token
     [HttpPost("refresh")]
     [AllowAnonymous]
@@ -164,15 +173,15 @@ public class AuthController : ApiController
     public async Task<IActionResult> RefreshToken([FromBody] TokenRequest request, CancellationToken ct)
     {
         var principal = await _mediator.Send(new GetPrincipalFromExpiredTokenCommand(request.AccessToken), ct)
-                        ?? throw new UnauthorizedAccessException("Invalid access token.");
+                        ?? throw new UnauthorizedAccessException(_localizer[LocalizationMessages.InvalidAccessToken]);
         var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                     ?? throw new UnauthorizedAccessException("Invalid access token.");
+                     ?? throw new UnauthorizedAccessException(_localizer[LocalizationMessages.InvalidAccessToken]);
         var user = await _userManager.FindByIdAsync(userId)
-                   ?? throw new KeyNotFoundException("User not found.");
+                   ?? throw new KeyNotFoundException(_localizer[LocalizationMessages.UserNotFound]);
         if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryUTC <= DateTime.UtcNow)
-            throw new UnauthorizedAccessException("Invalid or expired refresh token.");
+            throw new UnauthorizedAccessException(_localizer[LocalizationMessages.InvalidOrExpiredRefreshToken]);
         if(!user.IsActive || user.IsDeleted)
-            throw new KeyNotFoundException("User not found or inactive.");
+            throw new KeyNotFoundException(_localizer[LocalizationMessages.UserNotFoundOrInactive]);
         var newAccessToken = TokenGenerator.GenerateAccessToken(user, await _userManager.GetRolesAsync(user), _jwtSettings);
         user.RefreshToken = TokenGenerator.GenerateRefreshToken();
         user.RefreshTokenExpiryUTC = DateTime.UtcNow.AddDays(7);
@@ -182,7 +191,7 @@ public class AuthController : ApiController
             AccessToken = newAccessToken,
             RefreshToken = user.RefreshToken,
             RefreshTokenExpiry = user.RefreshTokenExpiryUTC
-        }, "Token refreshed successfully."));
+        }, _localizer[LocalizationMessages.TokenRefreshedSuccessfully]));
     }
     #endregion
 }

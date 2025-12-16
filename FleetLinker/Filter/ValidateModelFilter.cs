@@ -1,5 +1,8 @@
+using FleetLinker.API.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Localization;
+
 namespace FleetLinker.API.Filter
 {
     public class ValidateModelFilter : ActionFilterAttribute
@@ -8,6 +11,9 @@ namespace FleetLinker.API.Filter
         {
             if (!context.ModelState.IsValid)
             {
+                var localizer = context.HttpContext.RequestServices
+                    .GetRequiredService<IStringLocalizer<Messages>>();
+                
                 var errors = context.ModelState
                     .Where(x => x.Value.Errors.Count > 0)
                     .ToDictionary(
@@ -16,7 +22,7 @@ namespace FleetLinker.API.Filter
                     );
                 context.Result = new BadRequestObjectResult(new
                 {
-                    Message = "Model validation failed",
+                    Message = localizer[LocalizationMessages.ModelValidationFailed].Value,
                     Errors = errors
                 });
             }

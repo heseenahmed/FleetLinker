@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="0" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  
+  <!-- General -->
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  
+  <!-- Validation -->
+  <data name="ValidationError" xml:space="preserve">
+    <value>Validation Error</value>
+  </data>
+  <data name="ModelValidationFailed" xml:space="preserve">
+    <value>Model validation failed</value>
+  </data>
+  <data name="InvalidId" xml:space="preserve">
+    <value>Invalid ID.</value>
+  </data>
+  <data name="BodyRequired" xml:space="preserve">
+    <value>Body is required.</value>
+  </data>
+  <data name="InvalidArgument" xml:space="preserve">
+    <value>Invalid Argument</value>
+  </data>
+  
+  <!-- Authentication -->
+  <data name="Unauthorized" xml:space="preserve">
+    <value>Unauthorized</value>
+  </data>
+  <data name="UserNotAuthenticated" xml:space="preserve">
+    <value>User not authenticated.</value>
+  </data>
+  <data name="InvalidCredentials" xml:space="preserve">
+    <value>Invalid credentials.</value>
+  </data>
+  <data name="InvalidAccessToken" xml:space="preserve">
+    <value>Invalid access token.</value>
+  </data>
+  <data name="InvalidOrExpiredToken" xml:space="preserve">
+    <value>Invalid or expired token.</value>
+  </data>
+  <data name="InvalidOrExpiredRefreshToken" xml:space="preserve">
+    <value>Invalid or expired refresh token.</value>
+  </data>
+  
+  <!-- Users -->
+  <data name="UserNotFound" xml:space="preserve">
+    <value>User not found.</value>
+  </data>
+  <data name="UserNotFoundOrInactive" xml:space="preserve">
+    <value>User not found or inactive.</value>
+  </data>
+  <data name="UserNotFoundOrDeleted" xml:space="preserve">
+    <value>User not found or already deleted.</value>
+  </data>
+  <data name="TargetUserNotFound" xml:space="preserve">
+    <value>Target user not found.</value>
+  </data>
+  <data name="PerformerNotFound" xml:space="preserve">
+    <value>Performer not found in system.</value>
+  </data>
+  <data name="UserRegisteredSuccessfully" xml:space="preserve">
+    <value>User registered successfully.</value>
+  </data>
+  <data name="UserUpdatedSuccessfully" xml:space="preserve">
+    <value>User updated successfully.</value>
+  </data>
+  <data name="UserDeletedSuccessfully" xml:space="preserve">
+    <value>User deleted successfully.</value>
+  </data>
+  <data name="UserActivatedSuccessfully" xml:space="preserve">
+    <value>User activated successfully.</value>
+  </data>
+  <data name="UserDeactivated" xml:space="preserve">
+    <value>User deactivated.</value>
+  </data>
+  <data name="UserInfoRetrieved" xml:space="preserve">
+    <value>User information retrieved successfully.</value>
+  </data>
+  <data name="UsersInfoRetrieved" xml:space="preserve">
+    <value>Users information retrieved successfully.</value>
+  </data>
+  <data name="UserRolesUpdated" xml:space="preserve">
+    <value>User roles updated.</value>
+  </data>
+  <data name="InvalidUserId" xml:space="preserve">
+    <value>Invalid user ID.</value>
+  </data>
+  <data name="UserIdRequired" xml:space="preserve">
+    <value>User ID is required.</value>
+  </data>
+  <data name="UserDataMissingOrInconsistent" xml:space="preserve">
+    <value>User data is missing or inconsistent.</value>
+  </data>
+  <data name="UserUpdateDataRequired" xml:space="preserve">
+    <value>User update data is required.</value>
+  </data>
+  <data name="FailedToUpdateUser" xml:space="preserve">
+    <value>Failed to update user.</value>
+  </data>
+  
+  <!-- Registration -->
+  <data name="RegistrationPayloadRequired" xml:space="preserve">
+    <value>Registration payload is required.</value>
+  </data>
+  <data name="RegistrationFailedInternally" xml:space="preserve">
+    <value>Registration failed internally.</value>
+  </data>
+  
+  <!-- Login -->
+  <data name="LoginPayloadRequired" xml:space="preserve">
+    <value>Login payload is required.</value>
+  </data>
+  <data name="UsernameAndPasswordRequired" xml:space="preserve">
+    <value>Username and password are required.</value>
+  </data>
+  <data name="InvalidPassword" xml:space="preserve">
+    <value>Invalid password. Please try again.</value>
+  </data>
+  <data name="LoginSuccessful" xml:space="preserve">
+    <value>Login successful.</value>
+  </data>
+  <data name="LogoutSuccessful" xml:space="preserve">
+    <value>Logout successful.</value>
+  </data>
+  <data name="LogoutSuccessfulAllDevices" xml:space="preserve">
+    <value>Logout successful (all devices).</value>
+  </data>
+  
+  <!-- Password -->
+  <data name="OldAndNewPasswordsRequired" xml:space="preserve">
+    <value>Old and new passwords are required.</value>
+  </data>
+  <data name="MobileAndPasswordRequired" xml:space="preserve">
+    <value>Mobile and password are required.</value>
+  </data>
+  <data name="PasswordChangedSuccessfully" xml:space="preserve">
+    <value>Password changed successfully.</value>
+  </data>
+  <data name="TokenRequired" xml:space="preserve">
+    <value>Token is required.</value>
+  </data>
+  <data name="TokenRefreshedSuccessfully" xml:space="preserve">
+    <value>Token refreshed successfully.</value>
+  </data>
+  
+  <!-- Roles -->
+  <data name="RolesRetrievedSuccessfully" xml:space="preserve">
+    <value>Roles retrieved successfully.</value>
+  </data>
+  <data name="RoleNameRequired" xml:space="preserve">
+    <value>Role name is required.</value>
+  </data>
+  <data name="RoleNameCannotBeNull" xml:space="preserve">
+    <value>Role Name cannot be null.</value>
+  </data>
+  <data name="RoleNotFound" xml:space="preserve">
+    <value>Role {0} not found.</value>
+  </data>
+  <data name="RoleAddedSuccessfully" xml:space="preserve">
+    <value>Role Added Successfully!</value>
+  </data>
+  <data name="RoleDeletedSuccessfully" xml:space="preserve">
+    <value>Role Deleted Successfully!</value>
+  </data>
+  <data name="ErrorAddingRole" xml:space="preserve">
+    <value>Error when adding new role.</value>
+  </data>
+  <data name="RoleIdsCannotBeNull" xml:space="preserve">
+    <value>RoleIds cannot be null. Send empty list to remove all roles.</value>
+  </data>
+  
+  <!-- Errors -->
+  <data name="NotFound" xml:space="preserve">
+    <value>Not Found</value>
+  </data>
+  <data name="OperationFailed" xml:space="preserve">
+    <value>Operation Failed</value>
+  </data>
+  <data name="DatabaseError" xml:space="preserve">
+    <value>Database Error</value>
+  </data>
+  <data name="DatabaseErrorOccurred" xml:space="preserve">
+    <value>A database error occurred.</value>
+  </data>
+  <data name="SqlError" xml:space="preserve">
+    <value>SQL Error</value>
+  </data>
+  <data name="ApplicationError" xml:space="preserve">
+    <value>Application Error</value>
+  </data>
+  <data name="ServerError" xml:space="preserve">
+    <value>Server Error</value>
+  </data>
+  <data name="UnexpectedErrorOccurred" xml:space="preserve">
+    <value>An unexpected error occurred.</value>
+  </data>
+</root>
