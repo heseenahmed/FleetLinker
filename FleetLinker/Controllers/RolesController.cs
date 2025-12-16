@@ -1,5 +1,6 @@
 using FleetLinker.API.Resources;
 using FleetLinker.Application.Command.Companies;
+using FleetLinker.Application.Common.Localization;
 using FleetLinker.Application.Queries.Roles;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.Entity.Dto;
@@ -23,7 +24,7 @@ namespace FleetLinker.API.Controllers
         public RolesController(
             ISender mediator, 
             UserManager<ApplicationUser> userManager,
-            IStringLocalizer<Messages> localizer)
+            IAppLocalizer localizer)
             : base(mediator, userManager, localizer) { }
         #endregion
 

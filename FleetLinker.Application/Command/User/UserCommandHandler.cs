@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using FleetLinker.Application.Common.Localization;
+using FleetLinker.API.Resources;
 
 namespace FleetLinker.Application.Command.User
 {
@@ -32,7 +34,7 @@ namespace FleetLinker.Application.Command.User
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtSettings _jwtSettings;
         private readonly IMediator _mediator;
-
+        private readonly IAppLocalizer _localizer;
         #endregion
 
         #region Constructor
@@ -44,7 +46,8 @@ namespace FleetLinker.Application.Command.User
             IWebHostEnvironment env,
             UserManager<ApplicationUser> userManager,
             JwtSettings jwtSettings,
-            IMediator mediator)
+            IMediator mediator
+            , IAppLocalizer localizer)
         {
             _tokenRepository = tokenRepository;
             _userRepository = userRepository;
@@ -53,6 +56,7 @@ namespace FleetLinker.Application.Command.User
             _userManager = userManager;
             _jwtSettings = jwtSettings;
             _mediator = mediator;
+            _localizer = localizer;
         }
 
         #endregion
@@ -62,21 +66,21 @@ namespace FleetLinker.Application.Command.User
         public async Task<bool> Handle(UpdateUserAsyncCommand request, CancellationToken cancellationToken)
         {
             if (request.UpdateUserDto == null)
-                throw new ArgumentException("User update data is required.");
+                throw new ArgumentException(_localizer[LocalizationMessages.UserUpdateDataRequired]);
 
             var performer = await _userManager.Users
                 .FirstOrDefaultAsync(u => u.Email == request.PerformedBy || u.UserName == request.PerformedBy, cancellationToken);
 
             if (performer == null)
-                throw new UnauthorizedAccessException("Performer not found in system.");
+                throw new UnauthorizedAccessException(_localizer[LocalizationMessages.PerformerNotFound]);
 
             var targetUser = await _userManager.FindByIdAsync(request.UpdateUserDto.Id);
             if (targetUser == null)
-                throw new KeyNotFoundException("Target user not found.");
+                throw new KeyNotFoundException(_localizer[LocalizationMessages.TargetUserNotFound]);
 
             var updated = await _userRepository.UpdateUserAsync(request.UpdateUserDto);
             if (!updated)
-                throw new InvalidOperationException("Failed to update user.");
+                throw new InvalidOperationException(_localizer[LocalizationMessages.FailedToUpdateUser]);
 
             return true;
         }
@@ -88,11 +92,11 @@ namespace FleetLinker.Application.Command.User
         public async Task<ClaimsPrincipal> Handle(GetPrincipalFromExpiredTokenCommand request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(request.Token))
-                throw new ArgumentException("Token is required.");
+                throw new ArgumentException(_localizer[LocalizationMessages.TokenRequired]);
 
             var principal = await _tokenRepository.GetPrincipalFromExpiredToken(request.Token);
             if (principal == null)
-                throw new UnauthorizedAccessException("Invalid or expired token.");
+                throw new UnauthorizedAccessException(_localizer[LocalizationMessages.InvalidOrExpiredToken]);
 
             return principal;
         }
@@ -105,11 +109,11 @@ namespace FleetLinker.Application.Command.User
         
         {
             if (request.userDto == null)
-                throw new ArgumentException("Registration payload is required.");
+                throw new ArgumentException(_localizer[LocalizationMessages.RegistrationPayloadRequired]);
 
             var success = await _userRepository.RegisterAsync(request.userDto);
             if (!success)
-                throw new ApplicationException("Registration failed internally.");
+                throw new ApplicationException(_localizer[LocalizationMessages.RegistrationFailedInternally]);
 
             //var templatePath = Path.Combine(_env.WebRootPath, "Template", "WelcomeEmail.html");
             //if (!File.Exists(templatePath))
@@ -132,11 +136,11 @@ namespace FleetLinker.Application.Command.User
         public async Task<bool> Handle(SwitchUserActiveCommand request, CancellationToken cancellationToken)
         {
             if (request.Id == Guid.Empty)
-                throw new ArgumentException("Invalid user ID.");
+                throw new ArgumentException(_localizer[LocalizationMessages.UserIdRequired]);
 
             var targetUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == request.Id.ToString(), cancellationToken);
             if (targetUser == null)
-                throw new KeyNotFoundException("User not found.");
+                throw new KeyNotFoundException(_localizer[LocalizationMessages.UserNotFound]);
 
             var newStatus = await _userRepository.SwitchUserActiveAsync(request.Id.ToString());
             return newStatus;
@@ -149,11 +153,11 @@ namespace FleetLinker.Application.Command.User
         public async Task<APIResponse<LoginResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             if (request.LoginRequest == null)
-                throw new ArgumentException("Login payload is required.");
+                throw new ArgumentException(_localizer[LocalizationMessages.LoginPayloadRequired]);
 
             if (string.IsNullOrWhiteSpace(request.LoginRequest.Username) ||
                 string.IsNullOrWhiteSpace(request.LoginRequest.Password))
-                throw new ArgumentException("Username and password are required.");
+                throw new ArgumentException(_localizer[LocalizationMessages.UsernameAndPasswordRequired]);
 
             var username = request.LoginRequest.Username;
             var user = await _userManager.FindByNameAsync(username)
@@ -161,11 +165,11 @@ namespace FleetLinker.Application.Command.User
                        ?? await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == username, cancellationToken);
 
             if (user == null || user.IsDeleted || !user.IsActive)
-                throw new ArgumentException("User Not Found.");
+                throw new ArgumentException(_localizer[LocalizationMessages.UserNotFound]);
 
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.LoginRequest.Password);
             if (!isPasswordValid)
-                throw new ArgumentException("Invalid password. Please try again.");
+                throw new ArgumentException(_localizer[LocalizationMessages.InvalidPassword]);
 
             var roles = await _userManager.GetRolesAsync(user);
             var accessToken = TokenGenerator.GenerateAccessToken(user, roles, _jwtSettings);
@@ -185,7 +189,7 @@ namespace FleetLinker.Application.Command.User
                 FirstTimeLogin = user.FirstTimeLogin,
             };
 
-            return APIResponse<LoginResponseDto>.Success(response, "Login successful.");
+            return APIResponse<LoginResponseDto>.Success(response, _localizer[LocalizationMessages.LoginSuccessful]);
         }
 
         #endregion
@@ -195,15 +199,15 @@ namespace FleetLinker.Application.Command.User
         public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(request.UserId))
-                throw new ArgumentException("User ID is required.");
+                throw new ArgumentException(_localizer[LocalizationMessages.UserIdRequired]);
 
             var targetUser = await _userManager.FindByIdAsync(request.UserId);
             if (targetUser == null)
-                throw new KeyNotFoundException("User not found or already deleted.");
+                throw new KeyNotFoundException(_localizer[LocalizationMessages.UserNotFound]);
 
             var deleted = await _userRepository.SoftDeleteUserAsync(request.UserId);
             if (!deleted)
-                throw new KeyNotFoundException("User not found or already deleted.");
+                throw new KeyNotFoundException(_localizer[LocalizationMessages.UserNotFound]);
 
             return true;
         }
@@ -215,14 +219,14 @@ namespace FleetLinker.Application.Command.User
         public async Task<UpdateUserRolesResult> Handle(UpdateUserRolesCommand request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(request.UserId))
-                throw new ArgumentException("UserId is required.");
+                throw new ArgumentException(_localizer[LocalizationMessages.UserIdRequired]);
 
             if (request.RoleIds is null)
-                throw new ArgumentException("RoleIds cannot be null. Send empty list to remove all roles.");
+                throw new ArgumentException(_localizer[LocalizationMessages.RoleIdsCannotBeNull]);
 
             var targetUser = await _userManager.FindByIdAsync(request.UserId);
             if (targetUser == null)
-                throw new KeyNotFoundException("Target user not found.");
+                throw new KeyNotFoundException(_localizer[LocalizationMessages.TargetUserNotFound]);
 
             var result = await _userRepository.UpdateUserRolesAsync(request.UserId, request.RoleIds, cancellationToken);
             return result;

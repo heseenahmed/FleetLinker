@@ -1,4 +1,6 @@
+using FleetLinker.API.Localization;
 using FleetLinker.API.Middlewares;
+using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Infra.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,7 +21,7 @@ namespace FleetLinker.API
             //{
             //    options.Filters.Add<ValidateUserStateFilter>();
             //});
-
+            services.AddScoped<IAppLocalizer, AppLocalizer>();
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
            {
                options.Password.RequireDigit = false;

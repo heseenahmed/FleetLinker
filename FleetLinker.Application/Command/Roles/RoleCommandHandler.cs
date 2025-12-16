@@ -1,9 +1,12 @@
 using AutoMapper;
+using FleetLinker.API.Resources;
 using FleetLinker.Application.Command.Companies;
+using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.Entity.Dto.Identity;
 using FleetLinker.Domain.IRepository;
 using MediatR;
+using Microsoft.Extensions.Localization;
 namespace FleetLinker.Application.Command.Roles
 {
     public class UserCommandHandler :
@@ -13,10 +16,12 @@ namespace FleetLinker.Application.Command.Roles
     {
         private readonly IMapper _mapper;
         private readonly IRoleRepository _roleRepository;
-        public UserCommandHandler(IMapper mapper, IRoleRepository roleRepository)
+        private readonly IAppLocalizer _localizer;
+        public UserCommandHandler(IMapper mapper, IRoleRepository roleRepository , IAppLocalizer localizer)
         {
             _mapper = mapper;
             _roleRepository = roleRepository;
+            _localizer = localizer;
         }
         public async Task<bool> Handle(AddRoleCommand request, CancellationToken cancellationToken)
         {
@@ -24,32 +29,32 @@ namespace FleetLinker.Application.Command.Roles
                 throw new ArgumentException("Role payload is required.");
             var newRole = _mapper.Map<ApplicationRole>(request.Role);
             if (string.IsNullOrWhiteSpace(newRole?.Name))
-                throw new ArgumentException("Role name is required.");
+                throw new ArgumentException(_localizer[LocalizationMessages.RoleNameRequired]);
             newRole.Id = Guid.NewGuid().ToString();
             newRole.NormalizedName = newRole.Name.ToUpperInvariant();
             var created = await _roleRepository.AddRoleAsync(newRole);
             if (!created)
-                throw new InvalidOperationException("Failed to add role (it may already exist).");
+                throw new InvalidOperationException(_localizer[LocalizationMessages.ErrorAddingRole]);
             return true;
         }
         public async Task<bool> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(request.RoleName))
-                throw new ArgumentException("Role name is required.");
+                throw new ArgumentException(_localizer[LocalizationMessages.RoleNameRequired]);
             var deleted = await _roleRepository.DeleteRoleByNameAsync(request.RoleName);
             if (!deleted)
-                throw new KeyNotFoundException($"Role '{request.RoleName}' not found.");
+                throw new KeyNotFoundException(_localizer[LocalizationMessages.RoleNotFound]);
             return true;
         }
         public async Task<bool> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
         {
             if (request?.Role == null)
-                throw new ArgumentException("Role payload is required.");
+                throw new ArgumentException(_localizer[LocalizationMessages.RoleNameRequired]);
             if (string.IsNullOrWhiteSpace(request.Role.Name))
-                throw new ArgumentException("Role name is required.");
+                throw new ArgumentException(_localizer[LocalizationMessages.RoleNameRequired]);
             var updated = await _roleRepository.UpdateRoleAsync(request.Role);
             if (!updated)
-                throw new InvalidOperationException("Failed to update role (role may not exist).");
+                throw new InvalidOperationException(_localizer[LocalizationMessages.ErrorUpdateRole]);
             return true;
         }
     }

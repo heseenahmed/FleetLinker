@@ -7,6 +7,8 @@ using FleetLinker.Domain.Entity.Dto.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using FleetLinker.Application.Common.Localization;
+using FleetLinker.API.Resources;
 namespace FleetLinker.Infra.Repository
 {
     public class UserRepository : IUserRepository
@@ -14,20 +16,23 @@ namespace FleetLinker.Infra.Repository
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IAppLocalizer _Localizer;
         public UserRepository(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager
+            RoleManager<ApplicationRole> roleManager,
+            IAppLocalizer localizer
            )
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _Localizer = localizer;
         }
         public async Task<UserInfoAPI?> GetUserInfoAsync(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentException("User ID is required.");
+                throw new ArgumentException(_Localizer[LocalizationMessages.UserIdRequired]);
             try
             {
                 return await _context.Users
@@ -42,21 +47,21 @@ namespace FleetLinker.Infra.Repository
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Error while retrieving user information.", ex);
+                throw new ApplicationException(_Localizer[LocalizationMessages.ErrorRetrievingUserInfo], ex);
             }
         }
         public async Task<bool> UpdateUserAsync(UserForUpdateDto dto)
         {
             if (dto == null)
-                throw new ArgumentNullException(nameof(dto), "User update payload is required.");
+                throw new ArgumentNullException( _Localizer[LocalizationMessages.UserUpdateDataRequired]);
             if (string.IsNullOrWhiteSpace(dto.Id))
-                throw new ArgumentException("User ID is required.", nameof(dto.Id));
+                throw new ArgumentException(_Localizer[LocalizationMessages.UserIdRequired]);
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 var user = await _userManager.FindByIdAsync(dto.Id);
                 if (user == null)
-                    throw new KeyNotFoundException("User not found.");
+                    throw new KeyNotFoundException(_Localizer[LocalizationMessages.UserNotFound]);
                 if (!string.IsNullOrWhiteSpace(dto.Email))
                 {
                     var emailExists = await _userManager.Users
@@ -64,7 +69,7 @@ namespace FleetLinker.Infra.Repository
                                        u.Email == dto.Email &&
                                        !u.IsDeleted);
                     if (emailExists)
-                        throw new ArgumentException("Email already in use by another user.");
+                        throw new ArgumentException(_Localizer[LocalizationMessages.EmailAlreadyInUse]);
                 }
                 if (!string.IsNullOrWhiteSpace(dto.Mobile))
                 {
@@ -73,7 +78,7 @@ namespace FleetLinker.Infra.Repository
                                        u.PhoneNumber == dto.Mobile &&
                                        !u.IsDeleted);
                     if (phoneExists)
-                        throw new ArgumentException("Mobile number already in use by another user.");
+                        throw new ArgumentException(_Localizer[LocalizationMessages.MobileAlreadyInUse]);
                 }
                 user.FullName = dto.FullName ?? user.FullName;
                 user.Email = dto.Email ?? user.Email;
@@ -83,23 +88,20 @@ namespace FleetLinker.Infra.Repository
                 user.IsActive = true;
                 var updateResult = await _userManager.UpdateAsync(user);
                 if (!updateResult.Succeeded)
-                    throw new ApplicationException("Failed to update user: " +
-                        string.Join(", ", updateResult.Errors.Select(e => e.Description)));
+                    throw new ApplicationException(_Localizer[LocalizationMessages.FailedToUpdateUser]);
                 if (!string.IsNullOrWhiteSpace(dto.Password))
                 {
                     var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                     var passwordResult = await _userManager.ResetPasswordAsync(user, resetToken, dto.Password);
                     if (!passwordResult.Succeeded)
-                        throw new ApplicationException("Failed to reset password: " +
-                            string.Join(", ", passwordResult.Errors.Select(e => e.Description)));
+                        throw new ApplicationException(_Localizer[LocalizationMessages.FailedToResetPassword]);
                 }
                 var oldRoles = await _userManager.GetRolesAsync(user);
                 if (oldRoles.Any())
                 {
                     var removeResult = await _userManager.RemoveFromRolesAsync(user, oldRoles);
                     if (!removeResult.Succeeded)
-                        throw new ApplicationException("Failed to remove existing roles: " +
-                            string.Join(", ", removeResult.Errors.Select(e => e.Description)));
+                        throw new ApplicationException(_Localizer[LocalizationMessages.ErrorDeleteRole]);
                 }
                 if (dto.RoleIds?.Any() == true)
                 {
@@ -108,11 +110,10 @@ namespace FleetLinker.Infra.Repository
                         .Select(r => r.Name!)
                         .ToListAsync();
                     if (!roleNames.Any())
-                        throw new ArgumentException("Invalid roles provided.");
+                        throw new ArgumentException(_Localizer[LocalizationMessages.RoleNotFound]);
                     var addResult = await _userManager.AddToRolesAsync(user, roleNames);
                     if (!addResult.Succeeded)
-                        throw new ApplicationException("Failed to assign roles: " +
-                            string.Join(", ", addResult.Errors.Select(e => e.Description)));
+                        throw new ApplicationException(_Localizer[LocalizationMessages.FailedToAssignRoles]);
                 }
                 await transaction.CommitAsync();
                 return true;
@@ -126,21 +127,22 @@ namespace FleetLinker.Infra.Repository
         public async Task<bool> RegisterAsync(UserForRegisterDto request)
         {
             if (request == null)
-                throw new ArgumentNullException(nameof(request), "Registration payload is required.");
+                throw new ArgumentNullException(_Localizer[LocalizationMessages.RegistrationPayloadRequired]);
             if (string.IsNullOrWhiteSpace(request.FullName))
-                throw new ArgumentException("Full name is required.");
+                throw new ArgumentException(_Localizer[LocalizationMessages.FullNameRequired]);
             if (string.IsNullOrWhiteSpace(request.Email))
-                throw new ArgumentException("Email is required.");
+                throw new ArgumentException(_Localizer[LocalizationMessages.EmailRequired]);
             if (string.IsNullOrWhiteSpace(request.Mobile))
-                throw new ArgumentException("Mobile is required.");
+                throw new ArgumentException(_Localizer[LocalizationMessages.MobileRequired]);
             var normalizedEmail = request.Email.Trim().ToUpperInvariant();
             var existingUsers = await _context.Users
                 .Where(u => u.NormalizedEmail == normalizedEmail && !u.IsDeleted)
                 .ToListAsync();
             if (existingUsers.Count > 1)
-                throw new InvalidOperationException("Multiple users found with the same email.");
+                throw new InvalidOperationException(_Localizer[LocalizationMessages.DuplicateEmail]);
+            
             if (existingUsers.Count == 1)
-                throw new ArgumentException("Email is already in use.");
+                throw new ArgumentException(_Localizer[LocalizationMessages.EmailAlreadyInUse]);
             var refreshToken = TokenGenerator.GenerateRefreshToken();
             var user = new ApplicationUser
             {
@@ -158,19 +160,17 @@ namespace FleetLinker.Infra.Repository
             };
             var createResult = await _userManager.CreateAsync(user);
             if (!createResult.Succeeded)
-                throw new ApplicationException("User creation failed: " +
-                    string.Join(", ", createResult.Errors.Select(e => e.Description)));
+                throw new ApplicationException(_Localizer[LocalizationMessages.FailedToCreateUser]);
             if (request.RoleIds?.Any() == true)
             {
                 foreach (var roleId in request.RoleIds)
                 {
                     var role = await _roleManager.FindByIdAsync(roleId.ToString());
                     if (role == null)
-                        throw new KeyNotFoundException("Role not found.");
+                        throw new KeyNotFoundException(_Localizer[LocalizationMessages.RoleNotFound]);
                     var addRoleResult = await _userManager.AddToRoleAsync(user, role.Name!);
                     if (!addRoleResult.Succeeded)
-                        throw new ApplicationException("Failed to assign role: " +
-                            string.Join(", ", addRoleResult.Errors.Select(e => e.Description)));
+                        throw new ApplicationException(_Localizer[LocalizationMessages.FailedToAssignRoles]);
                 }
             }
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -179,24 +179,22 @@ namespace FleetLinker.Infra.Repository
                 : request.Mobile;
             var passwordResult = await _userManager.ResetPasswordAsync(user, resetToken, password);
             if (!passwordResult.Succeeded)
-                throw new ApplicationException("Password setup failed: " +
-                    string.Join(", ", passwordResult.Errors.Select(e => e.Description)));
+                throw new ApplicationException(_Localizer[LocalizationMessages.FailedToResetPassword]);
             return true;
         }
         public async Task<bool> SwitchUserActiveAsync(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentException("User ID is required.", nameof(id));
+                throw new ArgumentException(_Localizer[LocalizationMessages.UserIdRequired]);
 
             var user = await _userManager.FindByIdAsync(id)
-                ?? throw new KeyNotFoundException("User not found.");
+                ?? throw new KeyNotFoundException(_Localizer[LocalizationMessages.UserNotFound]);
 
             user.IsActive = !user.IsActive;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
-                throw new ApplicationException(
-                    string.Join(", ", result.Errors.Select(e => e.Description)));
+                throw new ApplicationException(_Localizer[LocalizationMessages.FailedToUpdateUser]);
 
             // ?? VERY IMPORTANT: invalidate all existing tokens
             await _userManager.UpdateSecurityStampAsync(user);
@@ -207,7 +205,7 @@ namespace FleetLinker.Infra.Repository
         public async Task<ApplicationUser?> GetByIdAsync(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentException("User ID is required.", nameof(id));
+                throw new ArgumentException(_Localizer[LocalizationMessages.UserIdRequired]);
             try
             {
                 return await _context.Users
@@ -216,7 +214,7 @@ namespace FleetLinker.Infra.Repository
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Error retrieving user by ID.", ex);
+                throw new ApplicationException(_Localizer[LocalizationMessages.ErrorRetrievingUserInfo]);
             }
         }
         public async Task<List<ApplicationUser>> GetAllAsync()
@@ -230,41 +228,27 @@ namespace FleetLinker.Infra.Repository
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Error retrieving all users.", ex);
+                throw new ApplicationException(_Localizer[LocalizationMessages.ErrorRetrievingUserInfo]);
             }
         }
-        public async Task<int> CountAdminsAsync()
-        {
-            try
-            {
-                return await _context.Users
-                    .Include(x => x.UserRoles)
-                    .CountAsync(u => u.UserRoles.Any(ur => ur.Role.Name == "Admin"));
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("An error occurred while counting Admins.", ex);
-            }
-        }
+       
         public async Task<bool> SoftDeleteUserAsync(string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
-                throw new ArgumentException("User ID is required.", nameof(userId));
+                throw new ArgumentException(_Localizer[LocalizationMessages.UserIdRequired]);
 
             var user = await _userManager.FindByIdAsync(userId)
-                ?? throw new KeyNotFoundException("User not found.");
+                ?? throw new KeyNotFoundException(_Localizer[LocalizationMessages.UserNotFound]);
 
             if (user.IsDeleted)
-                throw new KeyNotFoundException("User already deleted.");
+                throw new KeyNotFoundException(_Localizer[LocalizationMessages.UserAlreadyDeleted]);
 
             user.IsDeleted = true;
             user.IsActive = false;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
-                throw new ApplicationException(
-                    "Failed to soft delete user: " +
-                    string.Join(", ", result.Errors.Select(e => e.Description)));
+                throw new ApplicationException(_Localizer[LocalizationMessages.FailedToDeleteUser]);
 
             // ?? Invalidate all tokens immediately
             await _userManager.UpdateSecurityStampAsync(user);
@@ -278,7 +262,7 @@ namespace FleetLinker.Infra.Repository
                 .Include(u => u.UserRoles)
                 .FirstOrDefaultAsync(u => u.Id == userId, ct);
             if (user is null)
-                throw new KeyNotFoundException($"User not found: {userId}");
+                throw new KeyNotFoundException(_Localizer[LocalizationMessages.UserNotFound]);
             var targetRoleIdStrings = roleIds?.Select(g => g.ToString()).ToHashSet(StringComparer.OrdinalIgnoreCase)
                                    ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var rolesInDb = await _context.Roles
@@ -288,7 +272,7 @@ namespace FleetLinker.Infra.Repository
             var foundIds = rolesInDb.Select(r => r.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
             var missingIds = targetRoleIdStrings.Except(foundIds, StringComparer.OrdinalIgnoreCase).ToList();
             if (missingIds.Count > 0)
-                throw new ArgumentException($"Some roles do not exist: {string.Join(", ", missingIds)}");
+                throw new ArgumentException(_Localizer[LocalizationMessages.SomeRolesNotExist] + $" {string.Join(", ", missingIds)}");
             var currentRoleIds = user.UserRoles.Select(ur => ur.RoleId).ToHashSet(StringComparer.OrdinalIgnoreCase);
             var toAdd = targetRoleIdStrings.Except(currentRoleIds, StringComparer.OrdinalIgnoreCase).ToList();
             var toRemove = currentRoleIds.Except(targetRoleIdStrings, StringComparer.OrdinalIgnoreCase).ToList();

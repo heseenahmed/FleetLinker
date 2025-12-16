@@ -1,3 +1,5 @@
+using Humanizer;
+
 namespace FleetLinker.API.Resources
 {
     /// <summary>
@@ -9,7 +11,11 @@ namespace FleetLinker.API.Resources
         public const string Success = "Success";
         public const string Failed = "Failed";
         public const string Error = "Error";
-        
+
+
+        //Email
+        public const string InvalidEmailAddress = "InvalidEmailAddress";
+
         // Validation
         public const string ValidationError = "ValidationError";
         public const string ModelValidationFailed = "ModelValidationFailed";
@@ -24,6 +30,8 @@ namespace FleetLinker.API.Resources
         public const string InvalidAccessToken = "InvalidAccessToken";
         public const string InvalidOrExpiredToken = "InvalidOrExpiredToken";
         public const string InvalidOrExpiredRefreshToken = "InvalidOrExpiredRefreshToken";
+        public const string InvalidTokenAlgorithm = "InvalidTokenAlgorithm";
+
         
         // Users
         public const string UserNotFound = "UserNotFound";
@@ -44,6 +52,18 @@ namespace FleetLinker.API.Resources
         public const string UserDataMissingOrInconsistent = "UserDataMissingOrInconsistent";
         public const string UserUpdateDataRequired = "UserUpdateDataRequired";
         public const string FailedToUpdateUser = "FailedToUpdateUser";
+        public const string ErrorRetrievingUserInfo = "ErrorRetrievingUserIfo";
+        public const string EmailAlreadyInUse = "EmailAlreadyInUseByAnotherUser";
+        public const string MobileAlreadyInUse = "MobileNumberAlreadyInUseByAnotherUser";
+        public const string FailedToResetPassword = "FailedToResetPassword";
+        public const string FullNameRequired = "FullNameRequired";
+        public const string EmailRequired = "EmailRequired";
+        public const string MobileRequired = "MobileRequired";
+        public const string DuplicateEmail = "DuplicateEmail";
+        public const string FailedToCreateUser = "FailedToCreateUser";
+        public const string UserAlreadyDeleted = "UserAlreadyDeleted";
+        public const string FailedToDeleteUser = "FailedToDeleteUser";
+        public const string SomeRolesNotExist = "SomeRolesDoNotExist";
         
         // Registration
         public const string RegistrationPayloadRequired = "RegistrationPayloadRequired";
@@ -72,7 +92,10 @@ namespace FleetLinker.API.Resources
         public const string RoleAddedSuccessfully = "RoleAddedSuccessfully";
         public const string RoleDeletedSuccessfully = "RoleDeletedSuccessfully";
         public const string ErrorAddingRole = "ErrorAddingRole";
+        public const string ErrorUpdateRole = "ErrorUpdateRole";
+        public const string ErrorDeleteRole = "ErrorDeleteRole";
         public const string RoleIdsCannotBeNull = "RoleIdsCannotBeNull";
+        public const string FailedToAssignRoles = "FailedToAssignRoles";
         
         // Errors
         public const string NotFound = "NotFound";

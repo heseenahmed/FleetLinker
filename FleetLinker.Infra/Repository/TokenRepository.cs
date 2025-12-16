@@ -1,3 +1,5 @@
+using FleetLinker.API.Resources;
+using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.IRepository;
 using Microsoft.Extensions.Options;
@@ -10,14 +12,16 @@ namespace FleetLinker.Infra.Repository
     public class TokenRepository : ITokenRepository
     {
         private readonly JwtSettings _jwtSettings;
-        public TokenRepository(IOptions<JwtSettings> jwtSettings)
+        private readonly IAppLocalizer _localizer;
+        public TokenRepository(IOptions<JwtSettings> jwtSettings , IAppLocalizer localizer)
         {
             _jwtSettings = jwtSettings.Value;
+            _localizer = localizer;
         }
         public Task<ClaimsPrincipal> GetPrincipalFromExpiredToken(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
-                throw new ArgumentException("Token is required.", nameof(token));
+                throw new ArgumentException(_localizer[LocalizationMessages.TokenRequired]);
             var validationParams = new TokenValidationParameters
             {
                 ValidateAudience = true,
@@ -36,17 +40,17 @@ namespace FleetLinker.Infra.Repository
                 if (securityToken is not JwtSecurityToken jwt ||
                     !jwt.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    throw new UnauthorizedAccessException("Invalid token algorithm.");
+                    throw new UnauthorizedAccessException(_localizer[LocalizationMessages.InvalidTokenAlgorithm]);
                 }
                 return Task.FromResult(principal);
             }
             catch (SecurityTokenException ex)
             {
-                throw new UnauthorizedAccessException("Invalid access token.", ex);
+                throw new UnauthorizedAccessException(_localizer[LocalizationMessages.InvalidAccessToken], ex);
             }
             catch (Exception ex)
             {
-                throw new UnauthorizedAccessException("Invalid or malformed token.", ex);
+                throw new UnauthorizedAccessException(_localizer[LocalizationMessages.InvalidAccessToken], ex);
             }
         }
     }

@@ -1,3 +1,4 @@
+using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.IRepository;
 using FleetLinker.Infra.Data;
 using FleetLinker.Infra.Repository;

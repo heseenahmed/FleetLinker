@@ -1,4 +1,5 @@
 using FleetLinker.API.Resources;
+using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.Entity.Dto;
 using MediatR;
@@ -17,12 +18,12 @@ namespace FleetLinker.API.Controllers
         #region Fields
         public readonly ISender _mediator;
         public readonly UserManager<ApplicationUser> _userManager;
-        public readonly IStringLocalizer<Messages> _localizer;
+        public readonly IAppLocalizer _localizer;
         public string loggedInUserId => _userManager.GetUserId(User) ?? "User";
         #endregion
 
         #region Constructor
-        public ApiController(ISender mediator, UserManager<ApplicationUser> userManager, IStringLocalizer<Messages> localizer)
+        public ApiController(ISender mediator, UserManager<ApplicationUser> userManager, IAppLocalizer localizer)
         {
             _mediator = mediator;
             _userManager = userManager;

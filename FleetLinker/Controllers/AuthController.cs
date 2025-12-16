@@ -15,6 +15,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using FleetLinker.Application.Common.Localization;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -25,13 +26,14 @@ public class AuthController : ApiController
     #region Fields
     private readonly JwtSettings _jwtSettings;
     private readonly IDistributedCache _cache;
+
     #endregion
 
     #region Constructor
     public AuthController(
         ISender mediator,
         UserManager<ApplicationUser> userManager,
-        IStringLocalizer<Messages> localizer,
+        IAppLocalizer localizer,
         JwtSettings jwtSettings,
         IDistributedCache cache) : base(mediator, userManager, localizer)
     {

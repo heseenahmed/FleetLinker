@@ -1,3 +1,5 @@
+using FleetLinker.API.Resources;
+using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.Entity.Dto.Identity;
 using FleetLinker.Domain.IRepository;
@@ -13,7 +15,7 @@ namespace FleetLinker.Infra.Repository
 
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly ApplicationDbContext _context;
-
+        private readonly IAppLocalizer _Localizer;
         private static readonly Dictionary<string, string> RoleNameMappings = new()
         {
             { "Admin", "Admin" },
@@ -26,10 +28,11 @@ namespace FleetLinker.Infra.Repository
 
         #region Constructor
 
-        public RoleRepository(RoleManager<ApplicationRole> roleManager, ApplicationDbContext context)
+        public RoleRepository(RoleManager<ApplicationRole> roleManager, ApplicationDbContext context , IAppLocalizer localizer)
         {
             _roleManager = roleManager;
             _context = context;
+            _Localizer = localizer;
         }
 
         #endregion
@@ -39,15 +42,14 @@ namespace FleetLinker.Infra.Repository
         public async Task<bool> AddRoleAsync(ApplicationRole role)
         {
             if (role is null) throw new ArgumentNullException(nameof(role));
-            if (string.IsNullOrWhiteSpace(role.Name)) throw new ArgumentException("Role name is required.", nameof(role));
+            if (string.IsNullOrWhiteSpace(role.Name)) throw new ArgumentException(_Localizer[LocalizationMessages.RoleNameRequired]);
             if (IsRoleExistsAsync(role.Name)) return true;
 
             role.NormalizedName = role.Name.ToUpperInvariant();
             var result = await _roleManager.CreateAsync(role);
 
             if (!result.Succeeded)
-                throw new ApplicationException(
-                    "Failed to create role: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                throw new ApplicationException(_Localizer[LocalizationMessages.ErrorAddingRole]);
 
             return true;
         }
@@ -58,25 +60,24 @@ namespace FleetLinker.Infra.Repository
 
         public async Task<bool> DeleteRoleByIdAsync(string id)
         {
-            if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException("Role id is required.", nameof(id));
+            if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException(_Localizer[LocalizationMessages.RoleIdsCannotBeNull]);
 
             var role = await _roleManager.FindByIdAsync(id);
-            if (role == null) throw new KeyNotFoundException("Role not found.");
+            if (role == null) throw new KeyNotFoundException(_Localizer[LocalizationMessages.RoleNotFound]);
 
             var result = await _roleManager.DeleteAsync(role);
             if (!result.Succeeded)
-                throw new ApplicationException(
-                    "Failed to delete role: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                throw new ApplicationException(_Localizer[LocalizationMessages.ErrorDeleteRole]);
 
             return true;
         }
 
         public async Task<bool> DeleteRoleByNameAsync(string roleName)
         {
-            if (string.IsNullOrWhiteSpace(roleName)) throw new ArgumentException("Role name is required.", nameof(roleName));
+            if (string.IsNullOrWhiteSpace(roleName)) throw new ArgumentException(_Localizer[LocalizationMessages.RoleNameRequired]);
 
             var role = await _roleManager.FindByNameAsync(roleName);
-            if (role == null) throw new KeyNotFoundException("Role not found.");
+            if (role == null) throw new KeyNotFoundException(_Localizer[LocalizationMessages.RoleNotFound]);
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -93,8 +94,7 @@ namespace FleetLinker.Infra.Repository
 
                 var result = await _roleManager.DeleteAsync(role);
                 if (!result.Succeeded)
-                    throw new ApplicationException(
-                        "Failed to delete role: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                    throw new ApplicationException(_Localizer[LocalizationMessages.ErrorDeleteRole]);
 
                 await transaction.CommitAsync();
                 return true;
@@ -112,13 +112,13 @@ namespace FleetLinker.Infra.Repository
 
         public async Task<ApplicationRole?> GetRoleByIdAsync(string id)
         {
-            if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException("Role id is required.", nameof(id));
+            if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException(_Localizer[LocalizationMessages.RoleIdsCannotBeNull]);
             return await _roleManager.FindByIdAsync(id);
         }
 
         public async Task<ApplicationRole?> GetRoleByNameAsync(string roleName)
         {
-            if (string.IsNullOrWhiteSpace(roleName)) throw new ArgumentException("Role name is required.", nameof(roleName));
+            if (string.IsNullOrWhiteSpace(roleName)) throw new ArgumentException(_Localizer[LocalizationMessages.RoleNameRequired]);
             return await _roleManager.FindByNameAsync(roleName);
         }
 
@@ -146,7 +146,7 @@ namespace FleetLinker.Infra.Repository
 
         public bool IsRoleExistsAsync(string roleName)
         {
-            if (string.IsNullOrWhiteSpace(roleName)) throw new ArgumentException("Role name is required.", nameof(roleName));
+            if (string.IsNullOrWhiteSpace(roleName)) throw new ArgumentException(_Localizer[LocalizationMessages.RoleNameRequired]);
             return _roleManager.Roles.Any(e => e.Name != null && e.Name.ToLower() == roleName.ToLower());
         }
 
@@ -157,12 +157,12 @@ namespace FleetLinker.Infra.Repository
         public async Task<bool> UpdateRoleAsync(RoleDto roleDto)
         {
             if (roleDto is null) throw new ArgumentNullException(nameof(roleDto));
-            if (string.IsNullOrWhiteSpace(roleDto.Name)) throw new ArgumentException("Role name is required.", nameof(roleDto.Name));
+            if (string.IsNullOrWhiteSpace(roleDto.Name)) throw new ArgumentException(_Localizer[LocalizationMessages.RoleNameRequired]);
 
             var role = await _context.Roles
                 .FirstOrDefaultAsync(r => r.Name != null && r.Name.ToLower() == roleDto.Name.ToLower());
 
-            if (role == null) throw new KeyNotFoundException("Role not found.");
+            if (role == null) throw new KeyNotFoundException(_Localizer[LocalizationMessages.RoleNotFound]);
 
             role.Name = roleDto.Name;
             role.NormalizedName = roleDto.Name.ToUpperInvariant();

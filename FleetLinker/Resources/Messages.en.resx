@@ -1,18 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="0" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -39,8 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  
-  <!-- General -->
   <data name="Success" xml:space="preserve">
     <value>Success</value>
   </data>
@@ -50,8 +126,6 @@
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
-  
-  <!-- Validation -->
   <data name="ValidationError" xml:space="preserve">
     <value>Validation Error</value>
   </data>
@@ -67,8 +141,6 @@
   <data name="InvalidArgument" xml:space="preserve">
     <value>Invalid Argument</value>
   </data>
-  
-  <!-- Authentication -->
   <data name="Unauthorized" xml:space="preserve">
     <value>Unauthorized</value>
   </data>
@@ -87,8 +159,6 @@
   <data name="InvalidOrExpiredRefreshToken" xml:space="preserve">
     <value>Invalid or expired refresh token.</value>
   </data>
-  
-  <!-- Users -->
   <data name="UserNotFound" xml:space="preserve">
     <value>User not found.</value>
   </data>
@@ -143,16 +213,12 @@
   <data name="FailedToUpdateUser" xml:space="preserve">
     <value>Failed to update user.</value>
   </data>
-  
-  <!-- Registration -->
   <data name="RegistrationPayloadRequired" xml:space="preserve">
     <value>Registration payload is required.</value>
   </data>
   <data name="RegistrationFailedInternally" xml:space="preserve">
     <value>Registration failed internally.</value>
   </data>
-  
-  <!-- Login -->
   <data name="LoginPayloadRequired" xml:space="preserve">
     <value>Login payload is required.</value>
   </data>
@@ -171,8 +237,6 @@
   <data name="LogoutSuccessfulAllDevices" xml:space="preserve">
     <value>Logout successful (all devices).</value>
   </data>
-  
-  <!-- Password -->
   <data name="OldAndNewPasswordsRequired" xml:space="preserve">
     <value>Old and new passwords are required.</value>
   </data>
@@ -188,8 +252,6 @@
   <data name="TokenRefreshedSuccessfully" xml:space="preserve">
     <value>Token refreshed successfully.</value>
   </data>
-  
-  <!-- Roles -->
   <data name="RolesRetrievedSuccessfully" xml:space="preserve">
     <value>Roles retrieved successfully.</value>
   </data>
@@ -214,8 +276,6 @@
   <data name="RoleIdsCannotBeNull" xml:space="preserve">
     <value>RoleIds cannot be null. Send empty list to remove all roles.</value>
   </data>
-  
-  <!-- Errors -->
   <data name="NotFound" xml:space="preserve">
     <value>Not Found</value>
   </data>
@@ -239,5 +299,53 @@
   </data>
   <data name="UnexpectedErrorOccurred" xml:space="preserve">
     <value>An unexpected error occurred.</value>
+  </data>
+  <data name="ErrorUpdateRole" xml:space="preserve">
+    <value>Error Update Role</value>
+  </data>
+  <data name="InvalidEmailAddress" xml:space="preserve">
+    <value>Invalid Email Address</value>
+  </data>
+  <data name="ErrorDeleteRole" xml:space="preserve">
+    <value>ErrorDeleteRole</value>
+  </data>
+  <data name="InvalidTokenAlgorithm" xml:space="preserve">
+    <value>Invalid Token Algorithm</value>
+  </data>
+  <data name="ErrorRetrievingUserInfo" xml:space="preserve">
+    <value>Error While Retrieving User Information</value>
+  </data>
+  <data name="EmailAlreadyInUseByAnotherUser" xml:space="preserve">
+    <value>This Email Already in Use By Another User</value>
+  </data>
+  <data name="MobileNumberAlreadyInUseByAnotherUser" xml:space="preserve">
+    <value>Mobile Number Already In Use By Another User</value>
+  </data>
+  <data name="FailedToAssignRoles" xml:space="preserve">
+    <value>Failed To Assign Roles</value>
+  </data>
+  <data name="FullNameRequired" xml:space="preserve">
+    <value>Full Name Required</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email Required</value>
+  </data>
+  <data name="MobileRequired" xml:space="preserve">
+    <value>Mobile Required</value>
+  </data>
+  <data name="DuplicateEmail" xml:space="preserve">
+    <value>Multiple users found with the same email.</value>
+  </data>
+  <data name="FailedToCreateUser" xml:space="preserve">
+    <value>User creation failed</value>
+  </data>
+  <data name="UserAlreadyDeleted" xml:space="preserve">
+    <value>User Already Deleted</value>
+  </data>
+  <data name="FailedToDeleteUser" xml:space="preserve">
+    <value>Failed To Delete User</value>
+  </data>
+  <data name="SomeRolesDoNotExist" xml:space="preserve">
+    <value>Some Roles Do Not Exist</value>
   </data>
 </root>

@@ -1,3 +1,5 @@
+using FleetLinker.API.Resources;
+using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.IRepository;
 using MailKit.Net.Smtp;
@@ -10,9 +12,11 @@ namespace FleetLinker.Infra.Repository
     public class MailRepository :IMailRepository
     {
         private readonly MailSettings _mailSettings;
-        public MailRepository(IOptions<MailSettings> mailSettings)
+        private readonly IAppLocalizer _localizer;
+        public MailRepository(IOptions<MailSettings> mailSettings , IAppLocalizer localizer)
         {
             _mailSettings = mailSettings.Value;
+            _localizer = localizer;
         }
         public async Task SendEmailAsync(string mailTo, string subject, string body, IList<IFormFile> attachments = null)
         {
@@ -22,7 +26,7 @@ namespace FleetLinker.Infra.Repository
                 Subject = subject
             };
             if (!MailboxAddress.TryParse(mailTo, out var toAddress))
-                throw new Exception($"Invalid email address: {mailTo}");
+                throw new Exception(_localizer[LocalizationMessages.InvalidEmailAddress]);
             email.To.Add(toAddress);
             var builder = new BodyBuilder();
             if (attachments != null)

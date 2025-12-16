@@ -1,5 +1,6 @@
 using FleetLinker.API.Resources;
 using FleetLinker.Application.Command.User;
+using FleetLinker.Application.Common.Localization;
 using FleetLinker.Application.Queries.User;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.Entity.Dto;
@@ -24,7 +25,7 @@ namespace FleetLinker.API.Controllers
         public UserManagerController(
             ISender mediator, 
             UserManager<ApplicationUser> userManager,
-            IStringLocalizer<Messages> localizer)
+            IAppLocalizer localizer)
             : base(mediator, userManager, localizer)
         {
         }

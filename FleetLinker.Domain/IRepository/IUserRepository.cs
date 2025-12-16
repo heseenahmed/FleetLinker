@@ -11,7 +11,6 @@ namespace FleetLinker.Domain.IRepository
         Task<bool> UpdateUserAsync(UserForUpdateDto dto);
         public Task<bool> RegisterAsync(UserForRegisterDto registerRequest);
         public Task<bool> SwitchUserActiveAsync(string id);
-        Task<int> CountAdminsAsync();
         Task<bool> SoftDeleteUserAsync(string userId);
         Task<UpdateUserRolesResult> UpdateUserRolesAsync(string userId, IEnumerable<Guid> roleIds, CancellationToken ct = default);
     }
