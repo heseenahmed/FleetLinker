@@ -3,6 +3,7 @@ using FleetLinker.Domain.Entity.Dto.Identity;
 using FleetLinker.Domain.IRepository;
 using FleetLinker.Domain.Entity.Dto.User;
 using MediatR;
+using FleetLinker.Application.Common.Caching;
 namespace FleetLinker.Application.Queries.User
 {
     public class UserCommandHandler :
@@ -12,10 +13,12 @@ namespace FleetLinker.Application.Queries.User
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public UserCommandHandler(IUserRepository userRepository, IMapper mapper)
+        private readonly ICacheService _cache;
+        public UserCommandHandler(IUserRepository userRepository, IMapper mapper , ICacheService cache)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _cache = cache;
         }
         public async Task<UserInfoAPI?> Handle(GetUserInfoAsyncCommand request, CancellationToken cancellationToken)
         {
@@ -35,8 +38,29 @@ namespace FleetLinker.Application.Queries.User
         }
         public async Task<List<UserForListDto>> Handle(GetAllUser request, CancellationToken cancellationToken)
         {
-            var users = await _userRepository.GetAllAsync() ?? new List<Domain.Entity.ApplicationUser>();
-            return _mapper.Map<List<UserForListDto>>(users) ?? new List<UserForListDto>();
+            // 1?? Try cache first
+            var cachedUsers = await _cache.GetAsync<List<UserForListDto>>(
+                CacheKeys.UsersAll,
+                cancellationToken);
+
+            if (cachedUsers != null)
+                return cachedUsers;
+
+            // 2?? Load from DB
+            var users = await _userRepository.GetAllAsync()
+                        ?? new List<Domain.Entity.ApplicationUser>();
+
+            var result = _mapper.Map<List<UserForListDto>>(users)
+                         ?? new List<UserForListDto>();
+
+            // 3?? Store in cache (TTL = 5 minutes)
+            await _cache.SetAsync(
+                CacheKeys.UsersAll,
+                result,
+                TimeSpan.FromMinutes(5),
+                cancellationToken);
+
+            return result;
         }
     }
 }

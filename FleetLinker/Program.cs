@@ -42,7 +42,12 @@ builder.Services.AddControllers(options => options.Filters.Add<ValidateModelFilt
     .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 QuestPDF.Settings.License = LicenseType.Community;
-builder.Services.AddDistributedMemoryCache();
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration["Redis:ConnectionString"];
+    options.InstanceName = builder.Configuration["Redis:InstanceName"];
+});
+
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 builder.Services.AddAppServices();
 builder.Services.AddInfraServices(builder.Configuration);

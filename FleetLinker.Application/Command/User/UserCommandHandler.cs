@@ -1,9 +1,12 @@
 using AutoMapper;
+using FleetLinker.API.Resources;
+using FleetLinker.Application.Common;
+using FleetLinker.Application.Common.Caching;
+using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.Entity.Dto;
-using FleetLinker.Domain.IRepository;
-using FleetLinker.Application.Common;
 using FleetLinker.Domain.Entity.Dto.User;
+using FleetLinker.Domain.IRepository;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,8 +14,6 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using FleetLinker.Application.Common.Localization;
-using FleetLinker.API.Resources;
 
 namespace FleetLinker.Application.Command.User
 {
@@ -35,6 +36,8 @@ namespace FleetLinker.Application.Command.User
         private readonly JwtSettings _jwtSettings;
         private readonly IMediator _mediator;
         private readonly IAppLocalizer _localizer;
+        private readonly ICacheService _cache;
+
         #endregion
 
         #region Constructor
@@ -47,7 +50,8 @@ namespace FleetLinker.Application.Command.User
             UserManager<ApplicationUser> userManager,
             JwtSettings jwtSettings,
             IMediator mediator
-            , IAppLocalizer localizer)
+            , IAppLocalizer localizer
+            , ICacheService cache)
         {
             _tokenRepository = tokenRepository;
             _userRepository = userRepository;
@@ -57,6 +61,7 @@ namespace FleetLinker.Application.Command.User
             _jwtSettings = jwtSettings;
             _mediator = mediator;
             _localizer = localizer;
+            _cache = cache;
         }
 
         #endregion
@@ -82,6 +87,11 @@ namespace FleetLinker.Application.Command.User
             if (!updated)
                 throw new InvalidOperationException(_localizer[LocalizationMessages.FailedToUpdateUser]);
 
+            // ?? Cache invalidation
+            await _cache.RemoveAsync(CacheKeys.UsersAll, cancellationToken);
+            await _cache.RemoveAsync(
+                CacheKeys.UserById(request.UpdateUserDto.Id),
+                cancellationToken);
             return true;
         }
 
@@ -125,7 +135,8 @@ namespace FleetLinker.Application.Command.User
 
             //if (!string.IsNullOrWhiteSpace(request.userDto.Email))
             //    await _mailRepository.SendEmailAsync(request.userDto.Email, "Welcome to FleetLinker", mailBody);
-
+            // ?? New user affects list
+            await _cache.RemoveAsync(CacheKeys.UsersAll, cancellationToken);
             return true;
         }
 
@@ -143,6 +154,11 @@ namespace FleetLinker.Application.Command.User
                 throw new KeyNotFoundException(_localizer[LocalizationMessages.UserNotFound]);
 
             var newStatus = await _userRepository.SwitchUserActiveAsync(request.Id.ToString());
+            // ?? Status affects list + details
+            await _cache.RemoveAsync(CacheKeys.UsersAll, cancellationToken);
+            await _cache.RemoveAsync(
+                CacheKeys.UserById(request.Id.ToString()),
+                cancellationToken);
             return newStatus;
         }
 
@@ -208,7 +224,11 @@ namespace FleetLinker.Application.Command.User
             var deleted = await _userRepository.SoftDeleteUserAsync(request.UserId);
             if (!deleted)
                 throw new KeyNotFoundException(_localizer[LocalizationMessages.UserNotFound]);
-
+            // ?? Remove from cache
+            await _cache.RemoveAsync(CacheKeys.UsersAll, cancellationToken);
+            await _cache.RemoveAsync(
+                CacheKeys.UserById(request.UserId),
+                cancellationToken);
             return true;
         }
 
@@ -229,6 +249,11 @@ namespace FleetLinker.Application.Command.User
                 throw new KeyNotFoundException(_localizer[LocalizationMessages.TargetUserNotFound]);
 
             var result = await _userRepository.UpdateUserRolesAsync(request.UserId, request.RoleIds, cancellationToken);
+            // ?? Roles affect authorization & listing
+            await _cache.RemoveAsync(CacheKeys.UsersAll, cancellationToken);
+            await _cache.RemoveAsync(
+                CacheKeys.UserById(request.UserId),
+                cancellationToken);
             return result;
         }
 

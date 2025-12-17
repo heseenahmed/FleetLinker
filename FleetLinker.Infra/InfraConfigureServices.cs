@@ -1,5 +1,7 @@
+using FleetLinker.Application.Common.Caching;
 using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.IRepository;
+using FleetLinker.Infra.Caching;
 using FleetLinker.Infra.Data;
 using FleetLinker.Infra.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +24,7 @@ namespace FleetLinker.Infra
             services.AddScoped<ITokenRepository, TokenRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICacheService, RedisCacheService>();
             return services;
         }
     }
