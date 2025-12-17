@@ -1,15 +1,22 @@
+using FleetLinker.API.Filter;
 using FleetLinker.API.Localization;
 using FleetLinker.API.Middlewares;
 using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
+using FleetLinker.Infra.Behaviors;
 using FleetLinker.Infra.Data;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 namespace FleetLinker.API
 {
     public static class APIConfigureServices
@@ -21,6 +28,36 @@ namespace FleetLinker.API
             //{
             //    options.Filters.Add<ValidateUserStateFilter>();
             //});
+            services.AddControllers()
+                    .ConfigureApiBehaviorOptions(o => o.SuppressModelStateInvalidFilter = true);
+            // Add Localization Services
+            services.AddLocalization(options => options.ResourcesPath = "");
+            // Configure supported cultures (Arabic as default)
+            var supportedCultures = new[]
+            {
+                new CultureInfo("ar"),
+                new CultureInfo("en")
+            };
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("ar"); // Arabic is default
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+                options.ApplyCurrentCultureToResponseHeaders = true;
+            });
+            services.AddControllers(options => options.Filters.Add<ValidateModelFilter>())
+                    .AddDataAnnotationsLocalization()
+                    .AddViewLocalization()
+                    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
+                    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyPolicy", policy => { policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
+            });
+
+            services.AddEndpointsApiExplorer();
+            
             services.AddScoped<IAppLocalizer, AppLocalizer>();
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
            {
