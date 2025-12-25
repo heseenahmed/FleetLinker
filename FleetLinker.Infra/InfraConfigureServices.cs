@@ -11,11 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QuestPDF.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 namespace FleetLinker.Infra
 {
     public static class InfraConfigureServices
     {
-        public static IServiceCollection AddInfraServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfraServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
         {
             QuestPDF.Settings.License = LicenseType.Community;
 
@@ -26,11 +28,21 @@ namespace FleetLinker.Infra
                 options.UseSqlServer(configuration.GetConnectionString("AppDBContext"));
                 Console.WriteLine($"Connection String: {options.UseSqlServer(configuration.GetConnectionString("AppDBContext"))}");
             });
-            services.AddStackExchangeRedisCache(options =>
+            var redisConnectionString = configuration["Redis:ConnectionString"];
+
+            if (!string.IsNullOrEmpty(redisConnectionString) && (env.IsDevelopment() || redisConnectionString != "localhost:6379"))
             {
-                options.Configuration = configuration["Redis:ConnectionString"];
-                options.InstanceName = configuration["Redis:InstanceName"];
-            });
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = redisConnectionString;
+                    options.InstanceName = configuration["Redis:InstanceName"] ?? "FleetLinker:";
+                });
+            }
+            else
+            {
+                // Fallback to memory cache if Redis is not configured or pointing to localhost in production
+                services.AddDistributedMemoryCache();
+            }
             services.AddScoped<IEmailSender, MailSender>();  // Register the MailSender service
             services.AddTransient<IMailRepository, MailRepository>();
             services.AddScoped<IServiceProvider, ServiceProvider>();

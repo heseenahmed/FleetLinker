@@ -45,6 +45,15 @@ namespace FleetLinker.API
                 options.DefaultRequestCulture = new RequestCulture("ar");
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
+                
+                // Explicitly set providers to ensure Accept-Language header is respected
+                options.RequestCultureProviders = new List<IRequestCultureProvider>
+                {
+                    new QueryStringRequestCultureProvider(),
+                    new CookieRequestCultureProvider(),
+                    new AcceptLanguageHeaderRequestCultureProvider()
+                };
+                
                 options.ApplyCurrentCultureToResponseHeaders = true;
             });
 
