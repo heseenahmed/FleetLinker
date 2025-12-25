@@ -1,5 +1,5 @@
 using FleetLinker.Domain.Entity;
-using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Application.DTOs.Identity;
 using MediatR;
 namespace FleetLinker.Application.Queries.Roles
 {

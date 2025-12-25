@@ -24,60 +24,68 @@ namespace FleetLinker.API
         public static IServiceCollection AddAPIServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<GlobalExceptionHandlingMiddleware>();
-            //services.AddControllers(options =>
-            //{
-            //    options.Filters.Add<ValidateUserStateFilter>();
-            //});
-            services.AddControllers()
-                    .ConfigureApiBehaviorOptions(o => o.SuppressModelStateInvalidFilter = true);
-            // Add Localization Services
-            services.AddLocalization(options => options.ResourcesPath = "");
-            // Configure supported cultures (Arabic as default)
-            var supportedCultures = new[]
+            services.AddControllers(options => 
             {
-                new CultureInfo("ar"),
-                new CultureInfo("en")
-            };
+                options.Filters.Add<ValidateModelFilter>();
+            })
+            .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
+            .AddJsonOptions(options => 
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            })
+            .AddDataAnnotationsLocalization()
+            .AddViewLocalization();
+
+            // Configure Localization
+            services.AddLocalization(options => options.ResourcesPath = "");
+            var supportedCultures = new[] { new CultureInfo("ar"), new CultureInfo("en") };
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                options.DefaultRequestCulture = new RequestCulture("ar"); // Arabic is default
+                options.DefaultRequestCulture = new RequestCulture("ar");
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
                 options.ApplyCurrentCultureToResponseHeaders = true;
             });
-            services.AddControllers(options => options.Filters.Add<ValidateModelFilter>())
-                    .AddDataAnnotationsLocalization()
-                    .AddViewLocalization()
-                    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
-                    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddCors(options =>
             {
-                options.AddPolicy("MyPolicy", policy => { policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
+                options.AddPolicy("MyPolicy", policy => 
+                { 
+                    policy.WithOrigins("http://localhost:4200") // TODO: Add production domains
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .AllowCredentials(); 
+                });
             });
 
             services.AddEndpointsApiExplorer();
-            
             services.AddScoped<IAppLocalizer, AppLocalizer>();
+
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-           {
-               options.Password.RequireDigit = false;
-               options.Password.RequiredLength = 6;
-               options.Password.RequireNonAlphanumeric = false;
-               options.Password.RequireUppercase = false;
-               options.Password.RequireLowercase = false;
-               options.Password.RequiredUniqueChars = 0;
-               options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-               options.Lockout.MaxFailedAccessAttempts = 5;
-               options.Lockout.AllowedForNewUsers = true;
-               options.SignIn.RequireConfirmedEmail = false;
-               options.SignIn.RequireConfirmedPhoneNumber = false;
-               options.User.RequireUniqueEmail = false;
-           })
-           .AddEntityFrameworkStores<ApplicationDbContext>()
-           .AddDefaultTokenProviders();
+            {
+                // Password settings
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequiredUniqueChars = 1;
+
+                // Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
             var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
+            services.AddSingleton(jwtSettings!);
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -107,7 +115,20 @@ namespace FleetLinker.API
                             .GetRequiredService<UserManager<ApplicationUser>>();
                         var userId = ctx.Principal!.FindFirstValue(ClaimTypes.NameIdentifier)
                                      ?? ctx.Principal!.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+                        if (string.IsNullOrEmpty(userId))
+                        {
+                            ctx.Fail("User ID not found in token claims.");
+                            return;
+                        }
+
                         var user = await userManager.FindByIdAsync(userId);
+                        if (user == null)
+                        {
+                            ctx.Fail("User no longer exists.");
+                            return;
+                        }
+
                         var currentStamp = await userManager.GetSecurityStampAsync(user);
                         var tokenStamp = ctx.Principal!.FindFirst("sstamp")?.Value;
                         if (tokenStamp != currentStamp)

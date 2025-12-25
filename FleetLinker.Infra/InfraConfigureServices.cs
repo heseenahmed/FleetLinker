@@ -4,7 +4,9 @@ using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.IRepository;
 using FleetLinker.Infra.Caching;
 using FleetLinker.Infra.Data;
+using FleetLinker.Infra.Persistence;
 using FleetLinker.Infra.Repository;
+using FleetLinker.Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +38,7 @@ namespace FleetLinker.Infra
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICacheService, RedisCacheService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }

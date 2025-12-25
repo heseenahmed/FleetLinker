@@ -1,35 +1,40 @@
-using FleetLinker.Domain.Entity.Dto;
 using FleetLinker.Domain.IRepository;
 using FleetLinker.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
+
 namespace FleetLinker.Infra.Repository
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
         private readonly ApplicationDbContext _appDbContext;
         public DbSet<TEntity> _dbSet => _appDbContext.Set<TEntity>();
+
         public BaseRepository(ApplicationDbContext context) => _appDbContext = context;
+
         #region GetByID
-        public TEntity GetByGuid(Guid Id)
+        public TEntity GetByGuid(Guid id)
         {
-            return _dbSet.Find(Id)
-                ?? throw new InvalidOperationException("Entity not found."); ;
+            return _dbSet.Find(id)
+                ?? throw new InvalidOperationException("Entity not found.");
         }
-        public async Task<TEntity> GetByGuidAsync(Guid Guid)
+
+        public async Task<TEntity> GetByGuidAsync(Guid id)
         {
-            return await _dbSet.FindAsync(Guid)
-                ?? throw new InvalidOperationException("Entity not found."); ;
+            return await _dbSet.FindAsync(id)
+                ?? throw new KeyNotFoundException("Entity not found.");
         }
-        public async Task<TEntity> GetByGuidAsync(int Guid)
+
+        public async Task<TEntity> GetByIdAsync(int id)
         {
-            return await _dbSet.FindAsync(Guid)
-                ?? throw new InvalidOperationException("Entity not found."); ;
+            return await _dbSet.FindAsync(id)
+                ?? throw new KeyNotFoundException("Entity not found.");
         }
-        public bool Exists(Guid Guid)
+
+        public bool Exists(Guid id)
         {
-            return _dbSet.Find(Guid) == null;
+            return _dbSet.Find(id) != null;
         }
         #endregion
         #region Get

@@ -1,6 +1,7 @@
 using AutoMapper;
 using FleetLinker.Domain.Entity;
-using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Application.DTOs.Identity;
+using FleetLinker.Domain.Models;
 namespace FleetLinker.Application.Common.Mappings
 {
     public class RoleProfile :Profile

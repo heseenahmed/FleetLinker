@@ -1,6 +1,6 @@
 using AutoMapper;
 using FleetLinker.Domain.Entity;
-using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Application.DTOs.Identity;
 using FleetLinker.Domain.IRepository;
 using MediatR;
 using System.Linq;

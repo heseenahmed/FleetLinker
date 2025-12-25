@@ -1,7 +1,7 @@
 using FleetLinker.API.Resources;
 using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
-using FleetLinker.Domain.Entity.Dto;
+using FleetLinker.Application.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

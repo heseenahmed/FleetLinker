@@ -2,10 +2,11 @@
 using FleetLinker.API.Resources;
 using FleetLinker.Application.Command.User;
 using FleetLinker.Domain.Entity;
-using FleetLinker.Domain.Entity.Dto;
-using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Application.DTOs;
+using FleetLinker.Application.DTOs.Identity;
+using FleetLinker.Domain.Models;
 using FleetLinker.Application.Common;
-using FleetLinker.Domain.Entity.Dto.Auth;
+using FleetLinker.Application.DTOs.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using FleetLinker.Application.Common.Localization;
@@ -34,10 +36,10 @@ public class AuthController : ApiController
         ISender mediator,
         UserManager<ApplicationUser> userManager,
         IAppLocalizer localizer,
-        JwtSettings jwtSettings,
+        IOptions<JwtSettings> jwtSettings,
         IDistributedCache cache) : base(mediator, userManager, localizer)
     {
-        _jwtSettings = jwtSettings;
+        _jwtSettings = jwtSettings.Value;
         _cache = cache;
     }
     #endregion

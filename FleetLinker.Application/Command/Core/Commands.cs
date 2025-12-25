@@ -10,7 +10,7 @@ namespace FleetLinker.Application.Command.Core
         public DateTime TimeSpan { get; protected set; }
         protected Commands()
         {
-            TimeSpan = DateTime.Now;
+            TimeSpan = DateTime.UtcNow;
         }
     }
 }

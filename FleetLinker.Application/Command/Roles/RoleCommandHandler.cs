@@ -1,15 +1,13 @@
 using AutoMapper;
-using FleetLinker.API.Resources;
-using FleetLinker.Application.Command.Companies;
 using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
-using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.Models;
 using FleetLinker.Domain.IRepository;
 using MediatR;
-using Microsoft.Extensions.Localization;
+
 namespace FleetLinker.Application.Command.Roles
 {
-    public class UserCommandHandler :
+    public class RoleCommandHandler :
         IRequestHandler<AddRoleCommand, bool>,
         IRequestHandler<DeleteRoleCommand, bool>,
         IRequestHandler<UpdateRoleCommand, bool>
@@ -17,7 +15,7 @@ namespace FleetLinker.Application.Command.Roles
         private readonly IMapper _mapper;
         private readonly IRoleRepository _roleRepository;
         private readonly IAppLocalizer _localizer;
-        public UserCommandHandler(IMapper mapper, IRoleRepository roleRepository , IAppLocalizer localizer)
+        public RoleCommandHandler(IMapper mapper, IRoleRepository roleRepository , IAppLocalizer localizer)
         {
             _mapper = mapper;
             _roleRepository = roleRepository;

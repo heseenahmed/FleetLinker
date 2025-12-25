@@ -1,8 +1,9 @@
 using FleetLinker.Application.Command.Core;
 using FleetLinker.Domain.Entity;
-using FleetLinker.Domain.Entity.Dto;
-using FleetLinker.Domain.Entity.Dto.Identity;
-using FleetLinker.Domain.Entity.Dto.User;
+using FleetLinker.Application.DTOs;
+using FleetLinker.Application.DTOs.Identity;
+using FleetLinker.Application.DTOs.User;
+using FleetLinker.Domain.Models;
 using MediatR;
 using Microsoft.Extensions.Primitives;
 using System.Security.Claims;

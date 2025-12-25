@@ -1,10 +1,11 @@
 using FleetLinker.API.Resources;
-using FleetLinker.Application.Command.Companies;
+using FleetLinker.Application.Command.Roles;
 using FleetLinker.Application.Common.Localization;
 using FleetLinker.Application.Queries.Roles;
 using FleetLinker.Domain.Entity;
-using FleetLinker.Domain.Entity.Dto;
-using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Application.DTOs;
+using FleetLinker.Application.DTOs.Identity;
+using FleetLinker.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

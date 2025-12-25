@@ -1,7 +1,6 @@
-using FleetLinker.API.Resources;
 using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
-using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.Models;
 using FleetLinker.Domain.IRepository;
 using FleetLinker.Infra.Data;
 using Microsoft.AspNetCore.Identity;

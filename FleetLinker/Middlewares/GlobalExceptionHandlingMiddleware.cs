@@ -1,5 +1,6 @@
 using FleetLinker.API.Resources;
-using FleetLinker.Domain.Entity.Dto;
+using FleetLinker.Application.Common.Localization;
+using FleetLinker.Application.DTOs;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;

@@ -1,19 +1,20 @@
 using FleetLinker.Domain.Entity;
-using FleetLinker.Domain.Entity.Dto;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+
 namespace FleetLinker.Domain.IRepository
 {
     public interface IBaseRepository<TEntity> where TEntity : class
     {
-        #region Create_Update_Delet Async
+        #region Create_Update_Delete Async
         Task<int> AddAsync(TEntity entity);
         Task<int> AddRangeAsync(List<TEntity> entity);
         Task<int> UpdateAsync(TEntity entity);
         Task<int> RemoveAsync(TEntity entity);
         #endregion
-        #region Create_Update_Delet
+
+        #region Create_Update_Delete
         int Add(TEntity entity);
         int AddRange(List<TEntity> entity);
         int Update(TEntity entity);
@@ -23,11 +24,12 @@ namespace FleetLinker.Domain.IRepository
         void UpdateWithoutSave(TEntity entity);
         void RemoveWithoutSave(TEntity entity);
         #endregion
+
         #region Get 
-        TEntity GetByGuid(Guid Guid);
-        bool Exists(Guid Guid);
-        Task<TEntity> GetByGuidAsync(Guid Guid);
-        Task<TEntity> GetByGuidAsync(int Guid);
+        TEntity GetByGuid(Guid id);
+        bool Exists(Guid id);
+        Task<TEntity> GetByGuidAsync(Guid id);
+        Task<TEntity> GetByIdAsync(int id);
         TEntity? Get(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate);
         IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> predicate);

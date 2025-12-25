@@ -1,32 +1,33 @@
 using FleetLinker.Application.Command.Core;
-using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Domain.Models;
 using MediatR;
-namespace FleetLinker.Application.Command.Companies
+
+namespace FleetLinker.Application.Command.Roles
 {
-    public class UserCommand : Commands
+    public abstract class RoleCommand : Commands
     {
-        public string Id { get; set; }
-        public RoleDto Role { get; set; }
+        public RoleDto? Role { get; set; }
     }
-    public class AddRoleCommand : UserCommand
+
+    public class AddRoleCommand : RoleCommand, IRequest<bool>
     {
-        public RoleDto Role { get; set; }
         public AddRoleCommand(RoleDto role)
         {
             Role = role;
         }
     }
-    public class DeleteRoleCommand : UserCommand
+
+    public class DeleteRoleCommand : IRequest<bool>
     {
         public string RoleName { get; set; }
-        public DeleteRoleCommand(string RoleName)
+        public DeleteRoleCommand(string roleName)
         {
-            this.RoleName = RoleName;
+            RoleName = roleName;
         }
     }
-    public class UpdateRoleCommand : UserCommand
+
+    public class UpdateRoleCommand : RoleCommand, IRequest<bool>
     {
-        public RoleDto Role { get; set; }
         public UpdateRoleCommand(RoleDto role)
         {
             Role = role;

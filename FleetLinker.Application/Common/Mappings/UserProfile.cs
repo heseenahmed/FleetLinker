@@ -1,7 +1,7 @@
 using AutoMapper;
 using FleetLinker.Domain.Entity;
-using FleetLinker.Domain.Entity.Dto.Identity;
-using FleetLinker.Domain.Entity.Dto.User;
+using FleetLinker.Application.DTOs.Identity;
+using FleetLinker.Application.DTOs.User;
 namespace FleetLinker.Application.Common.Mappings
 {
     public class UserProfile : Profile

@@ -1,5 +1,6 @@
-using FleetLinker.Domain.Entity.Dto.Identity;
-using FleetLinker.Domain.Entity.Dto.User;
+using FleetLinker.Application.DTOs.Identity;
+using FleetLinker.Application.DTOs.User;
+using FleetLinker.Domain.Models;
 using MediatR;
 
 namespace FleetLinker.Application.Queries.User

@@ -1,12 +1,13 @@
 using AutoMapper;
-using FleetLinker.Domain.Entity.Dto.Identity;
+using FleetLinker.Application.DTOs.Identity;
 using FleetLinker.Domain.IRepository;
-using FleetLinker.Domain.Entity.Dto.User;
+using FleetLinker.Application.DTOs.User;
+using FleetLinker.Domain.Models;
 using MediatR;
 using FleetLinker.Application.Common.Caching;
 namespace FleetLinker.Application.Queries.User
 {
-    public class UserCommandHandler :
+    public class UserQueryHandler :
         IRequestHandler<GetUserInfoAsyncCommand, UserInfoAPI?>,
         IRequestHandler<GetUserById, UserForListDto>,
         IRequestHandler<GetAllUser, List<UserForListDto>>
@@ -14,7 +15,7 @@ namespace FleetLinker.Application.Queries.User
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly ICacheService _cache;
-        public UserCommandHandler(IUserRepository userRepository, IMapper mapper , ICacheService cache)
+        public UserQueryHandler(IUserRepository userRepository, IMapper mapper , ICacheService cache)
         {
             _userRepository = userRepository;
             _mapper = mapper;
