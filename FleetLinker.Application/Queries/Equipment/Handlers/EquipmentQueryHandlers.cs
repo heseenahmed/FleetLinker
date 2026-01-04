@@ -37,7 +37,7 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 OwnerName = e.Owner.FullName
             });
 
-            return APIResponse<IEnumerable<EquipmentDto>>.Success(data, _localizer[LocalizationMessages.Success]);
+            return APIResponse<IEnumerable<EquipmentDto>>.Success(data, _localizer[LocalizationMessages.EquipmentsRetrievedSuccessfully]);
         }
     }
 
@@ -72,7 +72,7 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 OwnerName = e.Owner.FullName
             };
 
-            return APIResponse<EquipmentDto>.Success(data, _localizer[LocalizationMessages.Success]);
+            return APIResponse<EquipmentDto>.Success(data, _localizer[LocalizationMessages.EquipmentRetrievedSuccessfully]);
         }
     }
 }

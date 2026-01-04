@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FleetLinker.Application.Command.Equipment.Handlers
 {
-    public class CreateEquipmentCommandHandler : IRequestHandler<CreateEquipmentCommand, APIResponse<Guid>>
+    public class CreateEquipmentCommandHandler : IRequestHandler<CreateEquipmentCommand, APIResponse<object?>>
     {
         private readonly IEquipmentRepository _repository;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -25,7 +25,7 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
             _localizer = localizer;
         }
 
-        public async Task<APIResponse<Guid>> Handle(CreateEquipmentCommand request, CancellationToken cancellationToken)
+        public async Task<APIResponse<object?>> Handle(CreateEquipmentCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.CreatedBy);
             if (user == null)
@@ -51,11 +51,11 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
             };
 
             await _repository.AddAsync(equipment);
-            return APIResponse<Guid>.Success(equipment.Id, _localizer[LocalizationMessages.EquipmentCreatedSuccessfully]);
+            return APIResponse<object?>.Success(null, _localizer[LocalizationMessages.EquipmentCreatedSuccessfully]);
         }
     }
 
-    public class UpdateEquipmentCommandHandler : IRequestHandler<UpdateEquipmentCommand, APIResponse<bool>>
+    public class UpdateEquipmentCommandHandler : IRequestHandler<UpdateEquipmentCommand, APIResponse<object?>>
     {
         private readonly IEquipmentRepository _repository;
         private readonly IAppLocalizer _localizer;
@@ -66,7 +66,7 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
             _localizer = localizer;
         }
 
-        public async Task<APIResponse<bool>> Handle(UpdateEquipmentCommand request, CancellationToken cancellationToken)
+        public async Task<APIResponse<object?>> Handle(UpdateEquipmentCommand request, CancellationToken cancellationToken)
         {
             var equipment = await _repository.GetByGuidAsync(request.Dto.Id);
             if (equipment == null) throw new KeyNotFoundException(_localizer[LocalizationMessages.EquipmentNotFound]);
@@ -80,11 +80,11 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
             equipment.UpdatedDate = DateTime.UtcNow;
 
             await _repository.UpdateAsync(equipment);
-            return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.EquipmentUpdatedSuccessfully]);
+            return APIResponse<object?>.Success(null, _localizer[LocalizationMessages.EquipmentUpdatedSuccessfully]);
         }
     }
 
-    public class DeleteEquipmentCommandHandler : IRequestHandler<DeleteEquipmentCommand, APIResponse<bool>>
+    public class DeleteEquipmentCommandHandler : IRequestHandler<DeleteEquipmentCommand, APIResponse<object?>>
     {
         private readonly IEquipmentRepository _repository;
         private readonly IAppLocalizer _localizer;
@@ -95,7 +95,7 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
             _localizer = localizer;
         }
 
-        public async Task<APIResponse<bool>> Handle(DeleteEquipmentCommand request, CancellationToken cancellationToken)
+        public async Task<APIResponse<object?>> Handle(DeleteEquipmentCommand request, CancellationToken cancellationToken)
         {
             var equipment = await _repository.GetByGuidAsync(request.Id);
             if (equipment == null) throw new KeyNotFoundException(_localizer[LocalizationMessages.EquipmentNotFound]);
@@ -105,7 +105,7 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
             equipment.UpdatedDate = DateTime.UtcNow;
 
             await _repository.UpdateAsync(equipment);
-            return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.EquipmentDeletedSuccessfully]);
+            return APIResponse<object?>.Success(null, _localizer[LocalizationMessages.EquipmentDeletedSuccessfully]);
         }
     }
 }

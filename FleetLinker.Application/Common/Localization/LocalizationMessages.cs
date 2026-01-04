@@ -117,5 +117,7 @@ namespace FleetLinker.Application.Common.Localization
         public const string YearRequired = "YearRequired";
         public const string ChassisNumberRequired = "ChassisNumberRequired";
         public const string ModelRequired = "ModelRequired";
+        public const string EquipmentRetrievedSuccessfully = "EquipmentRetrievedSuccessfully";
+        public const string EquipmentsRetrievedSuccessfully = "EquipmentsRetrievedSuccessfully";
     }
 }

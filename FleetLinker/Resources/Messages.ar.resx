@@ -375,4 +375,10 @@
   <data name="ModelRequired" xml:space="preserve">
     <value>الطراز (الموديل) مطلوب</value>
   </data>
+  <data name="EquipmentRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع المعدة بنجاح</value>
+  </data>
+  <data name="EquipmentsRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع المعدات بنجاح</value>
+  </data>
 </root>

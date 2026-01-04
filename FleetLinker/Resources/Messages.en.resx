@@ -375,4 +375,10 @@
   <data name="ModelRequired" xml:space="preserve">
     <value>Model is required</value>
   </data>
+  <data name="EquipmentRetrievedSuccessfully" xml:space="preserve">
+    <value>The equipment returned successfully</value>
+  </data>
+  <data name="EquipmentsRetrievedSuccessfully" xml:space="preserve">
+    <value>The equipments returned successfully</value>
+  </data>
 </root>

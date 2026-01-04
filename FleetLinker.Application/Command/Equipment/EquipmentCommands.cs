@@ -4,7 +4,7 @@ using MediatR;
 
 namespace FleetLinker.Application.Command.Equipment
 {
-    public class CreateEquipmentCommand : IRequest<APIResponse<Guid>>
+    public class CreateEquipmentCommand : IRequest<APIResponse<object?>>
     {
         public CreateEquipmentDto Dto { get; set; }
         public string CreatedBy { get; set; }
@@ -16,7 +16,7 @@ namespace FleetLinker.Application.Command.Equipment
         }
     }
 
-    public class UpdateEquipmentCommand : IRequest<APIResponse<bool>>
+    public class UpdateEquipmentCommand : IRequest<APIResponse<object?>>
     {
         public UpdateEquipmentDto Dto { get; set; }
         public string UpdatedBy { get; set; }
@@ -28,7 +28,7 @@ namespace FleetLinker.Application.Command.Equipment
         }
     }
 
-    public class DeleteEquipmentCommand : IRequest<APIResponse<bool>>
+    public class DeleteEquipmentCommand : IRequest<APIResponse<object?>>
     {
         public Guid Id { get; set; }
         public string DeletedBy { get; set; }
