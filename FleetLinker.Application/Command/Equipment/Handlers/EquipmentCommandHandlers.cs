@@ -29,18 +29,18 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
         {
             var user = await _userManager.FindByIdAsync(request.CreatedBy);
             if (user == null)
-                throw new KeyNotFoundException("User not found.");
+                throw new KeyNotFoundException(_localizer[LocalizationMessages.UserNotFound]);
 
             var roles = await _userManager.GetRolesAsync(user);
             if (!roles.Contains("Equipment owner"))
             {
-                throw new UnauthorizedAccessException("Only users with 'Equipment owner' role can add equipment.");
+                throw new UnauthorizedAccessException(_localizer[LocalizationMessages.EquipmentUnauthorized]);
             }
 
             var equipment = new Domain.Entity.Equipment
             {
                 Brand = request.Dto.Brand,
-                YearOfManufacture = request.Dto.YearOfManufacture,
+                YearOfManufacture = request.Dto.YearOfManufacture!.Value,
                 ChassisNumber = request.Dto.ChassisNumber,
                 Model = request.Dto.Model,
                 AssetNumber = request.Dto.AssetNumber,
@@ -51,7 +51,7 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
             };
 
             await _repository.AddAsync(equipment);
-            return APIResponse<Guid>.Success(equipment.Id, _localizer[LocalizationMessages.Success]);
+            return APIResponse<Guid>.Success(equipment.Id, _localizer[LocalizationMessages.EquipmentCreatedSuccessfully]);
         }
     }
 
@@ -69,10 +69,10 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
         public async Task<APIResponse<bool>> Handle(UpdateEquipmentCommand request, CancellationToken cancellationToken)
         {
             var equipment = await _repository.GetByGuidAsync(request.Dto.Id);
-            if (equipment == null) throw new KeyNotFoundException("Equipment not found.");
+            if (equipment == null) throw new KeyNotFoundException(_localizer[LocalizationMessages.EquipmentNotFound]);
 
             equipment.Brand = request.Dto.Brand;
-            equipment.YearOfManufacture = request.Dto.YearOfManufacture;
+            equipment.YearOfManufacture = request.Dto.YearOfManufacture!.Value;
             equipment.ChassisNumber = request.Dto.ChassisNumber;
             equipment.Model = request.Dto.Model;
             equipment.AssetNumber = request.Dto.AssetNumber;
@@ -80,7 +80,7 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
             equipment.UpdatedDate = DateTime.UtcNow;
 
             await _repository.UpdateAsync(equipment);
-            return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.Success]);
+            return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.EquipmentUpdatedSuccessfully]);
         }
     }
 
@@ -98,16 +98,14 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
         public async Task<APIResponse<bool>> Handle(DeleteEquipmentCommand request, CancellationToken cancellationToken)
         {
             var equipment = await _repository.GetByGuidAsync(request.Id);
-            if (equipment == null) throw new KeyNotFoundException("Equipment not found.");
+            if (equipment == null) throw new KeyNotFoundException(_localizer[LocalizationMessages.EquipmentNotFound]);
 
-            // Soft delete or hard delete depending on project preference. 
-            // BaseEntity has IsActive. Let's use soft delete.
             equipment.IsActive = false;
             equipment.UpdatedBy = request.DeletedBy;
             equipment.UpdatedDate = DateTime.UtcNow;
 
             await _repository.UpdateAsync(equipment);
-            return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.Success]);
+            return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.EquipmentDeletedSuccessfully]);
         }
     }
 }

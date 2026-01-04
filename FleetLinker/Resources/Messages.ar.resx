@@ -348,4 +348,31 @@
   <data name="SomeRolesDoNotExist" xml:space="preserve">
     <value>بعض من الادوار غير مجوده</value>
   </data>
+  <data name="EquipmentCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء المعدة بنجاح</value>
+  </data>
+  <data name="EquipmentUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تحديث المعدة بنجاح</value>
+  </data>
+  <data name="EquipmentDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف المعدة بنجاح</value>
+  </data>
+  <data name="EquipmentNotFound" xml:space="preserve">
+    <value>المعدة غير موجودة</value>
+  </data>
+  <data name="EquipmentUnauthorized" xml:space="preserve">
+    <value>غير مسموح لك بإضافة معدات. يجب أن تملك دور "Equipment owner".</value>
+  </data>
+  <data name="BrandRequired" xml:space="preserve">
+    <value>العلامة التجارية (البراند) مطلوبة</value>
+  </data>
+  <data name="YearRequired" xml:space="preserve">
+    <value>سنة الصنع مطلوبة</value>
+  </data>
+  <data name="ChassisNumberRequired" xml:space="preserve">
+    <value>رقم الشاسيه مطلوب</value>
+  </data>
+  <data name="ModelRequired" xml:space="preserve">
+    <value>الطراز (الموديل) مطلوب</value>
+  </data>
 </root>

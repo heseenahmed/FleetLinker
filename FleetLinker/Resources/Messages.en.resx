@@ -348,4 +348,31 @@
   <data name="SomeRolesDoNotExist" xml:space="preserve">
     <value>Some Roles Do Not Exist</value>
   </data>
+  <data name="EquipmentCreatedSuccessfully" xml:space="preserve">
+    <value>Equipment created successfully</value>
+  </data>
+  <data name="EquipmentUpdatedSuccessfully" xml:space="preserve">
+    <value>Equipment updated successfully</value>
+  </data>
+  <data name="EquipmentDeletedSuccessfully" xml:space="preserve">
+    <value>Equipment deleted successfully</value>
+  </data>
+  <data name="EquipmentNotFound" xml:space="preserve">
+    <value>Equipment not found</value>
+  </data>
+  <data name="EquipmentUnauthorized" xml:space="preserve">
+    <value>You are not authorized to add equipment. You must have the 'Equipment owner' role.</value>
+  </data>
+  <data name="BrandRequired" xml:space="preserve">
+    <value>Brand is required</value>
+  </data>
+  <data name="YearRequired" xml:space="preserve">
+    <value>Year of manufacture is required</value>
+  </data>
+  <data name="ChassisNumberRequired" xml:space="preserve">
+    <value>Chassis number is required</value>
+  </data>
+  <data name="ModelRequired" xml:space="preserve">
+    <value>Model is required</value>
+  </data>
 </root>

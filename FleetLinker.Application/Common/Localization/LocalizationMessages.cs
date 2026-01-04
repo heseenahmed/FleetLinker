@@ -106,5 +106,16 @@ namespace FleetLinker.Application.Common.Localization
         public const string ApplicationError = "ApplicationError";
         public const string ServerError = "ServerError";
         public const string UnexpectedErrorOccurred = "UnexpectedErrorOccurred";
+
+        // Equipment
+        public const string EquipmentCreatedSuccessfully = "EquipmentCreatedSuccessfully";
+        public const string EquipmentUpdatedSuccessfully = "EquipmentUpdatedSuccessfully";
+        public const string EquipmentDeletedSuccessfully = "EquipmentDeletedSuccessfully";
+        public const string EquipmentNotFound = "EquipmentNotFound";
+        public const string EquipmentUnauthorized = "EquipmentUnauthorized";
+        public const string BrandRequired = "BrandRequired";
+        public const string YearRequired = "YearRequired";
+        public const string ChassisNumberRequired = "ChassisNumberRequired";
+        public const string ModelRequired = "ModelRequired";
     }
 }

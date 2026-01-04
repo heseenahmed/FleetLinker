@@ -17,14 +17,16 @@ namespace FleetLinker.API.Filter
                 
                 var errors = context.ModelState
                     .Where(x => x.Value.Errors.Count > 0)
-                    .ToDictionary(
-                        error => error.Key,
-                        error => error.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                    );
-                context.Result = new BadRequestObjectResult(new
+                    .SelectMany(x => x.Value.Errors.Select(e => localizer[e.ErrorMessage].Value))
+                    .ToList();
+
+                context.Result = new BadRequestObjectResult(new FleetLinker.Application.DTOs.APIResponse<object>
                 {
-                    Message = localizer[LocalizationMessages.ModelValidationFailed].Value,
-                    Errors = errors
+                    ApiStatusCode = 400,
+                    Result = "Error",
+                    Msg = localizer[LocalizationMessages.ModelValidationFailed].Value,
+                    Errors = errors,
+                    Data = null
                 });
             }
         }
