@@ -13,6 +13,8 @@ namespace FleetLinker.Infra.Data
         IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>,
         IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
+        public DbSet<Equipment> Equipments { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }

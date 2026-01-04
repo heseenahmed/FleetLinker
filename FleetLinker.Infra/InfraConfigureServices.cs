@@ -49,6 +49,7 @@ namespace FleetLinker.Infra
             services.AddScoped<ITokenRepository, TokenRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IEquipmentRepository, EquipmentRepository>();
             services.AddScoped<ICacheService, RedisCacheService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
