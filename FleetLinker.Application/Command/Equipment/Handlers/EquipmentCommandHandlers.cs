@@ -1,0 +1,113 @@
+using FleetLinker.Application.Common.Interfaces;
+using FleetLinker.Application.Common.Localization;
+using FleetLinker.Application.DTOs;
+using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Enums;
+using FleetLinker.Domain.IRepository;
+using MediatR;
+using Microsoft.AspNetCore.Identity;
+
+namespace FleetLinker.Application.Command.Equipment.Handlers
+{
+    public class CreateEquipmentCommandHandler : IRequestHandler<CreateEquipmentCommand, APIResponse<Guid>>
+    {
+        private readonly IEquipmentRepository _repository;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAppLocalizer _localizer;
+
+        public CreateEquipmentCommandHandler(
+            IEquipmentRepository repository,
+            UserManager<ApplicationUser> userManager,
+            IAppLocalizer localizer)
+        {
+            _repository = repository;
+            _userManager = userManager;
+            _localizer = localizer;
+        }
+
+        public async Task<APIResponse<Guid>> Handle(CreateEquipmentCommand request, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByIdAsync(request.CreatedBy);
+            if (user == null)
+                throw new KeyNotFoundException("User not found.");
+
+            var roles = await _userManager.GetRolesAsync(user);
+            if (!roles.Contains("Equipment owner"))
+            {
+                throw new UnauthorizedAccessException("Only users with 'Equipment owner' role can add equipment.");
+            }
+
+            var equipment = new Domain.Entity.Equipment
+            {
+                Brand = request.Dto.Brand,
+                YearOfManufacture = request.Dto.YearOfManufacture,
+                ChassisNumber = request.Dto.ChassisNumber,
+                Model = request.Dto.Model,
+                AssetNumber = request.Dto.AssetNumber,
+                OwnerId = request.CreatedBy,
+                CreatedBy = request.CreatedBy,
+                CreatedDate = DateTime.UtcNow,
+                IsActive = true
+            };
+
+            await _repository.AddAsync(equipment);
+            return APIResponse<Guid>.Success(equipment.Id, _localizer[LocalizationMessages.Success]);
+        }
+    }
+
+    public class UpdateEquipmentCommandHandler : IRequestHandler<UpdateEquipmentCommand, APIResponse<bool>>
+    {
+        private readonly IEquipmentRepository _repository;
+        private readonly IAppLocalizer _localizer;
+
+        public UpdateEquipmentCommandHandler(IEquipmentRepository repository, IAppLocalizer localizer)
+        {
+            _repository = repository;
+            _localizer = localizer;
+        }
+
+        public async Task<APIResponse<bool>> Handle(UpdateEquipmentCommand request, CancellationToken cancellationToken)
+        {
+            var equipment = await _repository.GetByGuidAsync(request.Dto.Id);
+            if (equipment == null) throw new KeyNotFoundException("Equipment not found.");
+
+            equipment.Brand = request.Dto.Brand;
+            equipment.YearOfManufacture = request.Dto.YearOfManufacture;
+            equipment.ChassisNumber = request.Dto.ChassisNumber;
+            equipment.Model = request.Dto.Model;
+            equipment.AssetNumber = request.Dto.AssetNumber;
+            equipment.UpdatedBy = request.UpdatedBy;
+            equipment.UpdatedDate = DateTime.UtcNow;
+
+            await _repository.UpdateAsync(equipment);
+            return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.Success]);
+        }
+    }
+
+    public class DeleteEquipmentCommandHandler : IRequestHandler<DeleteEquipmentCommand, APIResponse<bool>>
+    {
+        private readonly IEquipmentRepository _repository;
+        private readonly IAppLocalizer _localizer;
+
+        public DeleteEquipmentCommandHandler(IEquipmentRepository repository, IAppLocalizer localizer)
+        {
+            _repository = repository;
+            _localizer = localizer;
+        }
+
+        public async Task<APIResponse<bool>> Handle(DeleteEquipmentCommand request, CancellationToken cancellationToken)
+        {
+            var equipment = await _repository.GetByGuidAsync(request.Id);
+            if (equipment == null) throw new KeyNotFoundException("Equipment not found.");
+
+            // Soft delete or hard delete depending on project preference. 
+            // BaseEntity has IsActive. Let's use soft delete.
+            equipment.IsActive = false;
+            equipment.UpdatedBy = request.DeletedBy;
+            equipment.UpdatedDate = DateTime.UtcNow;
+
+            await _repository.UpdateAsync(equipment);
+            return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.Success]);
+        }
+    }
+}

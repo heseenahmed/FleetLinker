@@ -1,4 +1,5 @@
 using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
