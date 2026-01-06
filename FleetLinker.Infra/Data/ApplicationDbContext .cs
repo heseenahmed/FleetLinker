@@ -36,6 +36,12 @@ namespace FleetLinker.Infra.Data
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId)
                 .IsRequired();
+
+            builder.Entity<ApplicationUser>()
+                .HasIndex(u => u.PhoneNumber)
+                .IsUnique()
+                .HasFilter("[PhoneNumber] IS NOT NULL");
+
             foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;

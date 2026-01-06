@@ -46,8 +46,8 @@ namespace FleetLinker.API.Controllers
                 throw new ValidationException(_localizer[LocalizationMessages.BodyRequired]);
             var performedBy = User?.Identity?.Name ?? "System";
             
-            var success = await _mediator.Send(new RegisterCommand(model, performedBy), ct);
-            return Ok(APIResponse<bool>.Success(success, _localizer[LocalizationMessages.UserRegisteredSuccessfully]));
+            var result = await _mediator.Send(new RegisterCommand(model, performedBy), ct);
+            return StatusCode(result.ApiStatusCode, result);
         }
         #endregion
 
@@ -66,7 +66,7 @@ namespace FleetLinker.API.Controllers
                 throw new ArgumentException(_localizer[LocalizationMessages.UserDataMissingOrInconsistent]);
             var performedBy = User?.Identity?.Name ?? "System";
             var result = await _mediator.Send(new UpdateUserAsyncCommand(model, performedBy), ct);
-            return Ok(APIResponse<bool>.Success(result, _localizer[LocalizationMessages.UserUpdatedSuccessfully]));
+            return StatusCode(result.ApiStatusCode, result);
         }
         #endregion
 

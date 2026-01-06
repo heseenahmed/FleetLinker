@@ -9,7 +9,7 @@ using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
 namespace FleetLinker.Application.Command.User
 {
-    public class UpdateUserAsyncCommand : IRequest<bool> 
+    public class UpdateUserAsyncCommand : IRequest<APIResponse<bool>> 
     {
         public UserForUpdateDto UpdateUserDto { set; get; }
         public string? PerformedBy { get; }
@@ -20,7 +20,7 @@ namespace FleetLinker.Application.Command.User
         }
     }
     public sealed record GetPrincipalFromExpiredTokenCommand(string? Token) : IRequest<ClaimsPrincipal>;
-    public class RegisterCommand : IRequest<bool>
+    public class RegisterCommand : IRequest<APIResponse<bool>>
     {
         public UserForRegisterDto userDto{set;get;}
         public string? PerformedBy{set;get;}

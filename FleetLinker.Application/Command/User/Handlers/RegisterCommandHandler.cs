@@ -5,13 +5,15 @@ using FleetLinker.Application.Common.Interfaces;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.Enums;
 using FleetLinker.Domain.IRepository;
+using FleetLinker.Application.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace FleetLinker.Application.Command.User.Handlers
 {
-    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, bool>
+    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, APIResponse<bool>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
@@ -33,17 +35,21 @@ namespace FleetLinker.Application.Command.User.Handlers
             _uow = uow;
         }
 
-        public async Task<bool> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public async Task<APIResponse<bool>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             var dto = request.userDto;
             if (dto == null)
-                throw new ArgumentException(_localizer[LocalizationMessages.RegistrationPayloadRequired]);
+                return APIResponse<bool>.Fail(StatusCodes.Status400BadRequest, null, _localizer[LocalizationMessages.RegistrationPayloadRequired]);
 
             // Business Validation
             var normalizedEmail = dto.Email.Trim().ToUpperInvariant();
             var emailExists = await _userManager.Users.AnyAsync(u => u.NormalizedEmail == normalizedEmail && !u.IsDeleted, cancellationToken);
             if (emailExists)
-                throw new ArgumentException(_localizer[LocalizationMessages.EmailAlreadyInUse]);
+                return APIResponse<bool>.Fail(StatusCodes.Status409Conflict, null, _localizer[LocalizationMessages.EmailAlreadyInUse]);
+
+            var mobileExists = await _userManager.Users.AnyAsync(u => u.PhoneNumber == dto.Mobile.Trim() && !u.IsDeleted, cancellationToken);
+            if (mobileExists)
+                return APIResponse<bool>.Fail(StatusCodes.Status409Conflict, null, _localizer[LocalizationMessages.MobileAlreadyInUse]);
 
             var user = new ApplicationUser
             {
@@ -65,7 +71,12 @@ namespace FleetLinker.Application.Command.User.Handlers
             {
                 var createResult = await _userManager.CreateAsync(user);
                 if (!createResult.Succeeded)
-                    throw new ApplicationException(_localizer[LocalizationMessages.FailedToCreateUser]);
+                {
+                    await _uow.RollbackAsync();
+                    var errors = createResult.Errors.Select(e => e.Description).ToList();
+                    var message = string.Join("; ", errors);
+                    return APIResponse<bool>.Fail(StatusCodes.Status400BadRequest, errors, message);
+                }
 
                 if (dto.RoleIds?.Any() == true)
                 {
@@ -73,11 +84,19 @@ namespace FleetLinker.Application.Command.User.Handlers
                     {
                         var role = await _roleManager.FindByIdAsync(roleId.ToString());
                         if (role == null)
-                            throw new KeyNotFoundException(_localizer[LocalizationMessages.RoleNotFound]);
+                        {
+                            await _uow.RollbackAsync();
+                            return APIResponse<bool>.Fail(StatusCodes.Status404NotFound, null, _localizer[LocalizationMessages.RoleNotFound]);
+                        }
 
                         var addRoleResult = await _userManager.AddToRoleAsync(user, role.Name!);
                         if (!addRoleResult.Succeeded)
-                            throw new ApplicationException(_localizer[LocalizationMessages.FailedToAssignRoles]);
+                        {
+                            await _uow.RollbackAsync();
+                            var errors = addRoleResult.Errors.Select(e => e.Description).ToList();
+                            var message = string.Join("; ", errors);
+                            return APIResponse<bool>.Fail(StatusCodes.Status400BadRequest, errors, message);
+                        }
                     }
                 }
 
@@ -86,16 +105,21 @@ namespace FleetLinker.Application.Command.User.Handlers
                 var passwordResult = await _userManager.ResetPasswordAsync(user, resetToken, password);
 
                 if (!passwordResult.Succeeded)
-                    throw new ApplicationException(_localizer[LocalizationMessages.FailedToResetPassword]);
+                {
+                    await _uow.RollbackAsync();
+                    var errors = passwordResult.Errors.Select(e => e.Description).ToList();
+                    var message = string.Join("; ", errors);
+                    return APIResponse<bool>.Fail(StatusCodes.Status400BadRequest, errors, message);
+                }
 
                 await _uow.CommitAsync();
                 await _cache.RemoveAsync(CacheKeys.UsersAll, cancellationToken);
-                return true;
+                return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.UserRegisteredSuccessfully]);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await _uow.RollbackAsync();
-                throw;
+                return APIResponse<bool>.Exception(ex);
             }
         }
     }

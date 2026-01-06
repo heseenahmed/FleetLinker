@@ -91,7 +91,8 @@ namespace FleetLinker.API
                 options.SignIn.RequireConfirmedEmail = false;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddErrorDescriber<LocalizedIdentityErrorDescriber>();
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
             var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
             services.AddSingleton(jwtSettings!);

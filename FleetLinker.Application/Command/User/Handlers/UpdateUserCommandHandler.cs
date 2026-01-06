@@ -2,13 +2,15 @@ using FleetLinker.Application.Common.Caching;
 using FleetLinker.Application.Common.Localization;
 using FleetLinker.Domain.Entity;
 using FleetLinker.Domain.IRepository;
+using FleetLinker.Application.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace FleetLinker.Application.Command.User.Handlers
 {
-    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserAsyncCommand, bool>
+    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserAsyncCommand, APIResponse<bool>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
@@ -27,27 +29,27 @@ namespace FleetLinker.Application.Command.User.Handlers
             _cache = cache;
         }
 
-        public async Task<bool> Handle(UpdateUserAsyncCommand request, CancellationToken cancellationToken)
+        public async Task<APIResponse<bool>> Handle(UpdateUserAsyncCommand request, CancellationToken cancellationToken)
         {
             var dto = request.UpdateUserDto;
             if (dto == null)
-                throw new ArgumentException(_localizer[LocalizationMessages.UserUpdateDataRequired]);
+                return APIResponse<bool>.Fail(StatusCodes.Status400BadRequest, null, _localizer[LocalizationMessages.UserUpdateDataRequired]);
 
             var user = await _userManager.FindByIdAsync(dto.Id);
             if (user == null)
-                throw new KeyNotFoundException(_localizer[LocalizationMessages.UserNotFound]);
+                return APIResponse<bool>.Fail(StatusCodes.Status404NotFound, null, _localizer[LocalizationMessages.UserNotFound]);
 
             // Validate Email/Mobile uniqueness if changed
             if (!string.IsNullOrWhiteSpace(dto.Email) && dto.Email != user.Email)
             {
                 if (await _userManager.Users.AnyAsync(u => u.Id != dto.Id && u.Email == dto.Email && !u.IsDeleted, cancellationToken))
-                    throw new ArgumentException(_localizer[LocalizationMessages.EmailAlreadyInUse]);
+                    return APIResponse<bool>.Fail(StatusCodes.Status409Conflict, null, _localizer[LocalizationMessages.EmailAlreadyInUse]);
             }
 
             if (!string.IsNullOrWhiteSpace(dto.Mobile) && dto.Mobile != user.PhoneNumber)
             {
                 if (await _userManager.Users.AnyAsync(u => u.Id != dto.Id && u.PhoneNumber == dto.Mobile && !u.IsDeleted, cancellationToken))
-                    throw new ArgumentException(_localizer[LocalizationMessages.MobileAlreadyInUse]);
+                    return APIResponse<bool>.Fail(StatusCodes.Status409Conflict, null, _localizer[LocalizationMessages.MobileAlreadyInUse]);
             }
 
             user.FullName = dto.FullName ?? user.FullName;
@@ -57,14 +59,20 @@ namespace FleetLinker.Application.Command.User.Handlers
 
             var updateResult = await _userManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
-                throw new ApplicationException(_localizer[LocalizationMessages.FailedToUpdateUser]);
+            {
+                var errors = updateResult.Errors.Select(e => e.Description).ToList();
+                return APIResponse<bool>.Fail(StatusCodes.Status400BadRequest, errors, string.Join("; ", errors));
+            }
 
             if (!string.IsNullOrWhiteSpace(dto.Password))
             {
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var passwordResult = await _userManager.ResetPasswordAsync(user, resetToken, dto.Password);
                 if (!passwordResult.Succeeded)
-                    throw new ApplicationException(_localizer[LocalizationMessages.FailedToResetPassword]);
+                {
+                    var errors = passwordResult.Errors.Select(e => e.Description).ToList();
+                    return APIResponse<bool>.Fail(StatusCodes.Status400BadRequest, errors, string.Join("; ", errors));
+                }
             }
 
             if (dto.RoleIds?.Any() == true)
@@ -83,7 +91,7 @@ namespace FleetLinker.Application.Command.User.Handlers
             await _cache.RemoveAsync(CacheKeys.UsersAll, cancellationToken);
             await _cache.RemoveAsync(CacheKeys.UserById(dto.Id), cancellationToken);
 
-            return true;
+            return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.UserUpdatedSuccessfully]);
         }
     }
 }
