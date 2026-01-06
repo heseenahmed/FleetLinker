@@ -5,8 +5,10 @@ namespace FleetLinker.Domain.Entity
 {
     public class Equipment : BaseEntity
     {
+        public string? BrandAr { get; set; } // العلامة التجارية بالعربية
+        
         [Required]
-        public string Brand { get; set; } = null!; // البراند (العلامة التجارية)
+        public string BrandEn { get; set; } = null!; // Brand in English
         
         [Required]
         public int YearOfManufacture { get; set; } // سنة الصنع
@@ -14,8 +16,10 @@ namespace FleetLinker.Domain.Entity
         [Required]
         public string ChassisNumber { get; set; } = null!; // رقم الشاسيه
         
+        public string? ModelAr { get; set; } // الطراز بالعربية
+        
         [Required]
-        public string Model { get; set; } = null!; // الطراز
+        public string ModelEn { get; set; } = null!; // Model in English
         
         public string? AssetNumber { get; set; } // رقم الأصل (إن وجد)
 

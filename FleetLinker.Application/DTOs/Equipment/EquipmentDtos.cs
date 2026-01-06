@@ -3,6 +3,7 @@ using FleetLinker.Application.Common.Localization;
 
 namespace FleetLinker.Application.DTOs.Equipment
 {
+
     public class EquipmentDto
     {
         public Guid Id { get; set; }
@@ -17,8 +18,10 @@ namespace FleetLinker.Application.DTOs.Equipment
 
     public class CreateEquipmentDto
     {
+        public string? BrandAr { get; set; }
+        
         [Required(ErrorMessage = LocalizationMessages.BrandRequired)]
-        public string Brand { get; set; } = null!;
+        public string BrandEn { get; set; } = null!;
         
         [Required(ErrorMessage = LocalizationMessages.YearRequired)]
         public int? YearOfManufacture { get; set; }
@@ -26,8 +29,10 @@ namespace FleetLinker.Application.DTOs.Equipment
         [Required(ErrorMessage = LocalizationMessages.ChassisNumberRequired)]
         public string ChassisNumber { get; set; } = null!;
         
+        public string? ModelAr { get; set; }
+        
         [Required(ErrorMessage = LocalizationMessages.ModelRequired)]
-        public string Model { get; set; } = null!;
+        public string ModelEn { get; set; } = null!;
         
         public string? AssetNumber { get; set; }
     }
@@ -37,8 +42,10 @@ namespace FleetLinker.Application.DTOs.Equipment
         [Required(ErrorMessage = LocalizationMessages.InvalidId)]
         public Guid Id { get; set; }
 
+        public string? BrandAr { get; set; }
+        
         [Required(ErrorMessage = LocalizationMessages.BrandRequired)]
-        public string Brand { get; set; } = null!;
+        public string BrandEn { get; set; } = null!;
         
         [Required(ErrorMessage = LocalizationMessages.YearRequired)]
         public int? YearOfManufacture { get; set; }
@@ -46,8 +53,10 @@ namespace FleetLinker.Application.DTOs.Equipment
         [Required(ErrorMessage = LocalizationMessages.ChassisNumberRequired)]
         public string ChassisNumber { get; set; } = null!;
         
+        public string? ModelAr { get; set; }
+        
         [Required(ErrorMessage = LocalizationMessages.ModelRequired)]
-        public string Model { get; set; } = null!;
+        public string ModelEn { get; set; } = null!;
         
         public string? AssetNumber { get; set; }
     }

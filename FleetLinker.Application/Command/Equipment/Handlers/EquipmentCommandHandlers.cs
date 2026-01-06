@@ -39,10 +39,12 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
 
             var equipment = new Domain.Entity.Equipment
             {
-                Brand = request.Dto.Brand,
+                BrandAr = request.Dto.BrandAr,
+                BrandEn = request.Dto.BrandEn,
                 YearOfManufacture = request.Dto.YearOfManufacture!.Value,
                 ChassisNumber = request.Dto.ChassisNumber,
-                Model = request.Dto.Model,
+                ModelAr = request.Dto.ModelAr,
+                ModelEn = request.Dto.ModelEn,
                 AssetNumber = request.Dto.AssetNumber,
                 OwnerId = request.CreatedBy,
                 CreatedBy = request.CreatedBy,
@@ -68,20 +70,22 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
 
         public async Task<APIResponse<object?>> Handle(UpdateEquipmentCommand request, CancellationToken cancellationToken)
         {
-            var equipment = await _repository.GetByGuidAsync(request.Dto.Id);
-            if (equipment == null) throw new KeyNotFoundException(_localizer[LocalizationMessages.EquipmentNotFound]);
+    var equipment = await _repository.GetByGuidAsync(request.Dto.Id);
+    if (equipment == null) throw new KeyNotFoundException(_localizer[LocalizationMessages.EquipmentNotFound]);
 
-            equipment.Brand = request.Dto.Brand;
-            equipment.YearOfManufacture = request.Dto.YearOfManufacture!.Value;
-            equipment.ChassisNumber = request.Dto.ChassisNumber;
-            equipment.Model = request.Dto.Model;
-            equipment.AssetNumber = request.Dto.AssetNumber;
-            equipment.UpdatedBy = request.UpdatedBy;
-            equipment.UpdatedDate = DateTime.UtcNow;
+    equipment.BrandAr = request.Dto.BrandAr;
+    equipment.BrandEn = request.Dto.BrandEn;
+    equipment.YearOfManufacture = request.Dto.YearOfManufacture!.Value;
+    equipment.ChassisNumber = request.Dto.ChassisNumber;
+    equipment.ModelAr = request.Dto.ModelAr;
+    equipment.ModelEn = request.Dto.ModelEn;
+    equipment.AssetNumber = request.Dto.AssetNumber;
+    equipment.UpdatedBy = request.UpdatedBy;
+    equipment.UpdatedDate = DateTime.UtcNow;
 
-            await _repository.UpdateAsync(equipment);
-            return APIResponse<object?>.Success(null, _localizer[LocalizationMessages.EquipmentUpdatedSuccessfully]);
-        }
+    await _repository.UpdateAsync(equipment);
+    return APIResponse<object?>.Success(null, _localizer[LocalizationMessages.EquipmentUpdatedSuccessfully]);
+}
     }
 
     public class DeleteEquipmentCommandHandler : IRequestHandler<DeleteEquipmentCommand, APIResponse<object?>>

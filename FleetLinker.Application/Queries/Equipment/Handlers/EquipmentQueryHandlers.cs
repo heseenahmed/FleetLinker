@@ -20,24 +20,26 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
 
         public async Task<APIResponse<IEnumerable<EquipmentDto>>> Handle(GetAllEquipmentsQuery request, CancellationToken cancellationToken)
         {
-            var equipments = await _repository._dbSet
-                .Include(e => e.Owner)
-                .Where(e => e.IsActive)
-                .ToListAsync(cancellationToken);
-
-            var data = equipments.Select(e => new EquipmentDto
+            var equipments = await _repository.GetListAsync();
+            var isArabic = System.Globalization.CultureInfo.CurrentCulture.Name.StartsWith("ar");
+            
+            var dtos = equipments.Select(e => new EquipmentDto
             {
                 Id = e.Id,
-                Brand = e.Brand,
+                Brand = isArabic 
+                    ? (!string.IsNullOrWhiteSpace(e.BrandAr) ? e.BrandAr : e.BrandEn) 
+                    : (!string.IsNullOrWhiteSpace(e.BrandEn) ? e.BrandEn : e.BrandAr),
                 YearOfManufacture = e.YearOfManufacture,
                 ChassisNumber = e.ChassisNumber,
-                Model = e.Model,
+                Model = isArabic 
+                    ? (!string.IsNullOrWhiteSpace(e.ModelAr) ? e.ModelAr : e.ModelEn) 
+                    : (!string.IsNullOrWhiteSpace(e.ModelEn) ? e.ModelEn : e.ModelAr),
                 AssetNumber = e.AssetNumber,
                 OwnerId = e.OwnerId,
-                OwnerName = e.Owner.FullName
+                OwnerName = e.Owner?.FullName ?? string.Empty
             });
 
-            return APIResponse<IEnumerable<EquipmentDto>>.Success(data, _localizer[LocalizationMessages.EquipmentsRetrievedSuccessfully]);
+            return APIResponse<IEnumerable<EquipmentDto>>.Success(dtos, _localizer[LocalizationMessages.EquipmentsRetrievedSuccessfully]);
         }
     }
 
@@ -54,25 +56,29 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
 
         public async Task<APIResponse<EquipmentDto>> Handle(GetEquipmentByIdQuery request, CancellationToken cancellationToken)
         {
-            var e = await _repository._dbSet
-                .Include(e => e.Owner)
-                .FirstOrDefaultAsync(e => e.Id == request.Id && e.IsActive, cancellationToken);
+            var equipment = await _repository.GetByGuidAsync(request.Id);
+            if (equipment == null)
+                throw new KeyNotFoundException(_localizer[LocalizationMessages.EquipmentNotFound]);
 
-            if (e == null) throw new KeyNotFoundException("Equipment not found.");
+            var isArabic = System.Globalization.CultureInfo.CurrentCulture.Name.StartsWith("ar");
 
-            var data = new EquipmentDto
+            var dto = new EquipmentDto
             {
-                Id = e.Id,
-                Brand = e.Brand,
-                YearOfManufacture = e.YearOfManufacture,
-                ChassisNumber = e.ChassisNumber,
-                Model = e.Model,
-                AssetNumber = e.AssetNumber,
-                OwnerId = e.OwnerId,
-                OwnerName = e.Owner.FullName
+                Id = equipment.Id,
+                Brand = isArabic 
+                    ? (!string.IsNullOrWhiteSpace(equipment.BrandAr) ? equipment.BrandAr : equipment.BrandEn) 
+                    : (!string.IsNullOrWhiteSpace(equipment.BrandEn) ? equipment.BrandEn : equipment.BrandAr),
+                YearOfManufacture = equipment.YearOfManufacture,
+                ChassisNumber = equipment.ChassisNumber,
+                Model = isArabic 
+                    ? (!string.IsNullOrWhiteSpace(equipment.ModelAr) ? equipment.ModelAr : equipment.ModelEn) 
+                    : (!string.IsNullOrWhiteSpace(equipment.ModelEn) ? equipment.ModelEn : equipment.ModelAr),
+                AssetNumber = equipment.AssetNumber,
+                OwnerId = equipment.OwnerId,
+                OwnerName = equipment.Owner?.FullName ?? string.Empty
             };
 
-            return APIResponse<EquipmentDto>.Success(data, _localizer[LocalizationMessages.EquipmentRetrievedSuccessfully]);
+            return APIResponse<EquipmentDto>.Success(dto, _localizer[LocalizationMessages.EquipmentRetrievedSuccessfully]);
         }
     }
 }
