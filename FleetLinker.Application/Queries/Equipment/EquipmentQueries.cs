@@ -17,4 +17,8 @@ namespace FleetLinker.Application.Queries.Equipment
             Id = id;
         }
     }
+
+    public class DownloadEquipmentTemplateQuery : IRequest<byte[]>
+    {
+    }
 }

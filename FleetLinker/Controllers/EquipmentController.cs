@@ -58,5 +58,26 @@ namespace FleetLinker.API.Controllers
             var result = await _mediator.Send(new DeleteEquipmentCommand(id, userId!));
             return Ok(result);
         }
+
+        [HttpGet("DownloadTemplate")]
+        public async Task<IActionResult> DownloadTemplate()
+        {
+            var result = await _mediator.Send(new DownloadEquipmentTemplateQuery());
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EquipmentTemplate.xlsx");
+        }
+
+        [HttpPost("UploadExcel")]
+        public async Task<IActionResult> UploadExcel(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("File is empty.");
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            using (var stream = file.OpenReadStream())
+            {
+                var result = await _mediator.Send(new UploadEquipmentExcelCommand(stream, userId!));
+                return Ok(result);
+            }
+        }
     }
 }

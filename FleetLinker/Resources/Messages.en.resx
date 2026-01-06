@@ -408,4 +408,46 @@
   <data name="RoleWorkshop" xml:space="preserve">
     <value>Workshop</value>
   </data>
+  <data name="EquipmentsAddedSuccessfully" xml:space="preserve">
+    <value>Equipments added successfully</value>
+  </data>
+  <data name="IdentityDefaultError" xml:space="preserve">
+    <value>An unknown identity error occurred.</value>
+  </data>
+  <data name="IdentityConcurrencyFailure" xml:space="preserve">
+    <value>Optimistic concurrency failure, object has been modified.</value>
+  </data>
+  <data name="IdentityPasswordTooShort" xml:space="preserve">
+    <value>Passwords must be at least {0} characters.</value>
+  </data>
+  <data name="IdentityPasswordRequiresNonAlphanumeric" xml:space="preserve">
+    <value>Passwords must have at least one non alphanumeric character.</value>
+  </data>
+  <data name="IdentityPasswordRequiresDigit" xml:space="preserve">
+    <value>Passwords must have at least one digit ('0'-'9').</value>
+  </data>
+  <data name="IdentityPasswordRequiresLower" xml:space="preserve">
+    <value>Passwords must have at least one lowercase ('a'-'z').</value>
+  </data>
+  <data name="IdentityPasswordRequiresUpper" xml:space="preserve">
+    <value>Passwords must have at least one uppercase ('A'-'Z').</value>
+  </data>
+  <data name="IdentityPasswordRequiresUniqueChars" xml:space="preserve">
+    <value>Passwords must use at least {0} different characters.</value>
+  </data>
+  <data name="IdentityInvalidUserName" xml:space="preserve">
+    <value>User name is invalid, can only contain letters or digits.</value>
+  </data>
+  <data name="IdentityInvalidEmail" xml:space="preserve">
+    <value>Email is invalid.</value>
+  </data>
+  <data name="IdentityDuplicateUserName" xml:space="preserve">
+    <value>User name '{0}' is already taken.</value>
+  </data>
+  <data name="IdentityDuplicateEmail" xml:space="preserve">
+    <value>Email '{0}' is already taken.</value>
+  </data>
+  <data name="IdentityPasswordMismatch" xml:space="preserve">
+    <value>Incorrect password.</value>
+  </data>
 </root>

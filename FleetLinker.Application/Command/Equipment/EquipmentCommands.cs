@@ -39,4 +39,16 @@ namespace FleetLinker.Application.Command.Equipment
             DeletedBy = deletedBy;
         }
     }
+
+    public class UploadEquipmentExcelCommand : IRequest<APIResponse<object?>>
+    {
+        public Stream FileStream { get; set; }
+        public string CreatedBy { get; set; }
+
+        public UploadEquipmentExcelCommand(Stream fileStream, string createdBy)
+        {
+            FileStream = fileStream;
+            CreatedBy = createdBy;
+        }
+    }
 }

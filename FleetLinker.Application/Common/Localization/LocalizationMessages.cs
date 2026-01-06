@@ -106,6 +106,21 @@ namespace FleetLinker.Application.Common.Localization
         public const string ApplicationError = "ApplicationError";
         public const string ServerError = "ServerError";
         public const string UnexpectedErrorOccurred = "UnexpectedErrorOccurred";
+        
+        // Identity Errors
+        public const string IdentityDefaultError = "IdentityDefaultError";
+        public const string IdentityConcurrencyFailure = "IdentityConcurrencyFailure";
+        public const string IdentityPasswordTooShort = "IdentityPasswordTooShort";
+        public const string IdentityPasswordRequiresNonAlphanumeric = "IdentityPasswordRequiresNonAlphanumeric";
+        public const string IdentityPasswordRequiresDigit = "IdentityPasswordRequiresDigit";
+        public const string IdentityPasswordRequiresLower = "IdentityPasswordRequiresLower";
+        public const string IdentityPasswordRequiresUpper = "IdentityPasswordRequiresUpper";
+        public const string IdentityPasswordRequiresUniqueChars = "IdentityPasswordRequiresUniqueChars";
+        public const string IdentityInvalidUserName = "IdentityInvalidUserName";
+        public const string IdentityInvalidEmail = "IdentityInvalidEmail";
+        public const string IdentityDuplicateUserName = "IdentityDuplicateUserName";
+        public const string IdentityDuplicateEmail = "IdentityDuplicateEmail";
+        public const string IdentityPasswordMismatch = "IdentityPasswordMismatch";
 
         // Equipment
         public const string EquipmentCreatedSuccessfully = "EquipmentCreatedSuccessfully";
@@ -119,6 +134,7 @@ namespace FleetLinker.Application.Common.Localization
         public const string ModelRequired = "ModelRequired";
         public const string EquipmentRetrievedSuccessfully = "EquipmentRetrievedSuccessfully";
         public const string EquipmentsRetrievedSuccessfully = "EquipmentsRetrievedSuccessfully";
+        public const string EquipmentsAddedSuccessfully = "EquipmentsAddedSuccessfully";
 
         // Roles
         public const string RoleAdmin = "RoleAdmin";
