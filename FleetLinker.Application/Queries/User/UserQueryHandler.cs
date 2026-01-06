@@ -4,6 +4,7 @@ using FleetLinker.Domain.IRepository;
 using FleetLinker.Application.DTOs.User;
 using FleetLinker.Domain.Models;
 using MediatR;
+using FleetLinker.Application.Common.Localization;
 using FleetLinker.Application.Common.Caching;
 namespace FleetLinker.Application.Queries.User
 {
@@ -15,11 +16,13 @@ namespace FleetLinker.Application.Queries.User
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly ICacheService _cache;
-        public UserQueryHandler(IUserRepository userRepository, IMapper mapper , ICacheService cache)
+        private readonly IAppLocalizer _localizer;
+        public UserQueryHandler(IUserRepository userRepository, IMapper mapper , ICacheService cache, IAppLocalizer localizer)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _cache = cache;
+            _localizer = localizer;
         }
         public async Task<UserInfoAPI?> Handle(GetUserInfoAsyncCommand request, CancellationToken cancellationToken)
         {
@@ -35,7 +38,13 @@ namespace FleetLinker.Application.Queries.User
                 throw new ArgumentException("User ID is required.");
             var user = await _userRepository.GetByIdAsync(request.Id)
                        ?? throw new KeyNotFoundException("User not found.");
-            return _mapper.Map<UserForListDto>(user);
+            
+            var dto = _mapper.Map<UserForListDto>(user);
+            if (dto.UserRoles != null)
+            {
+                dto.UserRoles = dto.UserRoles.Select(r => _localizer[LocalizationMessages.GetRoleKey(r)]).ToList();
+            }
+            return dto;
         }
         public async Task<List<UserForListDto>> Handle(GetAllUser request, CancellationToken cancellationToken)
         {
@@ -53,6 +62,15 @@ namespace FleetLinker.Application.Queries.User
 
             var result = _mapper.Map<List<UserForListDto>>(users)
                          ?? new List<UserForListDto>();
+
+            // Localize roles
+            foreach (var userDto in result)
+            {
+                if (userDto.UserRoles != null)
+                {
+                    userDto.UserRoles = userDto.UserRoles.Select(r => _localizer[LocalizationMessages.GetRoleKey(r)]).ToList();
+                }
+            }
 
             // 3?? Store in cache (TTL = 5 minutes)
             await _cache.SetAsync(

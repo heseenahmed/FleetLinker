@@ -119,5 +119,33 @@ namespace FleetLinker.Application.Common.Localization
         public const string ModelRequired = "ModelRequired";
         public const string EquipmentRetrievedSuccessfully = "EquipmentRetrievedSuccessfully";
         public const string EquipmentsRetrievedSuccessfully = "EquipmentsRetrievedSuccessfully";
+
+        // Roles
+        public const string RoleAdmin = "RoleAdmin";
+        public const string RoleVisitor = "RoleVisitor";
+        public const string RoleEquipmentOwner = "RoleEquipmentOwner";
+        public const string RoleSupplier = "RoleSupplier";
+        public const string RoleMaintenanceWorkshopOwner = "RoleMaintenanceWorkshopOwner";
+        public const string RoleDriver = "RoleDriver";
+        public const string RoleMechanical = "RoleMechanical";
+        public const string RoleClient = "RoleClient";
+        public const string RoleWorkshop = "RoleWorkshop";
+
+        public static string GetRoleKey(string roleName)
+        {
+            return roleName.Trim().ToLower() switch
+            {
+                "admin" => RoleAdmin,
+                "visitor" => RoleVisitor,
+                "equipment owner" => RoleEquipmentOwner,
+                "supplier" => RoleSupplier,
+                "maintenance workshop owner" => RoleMaintenanceWorkshopOwner,
+                "driver" => RoleDriver,
+                "mechanical" => RoleMechanical,
+                "client" => RoleClient,
+                "workshop" => RoleWorkshop,
+                _ => roleName // Fallback to original if not found
+            };
+        }
     }
 }

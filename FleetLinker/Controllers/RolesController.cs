@@ -31,6 +31,7 @@ namespace FleetLinker.API.Controllers
 
         #region Get Roles
         [HttpGet("GetAllRoles")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(APIResponse<List<ApplicationRole>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(APIResponse<string>), StatusCodes.Status500InternalServerError)]

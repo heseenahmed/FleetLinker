@@ -381,4 +381,31 @@
   <data name="EquipmentsRetrievedSuccessfully" xml:space="preserve">
     <value>The equipments returned successfully</value>
   </data>
+  <data name="RoleAdmin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="RoleVisitor" xml:space="preserve">
+    <value>Visitor</value>
+  </data>
+  <data name="RoleEquipmentOwner" xml:space="preserve">
+    <value>Equipment owner</value>
+  </data>
+  <data name="RoleSupplier" xml:space="preserve">
+    <value>Supplier</value>
+  </data>
+  <data name="RoleMaintenanceWorkshopOwner" xml:space="preserve">
+    <value>Maintenance workshop owner</value>
+  </data>
+  <data name="RoleDriver" xml:space="preserve">
+    <value>Driver</value>
+  </data>
+  <data name="RoleMechanical" xml:space="preserve">
+    <value>Mechanical</value>
+  </data>
+  <data name="RoleClient" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="RoleWorkshop" xml:space="preserve">
+    <value>Workshop</value>
+  </data>
 </root>

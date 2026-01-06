@@ -61,7 +61,7 @@ namespace FleetLinker.Application.Command.User.Handlers
                 FullName = user.FullName,
                 RefreshToken = user.RefreshToken,
                 AccessToken = accessToken,
-                Roles = roles.ToList(),
+                Roles = roles.Select(r => _localizer[LocalizationMessages.GetRoleKey(r)]).ToList(),
                 FirstTimeLogin = user.FirstTimeLogin,
             };
 

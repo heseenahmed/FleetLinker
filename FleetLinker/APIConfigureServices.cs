@@ -61,7 +61,7 @@ namespace FleetLinker.API
             {
                 options.AddPolicy("MyPolicy", policy => 
                 { 
-                    policy.WithOrigins("http://localhost:4200") // TODO: Add production domains
+                    policy.WithOrigins("http://localhost:7270", "https://fleetlight-dashboard.vercel.app")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials(); 

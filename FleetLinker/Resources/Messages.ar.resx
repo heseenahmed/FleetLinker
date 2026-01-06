@@ -381,4 +381,31 @@
   <data name="EquipmentsRetrievedSuccessfully" xml:space="preserve">
     <value>تم استرجاع المعدات بنجاح</value>
   </data>
+  <data name="RoleAdmin" xml:space="preserve">
+    <value>مدير النظام</value>
+  </data>
+  <data name="RoleVisitor" xml:space="preserve">
+    <value>زائر</value>
+  </data>
+  <data name="RoleEquipmentOwner" xml:space="preserve">
+    <value>صاحب معدة</value>
+  </data>
+  <data name="RoleSupplier" xml:space="preserve">
+    <value>مورد</value>
+  </data>
+  <data name="RoleMaintenanceWorkshopOwner" xml:space="preserve">
+    <value>صاحب ورشة صيانة</value>
+  </data>
+  <data name="RoleDriver" xml:space="preserve">
+    <value>سائق</value>
+  </data>
+  <data name="RoleMechanical" xml:space="preserve">
+    <value>فني ميكانيكا</value>
+  </data>
+  <data name="RoleClient" xml:space="preserve">
+    <value>عميل</value>
+  </data>
+  <data name="RoleWorkshop" xml:space="preserve">
+    <value>ورشة</value>
+  </data>
 </root>
