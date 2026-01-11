@@ -20,7 +20,24 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
 
         public async Task<APIResponse<IEnumerable<EquipmentDto>>> Handle(GetAllEquipmentsQuery request, CancellationToken cancellationToken)
         {
-            var equipments = await _repository.GetListAsync();
+            IEnumerable<FleetLinker.Domain.Entity.Equipment> equipments;
+
+            if (!string.IsNullOrWhiteSpace(request.Search))
+            {
+                var search = request.Search.Trim().ToLower();
+                equipments = await _repository.GetListAsync(e =>
+                    (e.BrandAr != null && e.BrandAr.ToLower().Contains(search)) ||
+                    (e.BrandEn != null && e.BrandEn.ToLower().Contains(search)) ||
+                    (e.ChassisNumber != null && e.ChassisNumber.ToLower().Contains(search)) ||
+                    (e.ModelAr != null && e.ModelAr.ToLower().Contains(search)) ||
+                    (e.ModelEn != null && e.ModelEn.ToLower().Contains(search))
+                );
+            }
+            else
+            {
+                equipments = await _repository.GetListAsync();
+            }
+
             var isArabic = System.Globalization.CultureInfo.CurrentCulture.Name.StartsWith("ar");
             
             var dtos = equipments.Select(e => new EquipmentDto
@@ -29,11 +46,15 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 Brand = isArabic 
                     ? (!string.IsNullOrWhiteSpace(e.BrandAr) ? e.BrandAr : e.BrandEn) 
                     : (!string.IsNullOrWhiteSpace(e.BrandEn) ? e.BrandEn : e.BrandAr),
+                BrandAr = e.BrandAr,
+                BrandEn = e.BrandEn ?? string.Empty,
                 YearOfManufacture = e.YearOfManufacture,
                 ChassisNumber = e.ChassisNumber,
                 Model = isArabic 
                     ? (!string.IsNullOrWhiteSpace(e.ModelAr) ? e.ModelAr : e.ModelEn) 
                     : (!string.IsNullOrWhiteSpace(e.ModelEn) ? e.ModelEn : e.ModelAr),
+                ModelAr = e.ModelAr,
+                ModelEn = e.ModelEn ?? string.Empty,
                 AssetNumber = e.AssetNumber,
                 OwnerId = e.OwnerId,
                 OwnerName = e.Owner?.FullName ?? string.Empty
@@ -68,11 +89,15 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 Brand = isArabic 
                     ? (!string.IsNullOrWhiteSpace(equipment.BrandAr) ? equipment.BrandAr : equipment.BrandEn) 
                     : (!string.IsNullOrWhiteSpace(equipment.BrandEn) ? equipment.BrandEn : equipment.BrandAr),
+                BrandAr = equipment.BrandAr,
+                BrandEn = equipment.BrandEn ?? string.Empty,
                 YearOfManufacture = equipment.YearOfManufacture,
                 ChassisNumber = equipment.ChassisNumber,
                 Model = isArabic 
                     ? (!string.IsNullOrWhiteSpace(equipment.ModelAr) ? equipment.ModelAr : equipment.ModelEn) 
                     : (!string.IsNullOrWhiteSpace(equipment.ModelEn) ? equipment.ModelEn : equipment.ModelAr),
+                ModelAr = equipment.ModelAr,
+                ModelEn = equipment.ModelEn ?? string.Empty,
                 AssetNumber = equipment.AssetNumber,
                 OwnerId = equipment.OwnerId,
                 OwnerName = equipment.Owner?.FullName ?? string.Empty

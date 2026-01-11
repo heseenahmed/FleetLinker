@@ -104,11 +104,7 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
             var equipment = await _repository.GetByGuidAsync(request.Id);
             if (equipment == null) throw new KeyNotFoundException(_localizer[LocalizationMessages.EquipmentNotFound]);
 
-            equipment.IsActive = false;
-            equipment.UpdatedBy = request.DeletedBy;
-            equipment.UpdatedDate = DateTime.UtcNow;
-
-            await _repository.UpdateAsync(equipment);
+            await _repository.RemoveAsync(equipment);
             return APIResponse<object?>.Success(null, _localizer[LocalizationMessages.EquipmentDeletedSuccessfully]);
         }
     }

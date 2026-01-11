@@ -30,9 +30,9 @@ namespace FleetLinker.API.Controllers
         }
 
         [HttpGet("GetAllEquipments")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? search)
         {
-            var result = await _mediator.Send(new GetAllEquipmentsQuery());
+            var result = await _mediator.Send(new GetAllEquipmentsQuery(search));
             return Ok(result);
         }
 

@@ -6,6 +6,12 @@ namespace FleetLinker.Application.Queries.Equipment
 {
     public class GetAllEquipmentsQuery : IRequest<APIResponse<IEnumerable<EquipmentDto>>>
     {
+        public string? Search { get; set; }
+
+        public GetAllEquipmentsQuery(string? search = null)
+        {
+            Search = search;
+        }
     }
 
     public class GetEquipmentByIdQuery : IRequest<APIResponse<EquipmentDto>>
