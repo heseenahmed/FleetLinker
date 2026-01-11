@@ -58,5 +58,24 @@ namespace FleetLinker.API.Controllers
             var result = await _mediator.Send(new DeleteEquipmentSparePartCommand(id, userId!));
             return Ok(result);
         }
+
+        [HttpGet("DownloadExcelTemplate")]
+        public async Task<IActionResult> DownloadExcelTemplate()
+        {
+            var result = await _mediator.Send(new DownloadSparePartTemplateQuery());
+            if (result.Result == "Success")
+            {
+                return File(result.Data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "SparePartTemplate.xlsx");
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("UploadExcelFile")]
+        public async Task<IActionResult> UploadExcelFile(IFormFile file)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _mediator.Send(new BatchUploadSparePartsCommand(file, userId!));
+            return Ok(result);
+        }
     }
 }

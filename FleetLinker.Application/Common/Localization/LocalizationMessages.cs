@@ -143,6 +143,9 @@ namespace FleetLinker.Application.Common.Localization
         public const string SparePartNotFound = "SparePartNotFound";
         public const string SparePartRetrievedSuccessfully = "SparePartRetrievedSuccessfully";
         public const string SparePartsRetrievedSuccessfully = "SparePartsRetrievedSuccessfully";
+        public const string SparePartsUploadedSuccessfully = "SparePartsUploadedSuccessfully";
+        public const string InvalidExcelFile = "InvalidExcelFile";
+        public const string TemplateDownloadedSuccessfully = "TemplateDownloadedSuccessfully";
 
         // Roles
         public const string RoleAdmin = "RoleAdmin";
