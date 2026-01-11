@@ -28,6 +28,7 @@ namespace FleetLinker.Domain.Entity
         [DefaultValue(false)]
         public bool IsOTPEnabled { get; set; }
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; } = new List<ApplicationUserRole>();
+        public virtual ICollection<EquipmentSparePart> SpareParts { get; set; } = new List<EquipmentSparePart>();
     }
     public class ApplicationUserRole : IdentityUserRole<string>
     {

@@ -14,6 +14,7 @@ namespace FleetLinker.Infra.Data
         IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         public DbSet<Equipment> Equipments { get; set; }
+        public DbSet<EquipmentSparePart> EquipmentSpareParts { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }

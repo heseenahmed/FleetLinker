@@ -4,6 +4,7 @@ using FleetLinker.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FleetLinker.Infra.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260111122040_EquipmentSparePartsConfiguration")]
+    partial class EquipmentSparePartsConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,10 +284,7 @@ namespace FleetLinker.Infra.Migrations
                     b.Property<string>("AssetNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BrandAr")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BrandEn")
+                    b.Property<string>("Brand")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")

@@ -135,6 +135,14 @@ namespace FleetLinker.Application.Common.Localization
         public const string EquipmentRetrievedSuccessfully = "EquipmentRetrievedSuccessfully";
         public const string EquipmentsRetrievedSuccessfully = "EquipmentsRetrievedSuccessfully";
         public const string EquipmentsAddedSuccessfully = "EquipmentsAddedSuccessfully";
+        
+        // Spare Parts
+        public const string SparePartCreatedSuccessfully = "SparePartCreatedSuccessfully";
+        public const string SparePartUpdatedSuccessfully = "SparePartUpdatedSuccessfully";
+        public const string SparePartDeletedSuccessfully = "SparePartDeletedSuccessfully";
+        public const string SparePartNotFound = "SparePartNotFound";
+        public const string SparePartRetrievedSuccessfully = "SparePartRetrievedSuccessfully";
+        public const string SparePartsRetrievedSuccessfully = "SparePartsRetrievedSuccessfully";
 
         // Roles
         public const string RoleAdmin = "RoleAdmin";
