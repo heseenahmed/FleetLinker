@@ -409,4 +409,34 @@
   <data name="SparePartsRetrievedSuccessfully" xml:space="preserve">
     <value>The spare parts returned successfully</value>
   </data>
+  <data name="OfferCreatedSuccessfully" xml:space="preserve">
+    <value>Offer request sent successfully</value>
+  </data>
+  <data name="OfferRespondedSuccessfully" xml:space="preserve">
+    <value>Offer responded successfully</value>
+  </data>
+  <data name="OffersRetrievedSuccessfully" xml:space="preserve">
+    <value>Offers retrieved successfully</value>
+  </data>
+  <data name="UnauthorizedOfferRequest" xml:space="preserve">
+    <value>Only visitors and equipment owners can request offers</value>
+  </data>
+  <data name="UnauthorizedSupplierAccess" xml:space="preserve">
+    <value>This endpoint is only allowed for suppliers</value>
+  </data>
+  <data name="Manufacturer" xml:space="preserve">
+    <value>Manufacturer</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="EquipmentRequestCreatedSuccessfully" xml:space="preserve">
+    <value>Equipment request sent successfully</value>
+  </data>
+  <data name="EquipmentRequestRespondedSuccessfully" xml:space="preserve">
+    <value>Equipment request responded successfully</value>
+  </data>
+  <data name="EquipmentRequestsRetrievedSuccessfully" xml:space="preserve">
+    <value>Equipment requests retrieved successfully</value>
+  </data>
 </root>

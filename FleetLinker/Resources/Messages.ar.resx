@@ -409,4 +409,34 @@
   <data name="SparePartsRetrievedSuccessfully" xml:space="preserve">
     <value>تم استرجاع قطع الغيار بنجاح</value>
   </data>
+  <data name="OfferCreatedSuccessfully" xml:space="preserve">
+    <value>تم إرسال طلب عرض السعر بنجاح</value>
+  </data>
+  <data name="OfferRespondedSuccessfully" xml:space="preserve">
+    <value>تم الرد على طلب عرض السعر بنجاح</value>
+  </data>
+  <data name="OffersRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع العروض بنجاح</value>
+  </data>
+  <data name="UnauthorizedOfferRequest" xml:space="preserve">
+    <value>فقط الزوار وأصحاب المعدات يمكنهم طلب العروض</value>
+  </data>
+  <data name="UnauthorizedSupplierAccess" xml:space="preserve">
+    <value>هذا المسار متاح فقط للموردين</value>
+  </data>
+  <data name="Manufacturer" xml:space="preserve">
+    <value>الشركة المصنعة</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>السعر</value>
+  </data>
+  <data name="EquipmentRequestCreatedSuccessfully" xml:space="preserve">
+    <value>تم إرسال طلب المعدة بنجاح</value>
+  </data>
+  <data name="EquipmentRequestRespondedSuccessfully" xml:space="preserve">
+    <value>تم الرد على طلب المعدة بنجاح</value>
+  </data>
+  <data name="EquipmentRequestsRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع طلبات المعدات بنجاح</value>
+  </data>
 </root>

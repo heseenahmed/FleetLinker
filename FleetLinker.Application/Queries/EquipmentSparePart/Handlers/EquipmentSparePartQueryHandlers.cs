@@ -55,6 +55,10 @@ namespace FleetLinker.Application.Queries.EquipmentSparePart.Handlers
                 BrandEn = p.BrandEn,
                 YearOfManufacture = p.YearOfManufacture,
                 AssetNumber = p.AssetNumber,
+                Manufacturer = p.Manufacturer,
+                ImagePath = p.ImagePath,
+                Price = p.Price,
+                IsPriceHidden = p.IsPriceHidden,
                 SupplierId = p.SupplierId,
                 SupplierName = p.Supplier?.FullName ?? string.Empty
             });
@@ -86,6 +90,10 @@ namespace FleetLinker.Application.Queries.EquipmentSparePart.Handlers
                 BrandEn = part.BrandEn,
                 YearOfManufacture = part.YearOfManufacture,
                 AssetNumber = part.AssetNumber,
+                Manufacturer = part.Manufacturer,
+                ImagePath = part.ImagePath,
+                Price = part.Price,
+                IsPriceHidden = part.IsPriceHidden,
                 SupplierId = part.SupplierId,
                 SupplierName = part.Supplier?.FullName ?? string.Empty
             };

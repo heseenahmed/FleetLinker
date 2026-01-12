@@ -4,6 +4,7 @@ using FleetLinker.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FleetLinker.Infra.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260111133353_SparePartOffer")]
+    partial class SparePartOffer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,19 +245,7 @@ namespace FleetLinker.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsForRent")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsForSale")
                         .HasColumnType("bit");
 
                     b.Property<string>("ModelAr")
@@ -267,12 +258,6 @@ namespace FleetLinker.Infra.Migrations
                     b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal?>("RentPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("SalePrice")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -288,65 +273,6 @@ namespace FleetLinker.Infra.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Equipments");
-                });
-
-            modelBuilder.Entity("FleetLinker.Domain.Entity.EquipmentRequest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("EquipmentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal?>("FinalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("RequestType")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("RequestedPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("RequesterId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EquipmentId");
-
-                    b.HasIndex("OwnerId");
-
-                    b.HasIndex("RequesterId");
-
-                    b.ToTable("EquipmentRequests");
                 });
 
             modelBuilder.Entity("FleetLinker.Domain.Entity.EquipmentSparePart", b =>
@@ -371,24 +297,12 @@ namespace FleetLinker.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<bool>("IsPriceHidden")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Manufacturer")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PartNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("SupplierId")
                         .IsRequired()
@@ -585,33 +499,6 @@ namespace FleetLinker.Infra.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("FleetLinker.Domain.Entity.EquipmentRequest", b =>
-                {
-                    b.HasOne("FleetLinker.Domain.Entity.Equipment", "Equipment")
-                        .WithMany()
-                        .HasForeignKey("EquipmentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("FleetLinker.Domain.Entity.ApplicationUser", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("FleetLinker.Domain.Entity.ApplicationUser", "Requester")
-                        .WithMany()
-                        .HasForeignKey("RequesterId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Equipment");
-
-                    b.Navigation("Owner");
-
-                    b.Navigation("Requester");
                 });
 
             modelBuilder.Entity("FleetLinker.Domain.Entity.EquipmentSparePart", b =>

@@ -15,6 +15,8 @@ namespace FleetLinker.Infra.Data
     {
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<EquipmentSparePart> EquipmentSpareParts { get; set; }
+        public DbSet<SparePartOffer> SparePartOffers { get; set; }
+        public DbSet<EquipmentRequest> EquipmentRequests { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }

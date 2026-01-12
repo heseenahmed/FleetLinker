@@ -143,9 +143,17 @@ namespace FleetLinker.Application.Common.Localization
         public const string SparePartNotFound = "SparePartNotFound";
         public const string SparePartRetrievedSuccessfully = "SparePartRetrievedSuccessfully";
         public const string SparePartsRetrievedSuccessfully = "SparePartsRetrievedSuccessfully";
+        public const string OfferCreatedSuccessfully = "OfferCreatedSuccessfully";
+        public const string OfferRespondedSuccessfully = "OfferRespondedSuccessfully";
+        public const string OffersRetrievedSuccessfully = "OffersRetrievedSuccessfully";
+        public const string UnauthorizedOfferRequest = "UnauthorizedOfferRequest";
         public const string SparePartsUploadedSuccessfully = "SparePartsUploadedSuccessfully";
         public const string InvalidExcelFile = "InvalidExcelFile";
         public const string TemplateDownloadedSuccessfully = "TemplateDownloadedSuccessfully";
+        public const string UnauthorizedSupplierAccess = "UnauthorizedSupplierAccess";
+        public const string EquipmentRequestCreatedSuccessfully = "EquipmentRequestCreatedSuccessfully";
+        public const string EquipmentRequestRespondedSuccessfully = "EquipmentRequestRespondedSuccessfully";
+        public const string EquipmentRequestsRetrievedSuccessfully = "EquipmentRequestsRetrievedSuccessfully";
 
         // Roles
         public const string RoleAdmin = "RoleAdmin";

@@ -28,5 +28,17 @@ namespace FleetLinker.Domain.Entity
 
         [ForeignKey("OwnerId")]
         public virtual ApplicationUser Owner { get; set; } = null!;
+
+        public bool IsForSale { get; set; } // معروض للبيع
+
+        public bool IsForRent { get; set; } // معروض للإيجار
+
+        public decimal? SalePrice { get; set; } // سعر البيع
+
+        public decimal? RentPrice { get; set; } // سعر الإيجار
+
+        public string? ImagePath { get; set; } // صورة المعدة
+
+        public string? Description { get; set; } // وصف المعدة
     }
 }

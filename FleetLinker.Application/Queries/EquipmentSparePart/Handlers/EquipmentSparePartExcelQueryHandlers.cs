@@ -31,9 +31,11 @@ namespace FleetLinker.Application.Queries.EquipmentSparePart.Handlers
                 worksheet.Cell(1, 4).Value = "Brand (English)";
                 worksheet.Cell(1, 5).Value = "Year of Manufacture";
                 worksheet.Cell(1, 6).Value = "Asset Number";
+                worksheet.Cell(1, 7).Value = "Manufacturer";
+                worksheet.Cell(1, 8).Value = "Price";
 
                 // Formatting
-                var headerRange = worksheet.Range(1, 1, 1, 6);
+                var headerRange = worksheet.Range(1, 1, 1, 8);
                 headerRange.Style.Font.Bold = true;
                 headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
                 worksheet.Columns().AdjustToContents();

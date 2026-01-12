@@ -57,7 +57,13 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 ModelEn = e.ModelEn ?? string.Empty,
                 AssetNumber = e.AssetNumber,
                 OwnerId = e.OwnerId,
-                OwnerName = e.Owner?.FullName ?? string.Empty
+                OwnerName = e.Owner?.FullName ?? "N/A",
+                IsForSale = e.IsForSale,
+                IsForRent = e.IsForRent,
+                SalePrice = e.SalePrice,
+                RentPrice = e.RentPrice,
+                ImagePath = e.ImagePath,
+                Description = e.Description
             });
 
             return APIResponse<IEnumerable<EquipmentDto>>.Success(dtos, _localizer[LocalizationMessages.EquipmentsRetrievedSuccessfully]);
@@ -100,7 +106,13 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 ModelEn = equipment.ModelEn ?? string.Empty,
                 AssetNumber = equipment.AssetNumber,
                 OwnerId = equipment.OwnerId,
-                OwnerName = equipment.Owner?.FullName ?? string.Empty
+                OwnerName = equipment.Owner?.FullName ?? "N/A",
+                IsForSale = equipment.IsForSale,
+                IsForRent = equipment.IsForRent,
+                SalePrice = equipment.SalePrice,
+                RentPrice = equipment.RentPrice,
+                ImagePath = equipment.ImagePath,
+                Description = equipment.Description
             };
 
             return APIResponse<EquipmentDto>.Success(dto, _localizer[LocalizationMessages.EquipmentRetrievedSuccessfully]);

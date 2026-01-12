@@ -56,6 +56,8 @@ namespace FleetLinker.Application.Command.EquipmentSparePart.Handlers
                         var brandEn = row.Cell(4).GetString();
                         var yearStr = row.Cell(5).GetString();
                         var assetNumber = row.Cell(6).GetString();
+                        var manufacturer = row.Cell(7).GetString();
+                        var priceStr = row.Cell(8).GetString();
 
                         if (string.IsNullOrWhiteSpace(partNumber)) continue;
 
@@ -64,6 +66,7 @@ namespace FleetLinker.Application.Command.EquipmentSparePart.Handlers
                             : PartType.Commercial;
 
                         int.TryParse(yearStr, out int year);
+                        decimal.TryParse(priceStr, out decimal price);
 
                         var sparePart = new FleetLinker.Domain.Entity.EquipmentSparePart
                         {
@@ -74,6 +77,9 @@ namespace FleetLinker.Application.Command.EquipmentSparePart.Handlers
                             BrandEn = brandEn,
                             YearOfManufacture = year,
                             AssetNumber = assetNumber,
+                            Manufacturer = manufacturer,
+                            Price = price,
+                            IsPriceHidden = false, // Default to false for Excel upload
                             SupplierId = request.SupplierId,
                             CreatedDate = DateTime.UtcNow,
                             CreatedBy = request.SupplierId,

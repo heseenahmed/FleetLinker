@@ -25,5 +25,13 @@ namespace FleetLinker.Domain.Entity
 
         [ForeignKey("SupplierId")]
         public virtual ApplicationUser Supplier { get; set; } = null!;
+
+        public string? Manufacturer { get; set; } // الشركة المصنعة
+
+        public string? ImagePath { get; set; } // صورة القطعة
+
+        public decimal Price { get; set; } // سعر القطعة
+
+        public bool IsPriceHidden { get; set; } // إخفاء السعر عن المستخدمين
     }
 }

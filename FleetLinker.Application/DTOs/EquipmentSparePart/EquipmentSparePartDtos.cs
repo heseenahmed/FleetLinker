@@ -1,4 +1,5 @@
 using FleetLinker.Domain.Enums;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace FleetLinker.Application.DTOs.EquipmentSparePart
@@ -17,6 +18,10 @@ namespace FleetLinker.Application.DTOs.EquipmentSparePart
         public string? AssetNumber { get; set; }
         public string SupplierId { get; set; } = null!;
         public string SupplierName { get; set; } = null!;
+        public string? Manufacturer { get; set; }
+        public string? ImagePath { get; set; }
+        public decimal Price { get; set; }
+        public bool IsPriceHidden { get; set; }
     }
 
     public class CreateEquipmentSparePartDto
@@ -34,6 +39,14 @@ namespace FleetLinker.Application.DTOs.EquipmentSparePart
         public int YearOfManufacture { get; set; }
 
         public string? AssetNumber { get; set; }
+
+        public string? Manufacturer { get; set; }
+        
+        public IFormFile? ImageFile { get; set; }
+
+        public decimal Price { get; set; }
+
+        public bool IsPriceHidden { get; set; }
     }
 
     public class UpdateEquipmentSparePartDto : CreateEquipmentSparePartDto

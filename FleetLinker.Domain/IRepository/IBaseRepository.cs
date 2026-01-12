@@ -32,8 +32,10 @@ namespace FleetLinker.Domain.IRepository
         Task<TEntity> GetByIdAsync(int id);
         TEntity? Get(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null);
         IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null);
         Task<IEnumerable<TEntity>> GetListAsync();
         #endregion
         #region Save_Dis

@@ -22,7 +22,7 @@ namespace FleetLinker.API.Controllers
         }
 
         [HttpPost("CreateSparePart")]
-        public async Task<IActionResult> Create([FromBody] CreateEquipmentSparePartDto dto)
+        public async Task<IActionResult> Create([FromForm] CreateEquipmentSparePartDto dto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _mediator.Send(new CreateEquipmentSparePartCommand(dto, userId!));
@@ -44,7 +44,7 @@ namespace FleetLinker.API.Controllers
         }
 
         [HttpPut("UpdateSparePart")]
-        public async Task<IActionResult> Update([FromBody] UpdateEquipmentSparePartDto dto)
+        public async Task<IActionResult> Update([FromForm] UpdateEquipmentSparePartDto dto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _mediator.Send(new UpdateEquipmentSparePartCommand(dto, userId!));

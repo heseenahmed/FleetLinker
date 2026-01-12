@@ -46,6 +46,12 @@ namespace FleetLinker.Infra.Repository
         {
             return await _dbSet.FirstOrDefaultAsync(predicate);
         }
+        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
+        {
+            IQueryable<TEntity> query = _dbSet;
+            if (include != null) query = include(query);
+            return await query.FirstOrDefaultAsync(predicate);
+        }
         public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> predicate)
         {
             return _dbSet.Where(predicate).ToList();
@@ -53,6 +59,13 @@ namespace FleetLinker.Infra.Repository
         public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
+        }
+        public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
+        {
+            IQueryable<TEntity> query = _dbSet;
+            if (include != null) query = include(query);
+            if (predicate != null) query = query.Where(predicate);
+            return await query.ToListAsync();
         }
         public async Task<IEnumerable<TEntity>> GetListAsync()
         {

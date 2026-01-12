@@ -1,9 +1,9 @@
-using System.ComponentModel.DataAnnotations;
 using FleetLinker.Application.Common.Localization;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace FleetLinker.Application.DTOs.Equipment
 {
-
     public class EquipmentDto
     {
         public Guid Id { get; set; }
@@ -18,6 +18,12 @@ namespace FleetLinker.Application.DTOs.Equipment
         public string? AssetNumber { get; set; }
         public string OwnerId { get; set; } = null!;
         public string OwnerName { get; set; } = null!;
+        public bool IsForSale { get; set; }
+        public bool IsForRent { get; set; }
+        public decimal? SalePrice { get; set; }
+        public decimal? RentPrice { get; set; }
+        public string? ImagePath { get; set; }
+        public string? Description { get; set; }
     }
 
     public class CreateEquipmentDto
@@ -39,6 +45,13 @@ namespace FleetLinker.Application.DTOs.Equipment
         public string ModelEn { get; set; } = null!;
         
         public string? AssetNumber { get; set; }
+
+        public bool IsForSale { get; set; }
+        public bool IsForRent { get; set; }
+        public decimal? SalePrice { get; set; }
+        public decimal? RentPrice { get; set; }
+        public string? Description { get; set; }
+        public IFormFile? ImageFile { get; set; }
     }
 
     public class UpdateEquipmentDto
@@ -63,5 +76,12 @@ namespace FleetLinker.Application.DTOs.Equipment
         public string ModelEn { get; set; } = null!;
         
         public string? AssetNumber { get; set; }
+
+        public bool IsForSale { get; set; }
+        public bool IsForRent { get; set; }
+        public decimal? SalePrice { get; set; }
+        public decimal? RentPrice { get; set; }
+        public string? Description { get; set; }
+        public IFormFile? ImageFile { get; set; }
     }
 }
