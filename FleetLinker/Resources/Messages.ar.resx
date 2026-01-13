@@ -439,4 +439,25 @@
   <data name="EquipmentRequestsRetrievedSuccessfully" xml:space="preserve">
     <value>تم استرجاع طلبات المعدات بنجاح</value>
   </data>
+  <data name="ItemAddedToCart" xml:space="preserve">
+    <value>تم إضافة العنصر إلى السلة بنجاح</value>
+  </data>
+  <data name="ItemRemovedFromCart" xml:space="preserve">
+    <value>تم إزالة العنصر من السلة بنجاح</value>
+  </data>
+  <data name="CartCleared" xml:space="preserve">
+    <value>تم إفراغ السلة بنجاح</value>
+  </data>
+  <data name="OrderCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء الطلب بنجاح</value>
+  </data>
+  <data name="InsufficientCart" xml:space="preserve">
+    <value>سلة التسوق فارغة أو تحتوي على عناصر غير متوفرة</value>
+  </data>
+  <data name="InvalidCartItem" xml:space="preserve">
+    <value>العنصر لم يعد متاحاً أو لم يتم قبوله بعد</value>
+  </data>
+  <data name="ItemAlreadyInCart" xml:space="preserve">
+    <value>العنصر موجود بالفعل في سلة التسوق</value>
+  </data>
 </root>

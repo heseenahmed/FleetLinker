@@ -439,4 +439,25 @@
   <data name="EquipmentRequestsRetrievedSuccessfully" xml:space="preserve">
     <value>Equipment requests retrieved successfully</value>
   </data>
+  <data name="ItemAddedToCart" xml:space="preserve">
+    <value>Item added to cart successfully</value>
+  </data>
+  <data name="ItemRemovedFromCart" xml:space="preserve">
+    <value>Item removed from cart successfully</value>
+  </data>
+  <data name="CartCleared" xml:space="preserve">
+    <value>Cart cleared successfully</value>
+  </data>
+  <data name="OrderCreatedSuccessfully" xml:space="preserve">
+    <value>Order created successfully</value>
+  </data>
+  <data name="InsufficientCart" xml:space="preserve">
+    <value>Your cart is empty or contains unavailable items</value>
+  </data>
+  <data name="InvalidCartItem" xml:space="preserve">
+    <value>Item is no longer available or not accepted</value>
+  </data>
+  <data name="ItemAlreadyInCart" xml:space="preserve">
+    <value>Item is already in your cart</value>
+  </data>
 </root>

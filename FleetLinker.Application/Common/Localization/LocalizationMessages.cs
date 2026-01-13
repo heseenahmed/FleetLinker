@@ -154,6 +154,13 @@ namespace FleetLinker.Application.Common.Localization
         public const string EquipmentRequestCreatedSuccessfully = "EquipmentRequestCreatedSuccessfully";
         public const string EquipmentRequestRespondedSuccessfully = "EquipmentRequestRespondedSuccessfully";
         public const string EquipmentRequestsRetrievedSuccessfully = "EquipmentRequestsRetrievedSuccessfully";
+        public const string ItemAddedToCart = "ItemAddedToCart";
+        public const string ItemRemovedFromCart = "ItemRemovedFromCart";
+        public const string CartCleared = "CartCleared";
+        public const string OrderCreatedSuccessfully = "OrderCreatedSuccessfully";
+        public const string InsufficientCart = "InsufficientCart";
+        public const string InvalidCartItem = "InvalidCartItem";
+        public const string ItemAlreadyInCart = "ItemAlreadyInCart";
 
         // Roles
         public const string RoleAdmin = "RoleAdmin";
