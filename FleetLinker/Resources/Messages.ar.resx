@@ -439,4 +439,13 @@
   <data name="EquipmentRequestsRetrievedSuccessfully" xml:space="preserve">
     <value>تم استرجاع طلبات المعدات بنجاح</value>
   </data>
+  <data name="UsageHoursRequired" xml:space="preserve">
+    <value>عدد ساعات الاستخدام مطلوب</value>
+  </data>
+  <data name="FuelLitersRequired" xml:space="preserve">
+    <value>عدد لترات الجاز مطلوب</value>
+  </data>
+  <data name="UsageUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تحديث بيانات الاستخدام بنجاح</value>
+  </data>
 </root>

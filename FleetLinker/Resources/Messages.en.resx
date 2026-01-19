@@ -439,4 +439,13 @@
   <data name="EquipmentRequestsRetrievedSuccessfully" xml:space="preserve">
     <value>Equipment requests retrieved successfully</value>
   </data>
+  <data name="UsageHoursRequired" xml:space="preserve">
+    <value>Usage hours are required</value>
+  </data>
+  <data name="FuelLitersRequired" xml:space="preserve">
+    <value>Fuel liters are required</value>
+  </data>
+  <data name="UsageUpdatedSuccessfully" xml:space="preserve">
+    <value>Usage data updated successfully</value>
+  </data>
 </root>

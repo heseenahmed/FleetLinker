@@ -27,4 +27,13 @@ namespace FleetLinker.Application.Queries.Equipment
     public class DownloadEquipmentTemplateQuery : IRequest<byte[]>
     {
     }
+    public class GetEquipmentsByOwnerQuery : IRequest<APIResponse<IEnumerable<EquipmentDto>>>
+    {
+        public string OwnerId { get; set; }
+
+        public GetEquipmentsByOwnerQuery(string ownerId)
+        {
+            OwnerId = ownerId;
+        }
+    }
 }

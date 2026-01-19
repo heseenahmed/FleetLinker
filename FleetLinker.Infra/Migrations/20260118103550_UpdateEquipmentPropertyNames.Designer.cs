@@ -4,6 +4,7 @@ using FleetLinker.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FleetLinker.Infra.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260118103550_UpdateEquipmentPropertyNames")]
+    partial class UpdateEquipmentPropertyNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,17 +254,11 @@ namespace FleetLinker.Infra.Migrations
                     b.Property<bool>("ForSale")
                         .HasColumnType("bit");
 
-                    b.Property<decimal?>("FuelLiters")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("MechanicalId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ModelAr")
                         .HasColumnType("nvarchar(max)");
@@ -286,15 +283,10 @@ namespace FleetLinker.Infra.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("UsageHours")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("YearOfManufacture")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MechanicalId");
 
                     b.HasIndex("OwnerId");
 
@@ -589,18 +581,11 @@ namespace FleetLinker.Infra.Migrations
 
             modelBuilder.Entity("FleetLinker.Domain.Entity.Equipment", b =>
                 {
-                    b.HasOne("FleetLinker.Domain.Entity.ApplicationUser", "Mechanical")
-                        .WithMany()
-                        .HasForeignKey("MechanicalId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("FleetLinker.Domain.Entity.ApplicationUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Mechanical");
 
                     b.Navigation("Owner");
                 });

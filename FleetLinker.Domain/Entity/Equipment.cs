@@ -29,9 +29,9 @@ namespace FleetLinker.Domain.Entity
         [ForeignKey("OwnerId")]
         public virtual ApplicationUser Owner { get; set; } = null!;
 
-        public bool IsForSale { get; set; } // معروض للبيع
+        public bool ForSale { get; set; } // معروض للبيع
 
-        public bool IsForRent { get; set; } // معروض للإيجار
+        public bool ForRent { get; set; } // معروض للإيجار
 
         public decimal? SalePrice { get; set; } // سعر البيع
 
@@ -40,5 +40,14 @@ namespace FleetLinker.Domain.Entity
         public string? ImagePath { get; set; } // صورة المعدة
 
         public string? Description { get; set; } // وصف المعدة
+        
+        public decimal? UsageHours { get; set; } // عدد ساعات الاستخدام
+        
+        public decimal? FuelLiters { get; set; } // عدد لترات الجاز
+
+        public string? MechanicalId { get; set; } // ID الفني الذي أدخل البيانات
+        
+        [ForeignKey("MechanicalId")]
+        public virtual ApplicationUser? Mechanical { get; set; }
     }
 }

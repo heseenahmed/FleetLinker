@@ -67,8 +67,8 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
                 ModelEn = request.Dto.ModelEn,
                 AssetNumber = request.Dto.AssetNumber,
                 OwnerId = request.CreatedBy,
-                IsForSale = request.Dto.IsForSale,
-                IsForRent = request.Dto.IsForRent,
+                ForSale = request.Dto.ForSale,
+                ForRent = request.Dto.ForRent,
                 SalePrice = request.Dto.SalePrice,
                 RentPrice = request.Dto.RentPrice,
                 Description = request.Dto.Description,
@@ -129,8 +129,8 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
             equipment.ModelAr = request.Dto.ModelAr;
             equipment.ModelEn = request.Dto.ModelEn;
             equipment.AssetNumber = request.Dto.AssetNumber;
-            equipment.IsForSale = request.Dto.IsForSale;
-            equipment.IsForRent = request.Dto.IsForRent;
+            equipment.ForSale = request.Dto.ForSale;
+            equipment.ForRent = request.Dto.ForRent;
             equipment.SalePrice = request.Dto.SalePrice;
             equipment.RentPrice = request.Dto.RentPrice;
             equipment.Description = request.Dto.Description;

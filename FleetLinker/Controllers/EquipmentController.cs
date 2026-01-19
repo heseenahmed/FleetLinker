@@ -79,5 +79,20 @@ namespace FleetLinker.API.Controllers
                 return Ok(result);
             }
         }
+
+        [HttpPut("UpdateEquipmentUsage")]
+        [Authorize(Roles = "mechanical")]
+        public async Task<IActionResult> UpdateUsage([FromBody] UpdateEquipmentUsageDto dto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _mediator.Send(new UpdateEquipmentUsageCommand(dto, userId!));
+            return Ok(result);
+        }
+        [HttpGet("GetEquipmentByOwner/{ownerId}")]
+        public async Task<IActionResult> GetByOwner(string ownerId)
+        {
+            var result = await _mediator.Send(new GetEquipmentsByOwnerQuery(ownerId));
+            return Ok(result);
+        }
     }
 }

@@ -51,4 +51,15 @@ namespace FleetLinker.Application.Command.Equipment
             CreatedBy = createdBy;
         }
     }
+    public class UpdateEquipmentUsageCommand : IRequest<APIResponse<object?>>
+    {
+        public UpdateEquipmentUsageDto Dto { get; set; }
+        public string MechanicalId { get; set; }
+
+        public UpdateEquipmentUsageCommand(UpdateEquipmentUsageDto dto, string mechanicalId)
+        {
+            Dto = dto;
+            MechanicalId = mechanicalId;
+        }
+    }
 }

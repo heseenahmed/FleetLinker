@@ -18,12 +18,16 @@ namespace FleetLinker.Application.DTOs.Equipment
         public string? AssetNumber { get; set; }
         public string OwnerId { get; set; } = null!;
         public string OwnerName { get; set; } = null!;
-        public bool IsForSale { get; set; }
-        public bool IsForRent { get; set; }
+        public bool ForSale { get; set; }
+        public bool ForRent { get; set; }
         public decimal? SalePrice { get; set; }
         public decimal? RentPrice { get; set; }
         public string? ImagePath { get; set; }
         public string? Description { get; set; }
+        public decimal? UsageHours { get; set; }
+        public decimal? FuelLiters { get; set; }
+        public string? MechanicalId { get; set; }
+        public string? MechanicalName { get; set; }
     }
 
     public class CreateEquipmentDto
@@ -46,8 +50,8 @@ namespace FleetLinker.Application.DTOs.Equipment
         
         public string? AssetNumber { get; set; }
 
-        public bool IsForSale { get; set; }
-        public bool IsForRent { get; set; }
+        public bool ForSale { get; set; }
+        public bool ForRent { get; set; }
         public decimal? SalePrice { get; set; }
         public decimal? RentPrice { get; set; }
         public string? Description { get; set; }
@@ -77,11 +81,22 @@ namespace FleetLinker.Application.DTOs.Equipment
         
         public string? AssetNumber { get; set; }
 
-        public bool IsForSale { get; set; }
-        public bool IsForRent { get; set; }
+        public bool ForSale { get; set; }
+        public bool ForRent { get; set; }
         public decimal? SalePrice { get; set; }
         public decimal? RentPrice { get; set; }
         public string? Description { get; set; }
         public IFormFile? ImageFile { get; set; }
+    }
+    public class UpdateEquipmentUsageDto
+    {
+        [Required(ErrorMessage = LocalizationMessages.InvalidId)]
+        public Guid EquipmentId { get; set; }
+
+        [Required(ErrorMessage = LocalizationMessages.UsageHoursRequired)]
+        public decimal UsageHours { get; set; }
+
+        [Required(ErrorMessage = LocalizationMessages.FuelLitersRequired)]
+        public decimal FuelLiters { get; set; }
     }
 }
