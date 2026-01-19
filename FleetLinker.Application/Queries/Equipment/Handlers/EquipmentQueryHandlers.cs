@@ -75,6 +75,7 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 FuelLiters = e.FuelLiters,
                 MechanicalId = e.MechanicalId,
                 MechanicalName = e.Mechanical?.FullName ?? "N/A",
+                Kilometers = e.Kilometers,
                 EquipmentType = e.EquipmentType == EquipmentType.Truck 
                     ? _localizer[LocalizationMessages.Truck] 
                     : _localizer[LocalizationMessages.Equipment]
@@ -134,6 +135,7 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 FuelLiters = equipment.FuelLiters,
                 MechanicalId = equipment.MechanicalId,
                 MechanicalName = equipment.Mechanical?.FullName ?? "N/A",
+                Kilometers = equipment.Kilometers,
                 EquipmentType = equipment.EquipmentType == EquipmentType.Truck 
                     ? _localizer[LocalizationMessages.Truck] 
                     : _localizer[LocalizationMessages.Equipment]
@@ -190,6 +192,7 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 FuelLiters = e.FuelLiters,
                 MechanicalId = e.MechanicalId,
                 MechanicalName = e.Mechanical?.FullName ?? "N/A",
+                Kilometers = e.Kilometers,
                 EquipmentType = e.EquipmentType == EquipmentType.Truck 
                     ? _localizer[LocalizationMessages.Truck] 
                     : _localizer[LocalizationMessages.Equipment]

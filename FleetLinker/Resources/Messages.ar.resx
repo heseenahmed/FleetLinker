@@ -457,4 +457,7 @@
   <data name="Equipment" xml:space="preserve">
     <value>معدة</value>
   </data>
+  <data name="Kilometers" xml:space="preserve">
+    <value>كيلومترات</value>
+  </data>
 </root>

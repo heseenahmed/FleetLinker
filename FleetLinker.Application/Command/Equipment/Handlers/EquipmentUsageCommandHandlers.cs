@@ -43,6 +43,7 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
 
             equipment.UsageHours = request.Dto.UsageHours;
             equipment.FuelLiters = request.Dto.FuelLiters;
+            equipment.Kilometers = request.Dto.Kilometers;
             equipment.MechanicalId = request.MechanicalId;
             equipment.UpdatedBy = request.MechanicalId;
             equipment.UpdatedDate = DateTime.UtcNow;

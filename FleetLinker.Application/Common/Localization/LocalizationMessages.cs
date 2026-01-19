@@ -141,6 +141,7 @@ namespace FleetLinker.Application.Common.Localization
         public const string EquipmentTypeRequired = "EquipmentTypeRequired";
         public const string Truck = "Truck";
         public const string Equipment = "Equipment";
+        public const string Kilometers = "Kilometers";
         
         // Spare Parts
         public const string SparePartCreatedSuccessfully = "SparePartCreatedSuccessfully";

@@ -30,6 +30,7 @@ namespace FleetLinker.Application.DTOs.Equipment
         public string? MechanicalId { get; set; }
         public string? MechanicalName { get; set; }
         public string EquipmentType { get; set; } = null!;
+        public decimal? Kilometers { get; set; }
     }
 
     public class CreateEquipmentDto
@@ -106,5 +107,7 @@ namespace FleetLinker.Application.DTOs.Equipment
 
         [Required(ErrorMessage = LocalizationMessages.FuelLitersRequired)]
         public decimal FuelLiters { get; set; }
+
+        public decimal? Kilometers { get; set; }
     }
 }

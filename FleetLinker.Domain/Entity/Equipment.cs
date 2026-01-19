@@ -54,5 +54,7 @@ namespace FleetLinker.Domain.Entity
 
         [Required]
         public EquipmentType EquipmentType { get; set; } // شاحنة أو معدة
+
+        public decimal? Kilometers { get; set; }
     }
 }
