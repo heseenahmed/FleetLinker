@@ -446,6 +446,15 @@
     <value>Fuel liters are required</value>
   </data>
   <data name="UsageUpdatedSuccessfully" xml:space="preserve">
-    <value>Usage data updated successfully</value>
+    <value>Equipment usage and fuel data updated successfully.</value>
+  </data>
+  <data name="EquipmentTypeRequired" xml:space="preserve">
+    <value>Equipment type is required.</value>
+  </data>
+  <data name="Truck" xml:space="preserve">
+    <value>Truck</value>
+  </data>
+  <data name="Equipment" xml:space="preserve">
+    <value>Equipment</value>
   </data>
 </root>

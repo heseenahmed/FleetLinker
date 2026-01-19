@@ -1,4 +1,5 @@
 using FleetLinker.Application.Common.Localization;
+using FleetLinker.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
@@ -28,6 +29,7 @@ namespace FleetLinker.Application.DTOs.Equipment
         public decimal? FuelLiters { get; set; }
         public string? MechanicalId { get; set; }
         public string? MechanicalName { get; set; }
+        public string EquipmentType { get; set; } = null!;
     }
 
     public class CreateEquipmentDto
@@ -56,6 +58,9 @@ namespace FleetLinker.Application.DTOs.Equipment
         public decimal? RentPrice { get; set; }
         public string? Description { get; set; }
         public IFormFile? ImageFile { get; set; }
+
+        [Required(ErrorMessage = LocalizationMessages.EquipmentTypeRequired)]
+        public EquipmentType EquipmentType { get; set; }
     }
 
     public class UpdateEquipmentDto
@@ -87,6 +92,9 @@ namespace FleetLinker.Application.DTOs.Equipment
         public decimal? RentPrice { get; set; }
         public string? Description { get; set; }
         public IFormFile? ImageFile { get; set; }
+
+        [Required(ErrorMessage = LocalizationMessages.EquipmentTypeRequired)]
+        public EquipmentType EquipmentType { get; set; }
     }
     public class UpdateEquipmentUsageDto
     {

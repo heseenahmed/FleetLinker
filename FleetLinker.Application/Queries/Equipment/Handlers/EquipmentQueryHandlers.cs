@@ -1,6 +1,7 @@
 using FleetLinker.Application.Common.Localization;
 using FleetLinker.Application.DTOs;
 using FleetLinker.Application.DTOs.Equipment;
+using FleetLinker.Domain.Enums;
 using FleetLinker.Domain.IRepository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -73,7 +74,10 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 UsageHours = e.UsageHours,
                 FuelLiters = e.FuelLiters,
                 MechanicalId = e.MechanicalId,
-                MechanicalName = e.Mechanical?.FullName ?? "N/A"
+                MechanicalName = e.Mechanical?.FullName ?? "N/A",
+                EquipmentType = e.EquipmentType == EquipmentType.Truck 
+                    ? _localizer[LocalizationMessages.Truck] 
+                    : _localizer[LocalizationMessages.Equipment]
             });
 
             return APIResponse<IEnumerable<EquipmentDto>>.Success(dtos, _localizer[LocalizationMessages.EquipmentsRetrievedSuccessfully]);
@@ -129,7 +133,10 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 UsageHours = equipment.UsageHours,
                 FuelLiters = equipment.FuelLiters,
                 MechanicalId = equipment.MechanicalId,
-                MechanicalName = equipment.Mechanical?.FullName ?? "N/A"
+                MechanicalName = equipment.Mechanical?.FullName ?? "N/A",
+                EquipmentType = equipment.EquipmentType == EquipmentType.Truck 
+                    ? _localizer[LocalizationMessages.Truck] 
+                    : _localizer[LocalizationMessages.Equipment]
             };
 
             return APIResponse<EquipmentDto>.Success(dto, _localizer[LocalizationMessages.EquipmentRetrievedSuccessfully]);
@@ -182,7 +189,10 @@ namespace FleetLinker.Application.Queries.Equipment.Handlers
                 UsageHours = e.UsageHours,
                 FuelLiters = e.FuelLiters,
                 MechanicalId = e.MechanicalId,
-                MechanicalName = e.Mechanical?.FullName ?? "N/A"
+                MechanicalName = e.Mechanical?.FullName ?? "N/A",
+                EquipmentType = e.EquipmentType == EquipmentType.Truck 
+                    ? _localizer[LocalizationMessages.Truck] 
+                    : _localizer[LocalizationMessages.Equipment]
             });
 
             return APIResponse<IEnumerable<EquipmentDto>>.Success(dtos, _localizer[LocalizationMessages.EquipmentsRetrievedSuccessfully]);

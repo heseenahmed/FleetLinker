@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using FleetLinker.Domain.Enums;
+
 namespace FleetLinker.Domain.Entity
 {
     public class Equipment : BaseEntity
@@ -49,5 +51,8 @@ namespace FleetLinker.Domain.Entity
         
         [ForeignKey("MechanicalId")]
         public virtual ApplicationUser? Mechanical { get; set; }
+
+        [Required]
+        public EquipmentType EquipmentType { get; set; } // شاحنة أو معدة
     }
 }

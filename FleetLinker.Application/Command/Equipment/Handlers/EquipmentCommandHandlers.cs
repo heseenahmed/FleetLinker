@@ -75,7 +75,8 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
                 ImagePath = imagePath,
                 CreatedBy = request.CreatedBy,
                 CreatedDate = DateTime.UtcNow,
-                IsActive = true
+                IsActive = true,
+                EquipmentType = request.Dto.EquipmentType
             };
 
             await _repository.AddAsync(equipment);
@@ -136,6 +137,7 @@ namespace FleetLinker.Application.Command.Equipment.Handlers
             equipment.Description = request.Dto.Description;
             equipment.UpdatedBy = request.UpdatedBy;
             equipment.UpdatedDate = DateTime.UtcNow;
+            equipment.EquipmentType = request.Dto.EquipmentType;
 
             await _repository.UpdateAsync(equipment);
             return APIResponse<object?>.Success(null, _localizer[LocalizationMessages.EquipmentUpdatedSuccessfully]);

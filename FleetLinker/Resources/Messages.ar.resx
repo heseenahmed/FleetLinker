@@ -448,4 +448,13 @@
   <data name="UsageUpdatedSuccessfully" xml:space="preserve">
     <value>تم تحديث بيانات الاستخدام بنجاح</value>
   </data>
+  <data name="EquipmentTypeRequired" xml:space="preserve">
+    <value>نوع المعدة مطلوب</value>
+  </data>
+  <data name="Truck" xml:space="preserve">
+    <value>شاحنة</value>
+  </data>
+  <data name="Equipment" xml:space="preserve">
+    <value>معدة</value>
+  </data>
 </root>

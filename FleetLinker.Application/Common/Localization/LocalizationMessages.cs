@@ -138,6 +138,9 @@ namespace FleetLinker.Application.Common.Localization
         public const string UsageHoursRequired = "UsageHoursRequired";
         public const string FuelLitersRequired = "FuelLitersRequired";
         public const string UsageUpdatedSuccessfully = "UsageUpdatedSuccessfully";
+        public const string EquipmentTypeRequired = "EquipmentTypeRequired";
+        public const string Truck = "Truck";
+        public const string Equipment = "Equipment";
         
         // Spare Parts
         public const string SparePartCreatedSuccessfully = "SparePartCreatedSuccessfully";
