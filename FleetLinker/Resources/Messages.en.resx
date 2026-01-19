@@ -460,4 +460,31 @@
   <data name="Kilometers" xml:space="preserve">
     <value>Kilometers</value>
   </data>
+  <data name="MaintenanceRequestCreatedSuccessfully" xml:space="preserve">
+    <value>Maintenance request sent to owner successfully.</value>
+  </data>
+  <data name="MaintenanceRequestRespondedSuccessfully" xml:space="preserve">
+    <value>Maintenance request responded successfully.</value>
+  </data>
+  <data name="RequestTypeBuy" xml:space="preserve">
+    <value>Buy</value>
+  </data>
+  <data name="RequestTypeRent" xml:space="preserve">
+    <value>Rent</value>
+  </data>
+  <data name="RequestTypeMaintenance" xml:space="preserve">
+    <value>Maintenance</value>
+  </data>
+  <data name="StatusPending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="StatusResponded" xml:space="preserve">
+    <value>Responded</value>
+  </data>
+  <data name="StatusAccepted" xml:space="preserve">
+    <value>Accepted</value>
+  </data>
+  <data name="StatusRejected" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
 </root>

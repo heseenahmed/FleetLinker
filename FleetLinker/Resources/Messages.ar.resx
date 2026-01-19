@@ -460,4 +460,31 @@
   <data name="Kilometers" xml:space="preserve">
     <value>كيلومترات</value>
   </data>
+  <data name="MaintenanceRequestCreatedSuccessfully" xml:space="preserve">
+    <value>تم إرسال طلب الصيانة لمالك المعدة بنجاح</value>
+  </data>
+  <data name="MaintenanceRequestRespondedSuccessfully" xml:space="preserve">
+    <value>تم الرد على طلب الصيانة بنجاح</value>
+  </data>
+  <data name="RequestTypeBuy" xml:space="preserve">
+    <value>شراء</value>
+  </data>
+  <data name="RequestTypeRent" xml:space="preserve">
+    <value>إيجار</value>
+  </data>
+  <data name="RequestTypeMaintenance" xml:space="preserve">
+    <value>صيانة</value>
+  </data>
+  <data name="StatusPending" xml:space="preserve">
+    <value>قيد الانتظار</value>
+  </data>
+  <data name="StatusResponded" xml:space="preserve">
+    <value>تم الرد</value>
+  </data>
+  <data name="StatusAccepted" xml:space="preserve">
+    <value>تم القبول</value>
+  </data>
+  <data name="StatusRejected" xml:space="preserve">
+    <value>تم الرفض</value>
+  </data>
 </root>

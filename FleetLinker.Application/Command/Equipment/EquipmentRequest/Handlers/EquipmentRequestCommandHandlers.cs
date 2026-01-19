@@ -50,6 +50,7 @@ namespace FleetLinker.Application.Command.Equipment.EquipmentRequest.Handlers
                 RequestType = request.Dto.RequestType,
                 Status = EquipmentRequestStatus.Pending,
                 RequestedPrice = request.Dto.RequestedPrice,
+                MaintenanceDescription = request.Dto.MaintenanceDescription,
                 Notes = request.Dto.Notes,
                 CreatedBy = request.RequesterId,
                 CreatedDate = DateTime.UtcNow,
@@ -57,7 +58,12 @@ namespace FleetLinker.Application.Command.Equipment.EquipmentRequest.Handlers
             };
 
             await _repository.AddAsync(equipmentRequest);
-            return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.EquipmentRequestCreatedSuccessfully]);
+            
+            var successMsg = request.Dto.RequestType == EquipmentRequestType.Maintenance 
+                ? _localizer[LocalizationMessages.MaintenanceRequestCreatedSuccessfully] 
+                : _localizer[LocalizationMessages.EquipmentRequestCreatedSuccessfully];
+
+            return APIResponse<bool>.Success(true, successMsg);
         }
 
         public async Task<APIResponse<bool>> Handle(RespondToEquipmentRequestCommand request, CancellationToken cancellationToken)
@@ -74,13 +80,19 @@ namespace FleetLinker.Application.Command.Equipment.EquipmentRequest.Handlers
                 return APIResponse<bool>.Fail(403, message: _localizer[LocalizationMessages.Unauthorized]);
 
             equipmentRequest.FinalPrice = request.Dto.FinalPrice;
+            equipmentRequest.MaintenanceResponse = request.Dto.MaintenanceResponse;
             equipmentRequest.Notes = request.Dto.Notes;
             equipmentRequest.Status = request.Dto.Status;
             equipmentRequest.UpdatedBy = request.OwnerId;
             equipmentRequest.UpdatedDate = DateTime.UtcNow;
 
             await _repository.UpdateAsync(equipmentRequest);
-            return APIResponse<bool>.Success(true, _localizer[LocalizationMessages.EquipmentRequestRespondedSuccessfully]);
+
+            var successMsg = equipmentRequest.RequestType == EquipmentRequestType.Maintenance 
+                ? _localizer[LocalizationMessages.MaintenanceRequestRespondedSuccessfully] 
+                : _localizer[LocalizationMessages.EquipmentRequestRespondedSuccessfully];
+
+            return APIResponse<bool>.Success(true, successMsg);
         }
     }
 }

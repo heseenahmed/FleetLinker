@@ -7,6 +7,8 @@ namespace FleetLinker.Domain.Enums
         [Display(Name = "Buy")]
         Buy = 1,
         [Display(Name = "Rent")]
-        Rent = 2
+        Rent = 2,
+        [Display(Name = "Maintenance")]
+        Maintenance = 3
     }
 }

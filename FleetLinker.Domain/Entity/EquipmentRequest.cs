@@ -34,6 +34,10 @@ namespace FleetLinker.Domain.Entity
 
         public decimal? FinalPrice { get; set; } // Price offered by the owner
 
+        public string? MaintenanceDescription { get; set; } // Specific to maintenance requests
+
+        public string? MaintenanceResponse { get; set; } // Specific to maintenance responses
+
         public string? Notes { get; set; }
     }
 }

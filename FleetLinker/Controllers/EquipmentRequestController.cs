@@ -5,6 +5,7 @@ using FleetLinker.Application.DTOs;
 using FleetLinker.Application.DTOs.Equipment;
 using FleetLinker.Application.Queries.Equipment.EquipmentRequest;
 using FleetLinker.Domain.Entity;
+using FleetLinker.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -38,6 +39,7 @@ namespace FleetLinker.API.Controllers
             var result = await _mediator.Send(new RespondToEquipmentRequestCommand(dto, userId!));
             return Ok(result);
         }
+
 
         [HttpGet("GetMyIncomingRequests")]
         public async Task<IActionResult> GetIncoming()

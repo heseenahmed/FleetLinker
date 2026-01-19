@@ -161,6 +161,19 @@ namespace FleetLinker.Application.Common.Localization
         public const string EquipmentRequestCreatedSuccessfully = "EquipmentRequestCreatedSuccessfully";
         public const string EquipmentRequestRespondedSuccessfully = "EquipmentRequestRespondedSuccessfully";
         public const string EquipmentRequestsRetrievedSuccessfully = "EquipmentRequestsRetrievedSuccessfully";
+        public const string MaintenanceRequestCreatedSuccessfully = "MaintenanceRequestCreatedSuccessfully";
+        public const string MaintenanceRequestRespondedSuccessfully = "MaintenanceRequestRespondedSuccessfully";
+
+        // Equipment Request Types
+        public const string RequestTypeBuy = "RequestTypeBuy";
+        public const string RequestTypeRent = "RequestTypeRent";
+        public const string RequestTypeMaintenance = "RequestTypeMaintenance";
+
+        // Equipment Request Statuses
+        public const string StatusPending = "StatusPending";
+        public const string StatusResponded = "StatusResponded";
+        public const string StatusAccepted = "StatusAccepted";
+        public const string StatusRejected = "StatusRejected";
 
         // Roles
         public const string RoleAdmin = "RoleAdmin";

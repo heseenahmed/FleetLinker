@@ -12,12 +12,12 @@ namespace FleetLinker.Application.DTOs.Equipment
         public string RequesterId { get; set; } = null!;
         public string RequesterName { get; set; } = null!;
         public string OwnerId { get; set; } = null!;
-        public EquipmentRequestType RequestType { get; set; }
-        public string RequestTypeName { get; set; } = null!;
-        public EquipmentRequestStatus Status { get; set; }
-        public string StatusName { get; set; } = null!;
+        public string RequestType { get; set; } = null!;
+        public string Status { get; set; } = null!;
         public decimal? RequestedPrice { get; set; }
         public decimal? FinalPrice { get; set; }
+        public string? MaintenanceDescription { get; set; }
+        public string? MaintenanceResponse { get; set; }
         public string? Notes { get; set; }
         public DateTime CreatedDate { get; set; }
     }
@@ -31,6 +31,8 @@ namespace FleetLinker.Application.DTOs.Equipment
         public EquipmentRequestType RequestType { get; set; }
 
         public decimal? RequestedPrice { get; set; }
+        
+        public string? MaintenanceDescription { get; set; } // Specific to maintenance requests
 
         public string? Notes { get; set; }
     }
@@ -41,11 +43,31 @@ namespace FleetLinker.Application.DTOs.Equipment
         public Guid RequestId { get; set; }
 
         [Required]
-        public decimal FinalPrice { get; set; }
+        public decimal? FinalPrice { get; set; } // Optional for maintenance
+
+        public string? MaintenanceResponse { get; set; } // Specific to maintenance responses
 
         public string? Notes { get; set; }
 
         [Required]
-        public EquipmentRequestStatus Status { get; set; } // Accepted, Rejected, or Responded
+        public EquipmentRequestStatus Status { get; set; }
+    }
+
+    public class CreateMaintenanceRequestDto
+    {
+        [Required]
+        public Guid EquipmentId { get; set; }
+
+        [Required]
+        public string MaintenanceDescription { get; set; } = null!;
+    }
+
+    public class RespondToMaintenanceRequestDto
+    {
+        [Required]
+        public Guid RequestId { get; set; }
+
+        [Required]
+        public string MaintenanceResponse { get; set; } = null!;
     }
 }

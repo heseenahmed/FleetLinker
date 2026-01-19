@@ -4,6 +4,7 @@ using FleetLinker.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FleetLinker.Infra.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260119101249_AddMaintenanceRequestFields")]
+    partial class AddMaintenanceRequestFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -304,7 +307,7 @@ namespace FleetLinker.Infra.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Equipments", (string)null);
+                    b.ToTable("Equipments");
                 });
 
             modelBuilder.Entity("FleetLinker.Domain.Entity.EquipmentRequest", b =>
@@ -369,7 +372,7 @@ namespace FleetLinker.Infra.Migrations
 
                     b.HasIndex("RequesterId");
 
-                    b.ToTable("EquipmentRequests", (string)null);
+                    b.ToTable("EquipmentRequests");
                 });
 
             modelBuilder.Entity("FleetLinker.Domain.Entity.EquipmentSparePart", b =>
@@ -433,7 +436,7 @@ namespace FleetLinker.Infra.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("EquipmentSpareParts", (string)null);
+                    b.ToTable("EquipmentSpareParts");
                 });
 
             modelBuilder.Entity("FleetLinker.Domain.Entity.SparePartOffer", b =>
@@ -486,7 +489,7 @@ namespace FleetLinker.Infra.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("SparePartOffers", (string)null);
+                    b.ToTable("SparePartOffers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
