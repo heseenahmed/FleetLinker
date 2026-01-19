@@ -86,6 +86,3 @@ Once the application is running, you can access the interactive Swagger document
 ## 🇸🇦 Built for Saudi localized experience
 FleetLinker is designed with a deep understanding of the local market requirements, offering seamless Arabic localization and Saudi-specific business workflows.
 
----
-
-Developed with ❤️ by the FleetLinker Team.
